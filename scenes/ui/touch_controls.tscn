@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://scripts/ui/touch_look_area.gd" id="5_look"]
 
 [node name="TouchControls" type="CanvasLayer"]
-layer = 10
+layer = 100
 script = ExtResource("1_tc")
 
 [node name="LookArea" type="Control" parent="."]
@@ -25,13 +25,13 @@ script = ExtResource("5_look")
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 180.0
-offset_top = -180.0
-offset_right = 180.0
-offset_bottom = -180.0
+offset_left = 220.0
+offset_top = -220.0
+offset_right = 220.0
+offset_bottom = -220.0
 grow_vertical = 0
-base_radius = 80.0
-stick_radius = 35.0
+base_radius = 150.0
+stick_radius = 60.0
 
 [node name="Buttons" type="Control" parent="."]
 layout_mode = 3
@@ -40,35 +40,41 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -10.0
-offset_top = -10.0
+offset_left = -30.0
+offset_top = -30.0
 grow_horizontal = 0
 grow_vertical = 0
 
 [node name="ShootButton" type="TouchScreenButton" parent="Buttons"]
-position = Vector2(-280, -320)
-scale = Vector2(0.4, 0.4)
+position = Vector2(-450, -550)
+scale = Vector2(0.8, 0.8)
 texture_normal = ExtResource("3_shoot")
 action = "shoot"
 visibility_mode = 0
 
 [node name="JumpButton" type="TouchScreenButton" parent="Buttons"]
-position = Vector2(-150, -220)
-scale = Vector2(0.35, 0.35)
+position = Vector2(-250, -400)
+scale = Vector2(0.7, 0.7)
 texture_normal = ExtResource("4_jump")
 action = "jump"
 visibility_mode = 0
 
 [node name="CrouchButton" type="TouchScreenButton" parent="Buttons"]
-position = Vector2(-280, -150)
-scale = Vector2(0.35, 0.35)
+position = Vector2(-480, -280)
+scale = Vector2(0.7, 0.7)
 texture_normal = ExtResource("4_jump")
 action = "capture"
 visibility_mode = 0
 
 [node name="RespawnButton" type="TouchScreenButton" parent="Buttons"]
-position = Vector2(-400, -120)
-scale = Vector2(0.2, 0.2)
+position = Vector2(-700, -180)
+scale = Vector2(0.4, 0.4)
 texture_normal = ExtResource("4_jump")
 action = "respawn"
+visibility_mode = 0
+
+[node name="FullscreenButton" type="TouchScreenButton" parent="."]
+position = Vector2(30, 30)
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("4_jump")
 visibility_mode = 0

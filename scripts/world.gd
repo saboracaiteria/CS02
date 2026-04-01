@@ -68,6 +68,7 @@ func _on_host_button_pressed() -> void:
 		options_menu.hide()
 
 	add_player(multiplayer.get_unique_id())
+	print("Player spawned as host. Touch controls should be active.")
 
 	upnp_setup()
 
