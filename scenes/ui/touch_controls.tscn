@@ -1,41 +1,74 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/ui/joystick.tscn" id="1_joy"]
-[ext_resource type="Texture2D" path="res://textures/mobile/shoot.png" id="2_shoot"]
-[ext_resource type="Texture2D" path="res://textures/mobile/jump.png" id="3_jump"]
+[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="1_tc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/joystick.tscn" id="2_joy"]
+[ext_resource type="Texture2D" path="res://textures/mobile/shoot.png" id="3_shoot"]
+[ext_resource type="Texture2D" path="res://textures/mobile/jump.png" id="4_jump"]
+[ext_resource type="Script" path="res://scripts/ui/touch_look_area.gd" id="5_look"]
 
 [node name="TouchControls" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_tc")
 
-[node name="MoveJoystick" parent="." instance=ExtResource("1_joy")]
-offset_left = 130.0
-offset_top = 514.0
-offset_right = 130.0
-offset_bottom = 514.0
+[node name="LookArea" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("5_look")
+
+[node name="MoveJoystick" parent="." instance=ExtResource("2_joy")]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 180.0
+offset_top = -180.0
+offset_right = 180.0
+offset_bottom = -180.0
+grow_vertical = 0
 base_radius = 80.0
 stick_radius = 35.0
 
-[node name="LookJoystick" parent="." instance=ExtResource("1_joy")]
-offset_left = 1014.0
-offset_top = 514.0
-offset_right = 1014.0
-offset_bottom = 514.0
-base_radius = 80.0
-stick_radius = 35.0
-action_left = ""
-action_right = ""
-action_up = ""
-action_down = ""
+[node name="Buttons" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -10.0
+grow_horizontal = 0
+grow_vertical = 0
 
-[node name="ShootButton" type="TouchScreenButton" parent="."]
-position = Vector2(988, 305)
-scale = Vector2(0.3, 0.3)
-texture_normal = ExtResource("2_shoot")
+[node name="ShootButton" type="TouchScreenButton" parent="Buttons"]
+position = Vector2(-280, -320)
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("3_shoot")
 action = "shoot"
-visibility_mode = 1
+visibility_mode = 0
 
-[node name="JumpButton" type="TouchScreenButton" parent="."]
-position = Vector2(810, 500)
-scale = Vector2(0.3, 0.3)
-texture_normal = ExtResource("3_jump")
+[node name="JumpButton" type="TouchScreenButton" parent="Buttons"]
+position = Vector2(-150, -220)
+scale = Vector2(0.35, 0.35)
+texture_normal = ExtResource("4_jump")
 action = "jump"
-visibility_mode = 1
+visibility_mode = 0
+
+[node name="CrouchButton" type="TouchScreenButton" parent="Buttons"]
+position = Vector2(-280, -150)
+scale = Vector2(0.35, 0.35)
+texture_normal = ExtResource("4_jump")
+action = "capture"
+visibility_mode = 0
+
+[node name="RespawnButton" type="TouchScreenButton" parent="Buttons"]
+position = Vector2(-400, -120)
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("4_jump")
+action = "respawn"
+visibility_mode = 0

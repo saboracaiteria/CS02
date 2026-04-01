@@ -24,27 +24,34 @@ func _ready():
 func _input(event):
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			var dist = (event.position - global_position).length()
-			if dist <= base_radius:
+			var touch_dist = (event.position - global_position).length()
+			if touch_dist <= base_radius:
 				joystick_active = true
 				touch_index = event.index
+				_handle_drag(event.position)
 		elif event.index == touch_index:
-			joystick_active = false
-			touch_index = -1
-			output_vector = Vector2.ZERO
-			knob.position = Vector2.ZERO
-			_update_input_map()
+			_reset_joystick()
 			
 	if event is InputEventScreenDrag:
 		if event.index == touch_index:
-			var center = global_position
-			var vec = event.position - center
-			if vec.length() > base_radius:
-				vec = vec.normalized() * base_radius
-			
-			knob.position = vec
-			output_vector = vec / base_radius
-			_update_input_map()
+			_handle_drag(event.position)
+
+func _handle_drag(touch_pos: Vector2):
+	var center = global_position
+	var vec = touch_pos - center
+	if vec.length() > base_radius:
+		vec = vec.normalized() * base_radius
+	
+	knob.position = vec
+	output_vector = vec / base_radius
+	_update_input_map()
+
+func _reset_joystick():
+	joystick_active = false
+	touch_index = -1
+	output_vector = Vector2.ZERO
+	knob.position = Vector2.ZERO
+	_update_input_map()
 
 func _update_input_map():
 	# Update Input Map for these actions
@@ -53,12 +60,12 @@ func _update_input_map():
 	_set_action(action_up, -output_vector.y if output_vector.y < 0 else 0.0)
 	_set_action(action_down, output_vector.y if output_vector.y > 0 else 0.0)
 
-func _set_action(action: String, strength: float):
-	if action == "": return
+func _set_action(action_name: String, strength: float):
+	if action_name == "": return
 	if strength > 0.1:
-		Input.action_press(action, strength)
+		Input.action_press(action_name, strength)
 	else:
-		Input.action_release(action)
+		Input.action_release(action_name)
 
 func get_value() -> Vector2:
 	return output_vector

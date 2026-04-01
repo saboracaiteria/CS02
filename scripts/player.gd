@@ -32,20 +32,26 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
-	if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority():
+		$TouchControls.visible = false
+		return
+	
+	# Set target for the new touch look area
+	if has_node("TouchControls/LookArea"):
+		get_node("TouchControls/LookArea").player_node = self
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
 	position = spawns[randi() % spawns.size()]
 
 func _process(_delta: float) -> void:
+	if not is_multiplayer_authority(): return
+	
 	sensitivity = Global.sensitivity
 	controller_sensitivity = Global.controller_sensitivity
 
 	# Move and Look with Controller/Touch
 	var look_dir = axis_vector
-	if look_joystick:
-		look_dir += look_joystick.get_value() * 10.0 # Scale touch look sensitivity
 	
 	rotate_y(-look_dir.x * controller_sensitivity)
 	camera.rotate_x(-look_dir.y * controller_sensitivity)
