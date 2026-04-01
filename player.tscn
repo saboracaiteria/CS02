@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://bevvvtb8n4qfc" path="res://audio/645317__darkshroom__m9_noisegate-1780.ogg" id="3_pilvn"]
 [ext_resource type="Texture2D" uid="uid://duu4nryr7idps" path="res://textures/kenney_particle_pack/circle_05.png" id="4_ssmal"]
 [ext_resource type="Script" path="res://scripts/ui/crosshair.gd" id="5_fnci2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/touch_controls.tscn" id="6_touch"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7800j"]
 
@@ -215,6 +216,8 @@ scale = Vector2(0.03, 0.03)
 texture = ExtResource("4_ssmal")
 stretch_mode = 5
 script = ExtResource("5_fnci2")
+
+[node name="TouchControls" parent="." instance=ExtResource("6_touch")]
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="child_order_changed" from="MeshInstance3D" to="." method="_on_mesh_instance_3d_child_order_changed"]

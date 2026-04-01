@@ -23,6 +23,7 @@ var controller_sensitivity : float =  .010
 
 var axis_vector : Vector2
 var	mouse_captured : bool = true
+@onready var look_joystick: Control = $TouchControls/LookJoystick
 
 const SPEED = 5.5
 const JUMP_VELOCITY = 4.5
@@ -41,8 +42,13 @@ func _process(_delta: float) -> void:
 	sensitivity = Global.sensitivity
 	controller_sensitivity = Global.controller_sensitivity
 
-	rotate_y(-axis_vector.x * controller_sensitivity)
-	camera.rotate_x(-axis_vector.y * controller_sensitivity)
+	# Move and Look with Controller/Touch
+	var look_dir = axis_vector
+	if look_joystick:
+		look_dir += look_joystick.get_value() * 10.0 # Scale touch look sensitivity
+	
+	rotate_y(-look_dir.x * controller_sensitivity)
+	camera.rotate_x(-look_dir.y * controller_sensitivity)
 	camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/joystick.tscn" id="1_joy"]
+[ext_resource type="Texture2D" path="res://textures/mobile/shoot.png" id="2_shoot"]
+[ext_resource type="Texture2D" path="res://textures/mobile/jump.png" id="3_jump"]
+
+[node name="TouchControls" type="CanvasLayer"]
+
+[node name="MoveJoystick" parent="." instance=ExtResource("1_joy")]
+offset_left = 130.0
+offset_top = 514.0
+offset_right = 130.0
+offset_bottom = 514.0
+base_radius = 80.0
+stick_radius = 35.0
+
+[node name="LookJoystick" parent="." instance=ExtResource("1_joy")]
+offset_left = 1014.0
+offset_top = 514.0
+offset_right = 1014.0
+offset_bottom = 514.0
+base_radius = 80.0
+stick_radius = 35.0
+action_left = ""
+action_right = ""
+action_up = ""
+action_down = ""
+
+[node name="ShootButton" type="TouchScreenButton" parent="."]
+position = Vector2(988, 305)
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("2_shoot")
+action = "shoot"
+visibility_mode = 1
+
+[node name="JumpButton" type="TouchScreenButton" parent="."]
+position = Vector2(810, 500)
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("3_jump")
+action = "jump"
+visibility_mode = 1
