@@ -6,15 +6,19 @@ extends Control
 var touch_index: int = -1
 
 func _input(event):
+	var is_on_left = false
+	if event is InputEventScreenTouch or event is InputEventScreenDrag:
+		is_on_left = event.position.x < get_viewport().size.x / 2.0
+		
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			if touch_index == -1:
+			if touch_index == -1 and not is_on_left: # IGNORE LEFT
 				touch_index = event.index
 		elif event.index == touch_index:
 			touch_index = -1
 			
 	if event is InputEventScreenDrag:
-		if event.index == touch_index:
+		if event.index == touch_index and not is_on_left: # IGNORE LEFT
 			var mouse_motion = event.relative * sensitivity
 			# We pass this to the player
 			if player_node:
