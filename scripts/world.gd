@@ -53,6 +53,47 @@ func _on_back_pressed() -> void:
 		options = false
 
 #func _ready() -> void:
+func _ready():
+	_apply_premium_style()
+
+func _apply_premium_style():
+	# Estilização Glassmorphism para o Menu
+	var panel = $Menu/MainMenu
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0, 0, 0, 0.4)
+	style.border_width_right = 2
+	style.border_color = Color(1, 1, 1, 0.1)
+	style.set_corner_radius_all(0) # Mantém sidebar reta
+	panel.add_theme_stylebox_override("panel", style)
+	
+	# Estilização dos Botões
+	var buttons = [
+		$Menu/MainMenu/MarginContainer/VBoxContainer/HostButton,
+		$Menu/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/JoinButton,
+		$Menu/MainMenu/MarginContainer/VBoxContainer/OptionsButton,
+		$Menu/MainMenu/MarginContainer/VBoxContainer/Quit
+	]
+	
+	var btn_style = StyleBoxFlat.new()
+	btn_style.bg_color = Color(1, 1, 1, 0.05)
+	btn_style.set_corner_radius_all(8)
+	btn_style.content_margin_left = 10
+	btn_style.content_margin_top = 8
+	btn_style.content_margin_right = 10
+	btn_style.content_margin_bottom = 8
+	
+	var btn_hover = btn_style.duplicate()
+	btn_hover.bg_color = Color(0, 0.6, 1, 0.2)
+	btn_hover.border_width_bottom = 2
+	btn_hover.border_color = Color(0, 0.6, 1, 0.8)
+
+	for btn in buttons:
+		if btn:
+			btn.add_theme_stylebox_override("normal", btn_style)
+			btn.add_theme_stylebox_override("hover", btn_hover)
+			btn.add_theme_stylebox_override("pressed", btn_hover)
+			btn.add_theme_stylebox_override("focus", btn_style)
+
 func _on_host_button_pressed() -> void:
 	main_menu.hide()
 	$Menu/DollyCamera.hide()
