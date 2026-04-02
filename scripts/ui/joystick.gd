@@ -7,19 +7,17 @@ extends Control
 @export var action_up: String = "up"
 @export var action_down: String = "down"
 
-@onready var base: Sprite2D = $Base
-@onready var knob: Sprite2D = $Knob
+# Referências aos novos nós visuais 🥋
+@onready var base: Control = $Base
+@onready var knob: Control = $Knob
 
 var joystick_active: bool = false
 var touch_index: int = -1
 var output_vector: Vector2 = Vector2.ZERO
 
 func _ready():
-	# Scale sprites based on radius
-	if base and base.texture:
-		base.scale = Vector2(base_radius * 2 / base.texture.get_width(), base_radius * 2 / base.texture.get_height())
-	if knob and knob.texture:
-		knob.scale = Vector2(stick_radius * 2 / knob.texture.get_width(), stick_radius * 2 / knob.texture.get_height())
+	# Garante que o HUD esteja no lugar certo e visível
+	_reset_joystick()
 
 func _input(event):
 	if event is InputEventScreenTouch:
@@ -42,7 +40,8 @@ func _handle_drag(touch_pos: Vector2):
 	if vec.length() > base_radius:
 		vec = vec.normalized() * base_radius
 	
-	knob.position = vec
+	# No novo sistema visual, position Vector2.ZERO é o CENTRO 🎯
+	knob.position = vec - knob.size / 2.0
 	output_vector = vec / base_radius
 	_update_input_map()
 
@@ -50,11 +49,12 @@ func _reset_joystick():
 	joystick_active = false
 	touch_index = -1
 	output_vector = Vector2.ZERO
-	knob.position = Vector2.ZERO
+	if knob:
+		knob.position = -knob.size / 2.0
 	_update_input_map()
 
 func _update_input_map():
-	# Update Input Map for these actions
+	# Transmite o movimento para o jogador 🏎️💨
 	_set_action(action_left, -output_vector.x if output_vector.x < 0 else 0.0)
 	_set_action(action_right, output_vector.x if output_vector.x > 0 else 0.0)
 	_set_action(action_up, -output_vector.y if output_vector.y < 0 else 0.0)

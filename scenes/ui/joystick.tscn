@@ -1,16 +1,42 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/joystick.gd" id="1_js"]
-[ext_resource type="Texture2D" path="res://textures/mobile/joystick_base.png" id="2_base"]
-[ext_resource type="Texture2D" path="res://textures/mobile/joystick_knob.png" id="3_knob"]
 
 [node name="Joystick" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_js")
 
-[node name="Base" type="Sprite2D" parent="."]
-texture = ExtResource("2_base")
+[node name="Base" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.15)
 
-[node name="Knob" type="Sprite2D" parent="."]
-texture = ExtResource("3_knob")
+[node name="Knob" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.4)
