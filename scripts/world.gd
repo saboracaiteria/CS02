@@ -139,6 +139,13 @@ func add_player(peer_id: int) -> void:
 	var player: Node = Player.instantiate()
 	player.name = str(peer_id)
 	add_child(player)
+	
+	# Se for o meu jogador, conecta ao HUD mobile 🥊
+	if peer_id == multiplayer.get_unique_id():
+		if has_node("TouchControls"):
+			$TouchControls.visible = Global.is_mobile
+			if has_node("TouchControls/LookArea"):
+				$TouchControls/LookArea.player_node = player
 
 func remove_player(peer_id: int) -> void:
 	var player: Node = get_node_or_null(str(peer_id))

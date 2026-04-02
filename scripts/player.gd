@@ -32,16 +32,8 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
-	# Só mostra os controles se for a autoridade E se for mobile
-	if is_multiplayer_authority():
-		$TouchControls.visible = Global.is_mobile
-		
-		# Configura o alvo da área de visão de toque
-		if has_node("TouchControls/LookArea"):
-			get_node("TouchControls/LookArea").player_node = self
-	else:
-		$TouchControls.visible = false
-		return
+	# O HUD agora é gerenciado pelo world.tscn para estabilidade total
+	# Não precisamos mais destas referências locais que causavam erros
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
@@ -54,11 +46,11 @@ func _process(_delta: float) -> void:
 	controller_sensitivity = Global.controller_sensitivity
 
 	# Move and Look with Controller/Touch
-	var look_dir = axis_vector
+	# var look_dir = axis_vector
 	
-	rotate_y(-look_dir.x * controller_sensitivity)
-	camera.rotate_x(-look_dir.y * controller_sensitivity)
-	camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+	# rotate_y(-look_dir.x * controller_sensitivity)
+	# camera.rotate_x(-look_dir.y * controller_sensitivity)
+	# camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
