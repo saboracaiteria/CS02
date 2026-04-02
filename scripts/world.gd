@@ -140,12 +140,15 @@ func add_player(peer_id: int) -> void:
 	player.name = str(peer_id)
 	add_child(player)
 	
-	# Se for o meu jogador, conecta ao HUD mobile 🥊
-	if peer_id == multiplayer.get_unique_id():
-		if has_node("TouchControls"):
-			$TouchControls.visible = Global.is_mobile
-			if has_node("TouchControls/LookArea"):
-				$TouchControls/LookArea.player_node = player
+	# Ativa o HUD Mobile apenas quando o jogador spawnar 🥊
+	if peer_id == multiplayer.get_unique_id() and Global.is_mobile:
+		var touch_controls_scene = load("res://scenes/ui/touch_controls.tscn")
+		if touch_controls_scene:
+			var hud = touch_controls_scene.instantiate()
+			add_child(hud)
+			if hud.has_node("LookArea"):
+				hud.get_node("LookArea").player_node = player
+			print("HUD Mobile instantaneamente criado no Spawn! 🏙️🎯")
 
 func remove_player(peer_id: int) -> void:
 	var player: Node = get_node_or_null(str(peer_id))

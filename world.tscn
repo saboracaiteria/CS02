@@ -333,7 +333,6 @@ size_flags_vertical = 8
 button_pressed = true
 text = "Music"
 
-[node name="TouchControls" parent="." instance=ExtResource("100_touch")]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://player.tscn")
