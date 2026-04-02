@@ -1,9 +1,9 @@
 extends CanvasLayer
 
 func _ready():
-	# Force visibility and ensure it's on top
-	visible = true
-	layer = 100 
+	# Começa escondido para não bloquear o menu (Host/Join) 🧱🥊
+	visible = false
+	layer = 125 
 	
 	if has_node("FullscreenButton"):
 		$FullscreenButton.pressed.connect(_on_fullscreen_pressed)
