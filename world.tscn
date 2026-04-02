@@ -11,8 +11,9 @@
 [ext_resource type="Script" path="res://scripts/ui/menu/options/back.gd" id="6_2hany"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options_button.gd" id="6_7g7sm"]
 [ext_resource type="Script" path="res://scripts/ui/menu/pause/resume.gd" id="7_5cdyw"]
-[ext_resource type="Script" path="res://scripts/ui/menu/options/controller_sensitivity.gd" id="7_jhf7u"]
+[ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="7_jhf7u"]
 [ext_resource type="Script" path="res://scripts/ui/menu/pause/quit.gd" id="9_ucmny"]
+[ext_resource type="PackedScene" path="res://scenes/ui/touch_controls.tscn" id="10_touch"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_r06yd"]
 energy_multiplier = 1.25
@@ -87,7 +88,6 @@ camera_attributes = SubResource("CameraAttributesPractical_wntx8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.835807, -0.47011, 0.283589, -0.375944, 0.866496, 0.328406, -0.400115, 0.167871, -0.900959, 0, 4.88489, 0)
-light_temperature = 4300.0
 light_energy = 5.0
 shadow_enabled = true
 shadow_bias = 0.0
@@ -332,6 +332,8 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 button_pressed = true
 text = "Music"
+
+[node name="TouchControls" parent="." instance=ExtResource("10_touch")]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://player.tscn")

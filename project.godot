@@ -14,10 +14,10 @@ config/name="FPS Multiplayer Template"
 config/tags=PackedStringArray("fps", "gamepad", "menu", "multiplayer")
 run/main_scene="res://world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://res://icon.svg"
+boot_splash/bg_color=Color(0.0392157, 0.0392157, 0.0470588, 1)
 boot_splash/show_image=false
 boot_splash/fullsize=false
-boot_splash/bg_color=Color(0.0392157, 0.0392157, 0.0470588, 1)
+config/icon="res://res://icon.svg"
 
 [autoload]
 
