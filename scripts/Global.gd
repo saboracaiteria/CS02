@@ -7,9 +7,14 @@ var controller_sensitivity : float =  .010
 var is_mobile : bool = false
 
 func _ready():
-	# Detecta se é mobile ou se estamos emulando touch no editor
-	if OS.get_name() in ["Android", "iOS"] or DisplayServer.is_touchscreen_available():
-		is_mobile = true
-	
-	# Caso queira testar a UI no PC, você pode forçar is_mobile = true aqui
-	# is_mobile = true
+	# Detecção Robusta de Mobile (Android, iOS e Web Mobile) 🥊🏆
+	is_mobile = OS.has_feature("mobile") or \
+				OS.get_name() in ["Android", "iOS"] or \
+				DisplayServer.is_touchscreen_available()
+				
+	# Se for Web, a chance de ser mobile é altíssima se tiver touchscreen
+	if OS.has_feature("web"):
+		is_mobile = DisplayServer.is_touchscreen_available()
+		
+	# LOG para Debug 🏁
+	print("Detector de Mobile: ", is_mobile, " | OS: ", OS.get_name())
