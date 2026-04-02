@@ -23,7 +23,7 @@ var controller_sensitivity : float =  .010
 
 var axis_vector : Vector2
 var	mouse_captured : bool = true
-@onready var look_joystick: Control = $TouchControls/LookJoystick
+# Removido LookJoystick pois não existe na cena e o toque é tratado pela LookArea
 
 const SPEED = 5.5
 const JUMP_VELOCITY = 4.5
@@ -32,13 +32,16 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
-	if not is_multiplayer_authority():
+	# Só mostra os controles se for a autoridade E se for mobile
+	if is_multiplayer_authority():
+		$TouchControls.visible = Global.is_mobile
+		
+		# Configura o alvo da área de visão de toque
+		if has_node("TouchControls/LookArea"):
+			get_node("TouchControls/LookArea").player_node = self
+	else:
 		$TouchControls.visible = false
 		return
-	
-	# Set target for the new touch look area
-	if has_node("TouchControls/LookArea"):
-		get_node("TouchControls/LookArea").player_node = self
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
