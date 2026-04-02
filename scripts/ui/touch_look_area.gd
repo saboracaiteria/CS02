@@ -19,7 +19,12 @@ func _input(event):
 			
 	if event is InputEventScreenDrag:
 		if event.index == touch_index and not is_on_left: # IGNORE LEFT
-			var mouse_motion = event.relative * sensitivity
+			var mouse_motion = event.relative
+			
+			# AMORTECEDOR: Evita saltos de câmera 180º causados por lag do navegador 🏁🥊
+			if mouse_motion.length() > 300: 
+				return
+				
 			# We pass this to the player
 			if player_node:
 				player_node.rotate_y(-mouse_motion.x * Global.sensitivity)

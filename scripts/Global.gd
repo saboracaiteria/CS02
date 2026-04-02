@@ -3,18 +3,15 @@ extends Node
 var sensitivity : float =  .005
 var controller_sensitivity : float =  .010
 
-# Detecção de Mobile/PC
-var is_mobile : bool = false
+# Detecção Simplificada - Menos é Mais 🥊🥇
+var is_mobile : bool = true
 
 func _ready():
-	# Detecção Robusta de Mobile (Android, iOS e Web Mobile) 🥊🏆
-	is_mobile = OS.has_feature("mobile") or \
-				OS.get_name() in ["Android", "iOS"] or \
-				DisplayServer.is_touchscreen_available()
-				
-	# Se for Web, a chance de ser mobile é altíssima se tiver touchscreen
-	if OS.has_feature("web"):
-		is_mobile = DisplayServer.is_touchscreen_available()
+	# Se for Web ou Mobile, os controles devem aparecer sempre!
+	is_mobile = OS.has_feature("mobile") or OS.has_feature("web") or DisplayServer.is_touchscreen_available()
+	
+	# Caso o detector falhe, forçamos para evitar que o usuário fique sem HUD 🏁
+	if OS.get_name() in ["Android", "iOS"]:
+		is_mobile = true
 		
-	# LOG para Debug 🏁
-	print("Detector de Mobile: ", is_mobile, " | OS: ", OS.get_name())
+	print("HUD Mobile Ativado por padrão: ", is_mobile)
