@@ -142,6 +142,7 @@ func add_player(peer_id: int) -> void:
 	
 	# Ativa o HUD Mobile apenas quando o jogador spawnar 🥊
 	if peer_id == multiplayer.get_unique_id() and Global.is_mobile:
+		Global.is_playing = true
 		var touch_controls_scene = load("res://scenes/ui/touch_controls.tscn")
 		if touch_controls_scene:
 			var hud = touch_controls_scene.instantiate()

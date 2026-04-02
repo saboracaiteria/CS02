@@ -5,6 +5,7 @@ var controller_sensitivity : float =  .010
 
 # Detecção Simplificada - Menos é Mais 🥊🥇
 var is_mobile : bool = true
+var is_playing : bool = false
 
 func _ready():
 	# Se for Web ou Mobile, os controles devem aparecer sempre!
