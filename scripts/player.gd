@@ -57,14 +57,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	axis_vector = Input.get_vector("look_left", "look_right", "look_up", "look_down")
 
-	if event is InputEventMouseMotion:
-		# PÁRA-RAIO: Se o sistema tentar girar a câmera do lado esquerdo, bloqueie! 🏹🎯
-		if event.position.x < get_viewport().size.x / 2:
-			return
-			
+	# A CÂMERA NO MOBILE É 100% CONTROLADA PELO TOUCH_LOOK_AREA.GD! 🏛️🕹️🎯
+	# Desativando a rotação de mouse para evitar o drift fantasma no analógico. ✨💎
+	if event is InputEventMouseMotion and (DisplayServer.get_name() != "Android" and DisplayServer.get_name() != "iOS"):
 		rotate_y(-event.relative.x * sensitivity)
 		camera.rotate_x(-event.relative.y * sensitivity)
-	camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
 	if Input.is_action_just_pressed("shoot") \
 			and anim_player.current_animation != "shoot" :
