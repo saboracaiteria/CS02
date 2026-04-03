@@ -81,8 +81,8 @@ offset_bottom = -40.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 20
-text = "CAGACHAR"
-script = ExtResource("6_btn")
+text = "AGACHAR"
+script = ExtResource("6_shoot")
 action_name = "capture"
 
 [node name="FullscreenButton" type="Button" parent="."]
@@ -97,5 +97,5 @@ offset_bottom = 80.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 22
 text = "TELA CHEIA 📺"
-script = ExtResource("6_btn")
+script = ExtResource("6_shoot")
 action_name = "fullscreen"
