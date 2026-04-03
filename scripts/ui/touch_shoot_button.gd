@@ -4,16 +4,18 @@ extends Button
 @export var player_node: CharacterBody3D
 var touch_index: int = -1
 
-func _input(event):
+func _gui_input(event):
+	# NOVO SISTEMA: Respeita a ordem dos botões na tela! 🏗️🕹️🎯
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			# Verifica se o toque foi DENTRO deste botão 🎯
-			if get_global_rect().has_point(event.position):
+			if touch_index == -1:
 				touch_index = event.index
 				Input.action_press(action_name)
+				accept_event() # CONSUME o toque para ser o REI do botão! 🕵️‍♂️🥊
 		elif event.index == touch_index:
 			touch_index = -1
 			Input.action_release(action_name)
+			accept_event() # CONSUME a soltura
 			
 	if event is InputEventScreenDrag:
 		if event.index == touch_index:
@@ -26,3 +28,5 @@ func _input(event):
 				if camera:
 					camera.rotate_x(-mouse_motion.y * Global.sensitivity * 0.5)
 					camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+				
+				accept_event() # CONSUME o drag para ser suave
