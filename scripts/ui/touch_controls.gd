@@ -1,17 +1,17 @@
 extends CanvasLayer
 
 func _ready():
-	# Começa escondido para não bloquear o menu (Host/Join) 🧱🥊
+	# Começa totalmente invisível e escondido 🧱🥊
 	visible = false
 	layer = 125 
 	
 	if has_node("FullscreenButton"):
 		$FullscreenButton.pressed.connect(_on_fullscreen_pressed)
 	
-	print("Touch Controls Initialized at Layer 100")
+	print("HUD SUPREMO V999 - MENU LIMPO")
 
-func _on_fullscreen_pressed():
-	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+func _process(_delta):
+	# Trava de Segurança Final: Se não estiver jogando, o HUD MORRE! 🛑⚔️🛡️
+	if not Global.is_playing:
+		if visible:
+			visible = false
