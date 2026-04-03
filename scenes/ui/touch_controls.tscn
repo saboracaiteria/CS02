@@ -5,6 +5,17 @@
 [ext_resource type="Script" path="res://scripts/ui/touch_look_area.gd" id="5_look"]
 [ext_resource type="Script" path="res://scripts/ui/touch_shoot_button.gd" id="6_shoot"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_round"]
+bg_color = Color(0.2, 0.2, 0.2, 0.3)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+
 [node name="TouchControls" type="CanvasLayer"]
 layer = 125
 visible = false
@@ -25,15 +36,15 @@ script = ExtResource("5_look")
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 200.0
-offset_top = -200.0
-offset_right = 200.0
-offset_bottom = -200.0
+offset_left = 180.0
+offset_top = -180.0
+offset_right = 180.0
+offset_bottom = -180.0
 grow_vertical = 0
 scale = Vector2(1.2, 1.2)
 
 [node name="ShootButton" type="Button" parent="."]
-modulate = Color(1, 0.2, 0.2, 0.6)
+modulate = Color(1, 0.2, 0.2, 0.82)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -46,43 +57,52 @@ offset_bottom = -130.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+theme_override_styles/hover = SubResource("StyleBoxFlat_round")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_round")
 text = "ATIRAR"
 script = ExtResource("6_shoot")
 action_name = "shoot"
 
 [node name="JumpButton" type="Button" parent="."]
-modulate = Color(1, 1, 1, 0.6)
+modulate = Color(1, 1, 1, 0.82)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -160.0
-offset_top = -360.0
-offset_right = -60.0
-offset_bottom = -260.0
+offset_top = -410.0
+offset_right = -40.0
+offset_bottom = -290.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+theme_override_styles/hover = SubResource("StyleBoxFlat_round")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_round")
 text = "PULAR"
 script = ExtResource("6_shoot")
 action_name = "ui_accept"
 
 [node name="CrouchButton" type="Button" parent="."]
-modulate = Color(0.3, 0.3, 0.3, 0.6)
+modulate = Color(0.3, 0.3, 0.3, 0.82)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -400.0
+offset_left = -440.0
 offset_top = -140.0
-offset_right = -300.0
-offset_bottom = -40.0
+offset_right = -320.0
+offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 20
-text = "AGACHAR"
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+theme_override_styles/hover = SubResource("StyleBoxFlat_round")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_round")
+text = "MIRAR"
 script = ExtResource("6_shoot")
 action_name = "capture"
 
@@ -97,6 +117,6 @@ offset_right = -30.0
 offset_bottom = 80.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 22
-text = "TELA CHEIA 📺"
+text = "TELA CHEIA"
 script = ExtResource("6_shoot")
 action_name = "fullscreen"

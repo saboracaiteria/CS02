@@ -9,6 +9,11 @@ func _gui_input(event):
 	# NOVO SISTEMA: Respeita a ordem dos botões na tela! 🏗️🕹️🎯
 	if event is InputEventScreenTouch:
 		if event.pressed:
+			# BLINDAGEM FÍSICA 50/50: Se o toque for na metade ESQUERDA, ignore totalmente! 🧱🥊
+			var viewport_width = get_viewport_rect().size.x
+			if event.position.x < viewport_width / 2:
+				return
+				
 			if touch_index == -1:
 				touch_index = event.index
 				accept_event() # CONSUME o evento para não girar a mira loucamente 🕵️‍♂️🥊
