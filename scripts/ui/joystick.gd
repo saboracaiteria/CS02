@@ -2,10 +2,10 @@ extends Control
 
 @export var base_radius: float = 100.0
 @export var stick_radius: float = 40.0
-@export var action_left: String = "left"
-@export var action_right: String = "right"
-@export var action_up: String = "up"
-@export var action_down: String = "down"
+@export var action_left: String = "move_left"
+@export var action_right: String = "move_right"
+@export var action_up: String = "move_up"
+@export var action_down: String = "move_down"
 
 # Referências aos novos nós visuais 🥋
 @onready var base: Control = $Base

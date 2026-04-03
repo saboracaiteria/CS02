@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="1_tc"]
 [ext_resource type="PackedScene" path="res://scenes/ui/joystick.tscn" id="2_joy"]
 [ext_resource type="Script" path="res://scripts/ui/touch_look_area.gd" id="5_look"]
-[ext_resource type="Script" path="res://scripts/ui/touch_button.gd" id="6_btn"]
+[ext_resource type="Script" path="res://scripts/ui/touch_shoot_button.gd" id="6_shoot"]
 
 [node name="TouchControls" type="CanvasLayer"]
 layer = 125
@@ -46,7 +46,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 24
 text = "ATIRAR"
-script = ExtResource("6_btn")
+script = ExtResource("6_shoot")
 action_name = "shoot"
 
 [node name="JumpButton" type="Button" parent="."]
@@ -64,8 +64,8 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 22
 text = "PULAR"
-script = ExtResource("6_btn")
-action_name = "jump"
+script = ExtResource("6_shoot")
+action_name = "ui_accept"
 
 [node name="CrouchButton" type="Button" parent="."]
 modulate = Color(0.3, 0.3, 0.3, 0.6)

@@ -149,7 +149,9 @@ func add_player(peer_id: int) -> void:
 			add_child(hud)
 			if hud.has_node("LookArea"):
 				hud.get_node("LookArea").player_node = player
-			print("HUD Mobile instantaneamente criado no Spawn! 🏙️🎯")
+			if hud.has_node("ShootButton"):
+				hud.get_node("ShootButton").player_node = player
+			print("HUD Mobile com MIRA FREE FIRE criado no Spawn! 🏙️🎯")
 
 func remove_player(peer_id: int) -> void:
 	var player: Node = get_node_or_null(str(peer_id))
