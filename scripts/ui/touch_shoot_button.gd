@@ -4,6 +4,23 @@ extends Button
 @export var player_node: CharacterBody3D
 var touch_index: int = -1
 
+func _ready():
+	if action_name == "screenshot":
+		pressed.connect(_take_screenshot)
+
+func _take_screenshot():
+	# CAPTURA DE ELITE: Foto da tela agora! 📸✨
+	var img = get_viewport().get_texture().get_image()
+	var time = Time.get_datetime_dict_from_system()
+	var filename = "user://screenshot_%d%d%d_%d%d.png" % [time.year, time.month, time.day, time.hour, time.minute]
+	img.save_png(filename)
+	print("PRINT SALVO EM: ", filename)
+	
+	# Feedback Visual Rápido ⚡
+	var tween = create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 0.1).from(0.0)
+	tween.tween_property(self, "modulate:a", 0.82, 0.4)
+
 func _gui_input(event):
 	# NOVO SISTEMA: Respeita a ordem dos botões na tela! 🏗️🕹️🎯
 	if event is InputEventScreenTouch:
