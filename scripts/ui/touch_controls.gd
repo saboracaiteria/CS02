@@ -15,3 +15,13 @@ func _process(_delta):
 	if not Global.is_playing:
 		if visible:
 			visible = false
+	else:
+		# Se estiver jogando, o HUD PRECISA aparecer! ✨💎
+		if not visible:
+			visible = true
+
+func _on_fullscreen_pressed():
+	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
