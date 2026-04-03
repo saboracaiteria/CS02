@@ -9,14 +9,14 @@ func _gui_input(event):
 	# NOVO SISTEMA: Respeita a ordem dos botões na tela! 🏗️🕹️🎯
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			# BLINDAGEM FÍSICA 50/50: Se o toque for na metade ESQUERDA, ignore totalmente! 🧱🥊
+			# BLINDAGEM FÍSICA: Se o toque NASCER na metade esquerda, ignore totalmente para sempre! 🧱🥊
 			var viewport_width = get_viewport_rect().size.x
 			if event.position.x < viewport_width / 2:
 				return
 				
 			if touch_index == -1:
 				touch_index = event.index
-				accept_event() # CONSUME o evento para não girar a mira loucamente 🕵️‍♂️🥊
+				accept_event()
 		elif event.index == touch_index:
 			touch_index = -1
 			
@@ -24,8 +24,8 @@ func _gui_input(event):
 		if event.index == touch_index:
 			var mouse_motion = event.relative
 			
-			# AMORTECEDOR: Evita saltos de câmera 180º causado por lag 🏁🥊
-			if mouse_motion.length() > 300: 
+			# AMORTECEDOR DE ELITE: Previne saltos loucos de mira causado por frames perdidos 🏁🥊
+			if mouse_motion.length() > 200: 
 				return
 				
 			if player_node:
@@ -35,4 +35,4 @@ func _gui_input(event):
 					camera.rotate_x(-mouse_motion.y * Global.sensitivity)
 					camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 			
-			accept_event() # CONSUME o drag para ser suave
+			accept_event()

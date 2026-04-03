@@ -58,6 +58,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	axis_vector = Input.get_vector("look_left", "look_right", "look_up", "look_down")
 
 	if event is InputEventMouseMotion:
+		# PÁRA-RAIO: Se o sistema tentar girar a câmera do lado esquerdo, bloqueie! 🏹🎯
+		if event.position.x < get_viewport().size.x / 2:
+			return
+			
 		rotate_y(-event.relative.x * sensitivity)
 		camera.rotate_x(-event.relative.y * sensitivity)
 	camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
