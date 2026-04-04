@@ -30,6 +30,7 @@ body {
 	z-index: 9999;
 	padding: 5px;
 	display: none;
+	pointer-events: none;
 }
 
 #canvas {
@@ -223,6 +224,9 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 }());
 		</script>
+		<!-- Injeção do Console F12 Mobile (Eruda) 🕵️‍♂️🔓 -->
+		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+		<script>eruda.init();</script>
 	</body>
 </html>
 
