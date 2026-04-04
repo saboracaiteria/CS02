@@ -24,6 +24,22 @@ func _ready():
 		look_area.set_anchors_preset(Control.PRESET_FULL_RECT) # 100% da tela para proteção total! 🏗️🕹️🎯
 		look_area.mouse_filter = Control.MOUSE_FILTER_STOP # Agora engole tudo que os botões não pegarem! ✨🏁🥊 
 		move_child(look_area, 0) # Joga para o fundo! 🛡️⚡🥋 
+		
+	# MURALHA FÍSICA: Bloqueio total do lado esquerdo para evitar drift! 🚧🧱⚡
+	var left_shield = get_node_or_null("LeftShield")
+	if not left_shield:
+		left_shield = Control.new()
+		left_shield.name = "LeftShield"
+		add_child(left_shield)
+		move_child(left_shield, 1) # Por cima da mira, mas abaixo dos controles! 🛡️⚡🥊 
+	
+	left_shield.anchor_left = 0.0
+	left_shield.anchor_right = 0.45
+	left_shield.anchor_top = 0.0
+	left_shield.anchor_bottom = 1.0
+	left_shield.mouse_filter = Control.MOUSE_FILTER_STOP # ENGOLIDOR DE TOQUES FANTASMAS! ✨🏹🥋 
+	left_shield.set_anchors_preset(Control.PRESET_LEFT_WIDE)
+	left_shield.anchor_right = 0.45
 
 	
 	# Aplicando estilo redondo nos botões 🥋🏹
