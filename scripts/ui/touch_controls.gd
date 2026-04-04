@@ -58,7 +58,7 @@ func _ready():
 	if has_node("FullscreenButton"):
 		$FullscreenButton.pressed.connect(_on_fullscreen_pressed)
 	
-	print("HUD SUPREMO V1008 - MURALHA FÍSICA E BOTÕES REDONDOS")
+	print("HUD SUPREMO V1010 - THE ULTIMATE SHIELD 🧱🎯🥇")
 
 func _process(_delta):
 	# Trava de Segurança Final: Se não estiver jogando, o HUD MORRE! 🛑⚔️🛡️
