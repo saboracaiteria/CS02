@@ -59,7 +59,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# A CÂMERA NO MOBILE É 100% CONTROLADA PELO TOUCH_LOOK_AREA.GD! 🏛️🕹️🎯
 	# Desativando a rotação de mouse para evitar o drift fantasma no analógico. ✨💎
-	if event is InputEventMouseMotion and (DisplayServer.get_name() != "Android" and DisplayServer.get_name() != "iOS"):
+	# BLOQUEIO FÍSICO SUPREMO: Se for mobile, o lado esquerdo (analógico) JAMAIS gira a mira! 🏙️🎯🥇
+	if event is InputEventMouseMotion:
+		if Global.is_mobile and event.position.x < get_viewport().get_visible_rect().size.x * 0.45:
+			return
+			
+		# Se estiver em Mobile nativo, a rotação já é tratada pelo LookArea
+		if DisplayServer.get_name() in ["Android", "iOS"]:
+			return
+
 		rotate_y(-event.relative.x * sensitivity)
 		camera.rotate_x(-event.relative.y * sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
