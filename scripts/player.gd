@@ -35,7 +35,7 @@ func _ready() -> void:
 	# Marcador Visual Global V1020 (Para termos certeza que a versão atualizou) ✨💎🥊 
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1020 - SHIELD ACTIVE"
+		label.text = "V1030 - ERUDA + JOYSTICK FIX"
 		label.modulate = Color(1, 1, 1, 0.4)
 		label.position = Vector2(20, 20)
 		add_child(label)
