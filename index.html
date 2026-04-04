@@ -18,6 +18,20 @@ body {
 	touch-action: none;
 }
 
+#cache-warning {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: red;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	z-index: 9999;
+	padding: 5px;
+	display: none;
+}
+
 #canvas {
 	display: block;
 }
@@ -81,6 +95,7 @@ body {
 
 	</head>
 	<body>
+		<div id="cache-warning">⚠️ ATENÇÃO: VOCÊ ESTÁ RODANDO UMA VERSÃO ANTIGA (V999) - EXPORTE O PROJETO NOVAMENTE NO GODOT E FAÇA PUSH DO INDEX.PCK! ⚠️</div>
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
 		</canvas>
@@ -88,6 +103,20 @@ body {
 		<noscript>
 			Your browser does not support JavaScript.
 		</noscript>
+
+		<script>
+			// AUTO-DETECTOR DE CACHE FANTASMA 🕵️‍♂️🔓
+			const originalLog = console.log;
+			console.log = function() {
+				originalLog.apply(console, arguments);
+				const msg = Array.from(arguments).join(' ');
+				if (msg.includes('HUD SUPREMO V999')) {
+					document.getElementById('cache-warning').style.display = 'block';
+				} else if (msg.includes('V1010')) {
+					document.getElementById('cache-warning').style.display = 'none';
+				}
+			}
+		</script>
 
 		<div id="status">
 			<img id="status-splash" src="index.png" alt="">
@@ -97,7 +126,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"godot_v1010.zip":29286959,"index.wasm":43016933},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":44220608,"index.wasm":43016933},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -194,9 +223,6 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 }());
 		</script>
-		<!-- Injeção do Console F12 Mobile (Eruda) 🕵️‍♂️🔓 -->
-		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-		<script>eruda.init();</script>
 	</body>
 </html>
 
