@@ -32,8 +32,13 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
-	# O HUD agora é gerenciado pelo world.tscn para estabilidade total
-	# Não precisamos mais destas referências locais que causavam erros
+	# Marcador Visual Global V1020 (Para termos certeza que a versão atualizou) ✨💎🥊 
+	if is_multiplayer_authority():
+		var label = Label.new()
+		label.text = "V1020 - SHIELD ACTIVE"
+		label.modulate = Color(1, 1, 1, 0.4)
+		label.position = Vector2(20, 20)
+		add_child(label)
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
@@ -59,15 +64,17 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# A CÂMERA NO MOBILE É 100% CONTROLADA PELO TOUCH_LOOK_AREA.GD! 🏛️🕹️🎯
 	# Desativando a rotação de mouse para evitar o drift fantasma no analógico. ✨💎
-	# BLOQUEIO FÍSICO V1010: Se for mobile touchscreen, o lado esquerdo (analógico) JAMAIS gira a mira! 🏙️🎯🥇
+	# BLOQUEIO FÍSICO V1020 SUPREMO: Se for mobile touchscreen, a metade esquerda JAMAIS gira a mira! 🏙️🎯🥇
 	if event is InputEventMouseMotion:
-		# No Web, usamos a posição absoluta do mouse para evitar o drift de captura do browser! ✨💎🥊 
+		# Bloqueio de 50% da tela para proteção absoluta! ✨💎🥊 
+		var viewport_rect = get_viewport().get_visible_rect()
 		var mouse_pos = get_viewport().get_mouse_position()
-		if Global.is_mobile and mouse_pos.x < get_viewport().get_visible_rect().size.x * 0.45:
+		
+		if Global.is_mobile and mouse_pos.x < viewport_rect.size.x * 0.5:
 			return
 			
-		# Se estiver em Mobile nativo, a rotação já é tratada pelo LookArea
-		if DisplayServer.get_name() in ["Android", "iOS"]:
+		# Detecção V1020: Mobile nativo OU Toucsscreen em qualquer plataforma! 🥊🥇
+		if OS.has_feature("mobile") or DisplayServer.is_touchscreen_available():
 			return
 
 		rotate_y(-event.relative.x * sensitivity)

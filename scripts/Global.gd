@@ -8,8 +8,8 @@ var is_mobile : bool = true
 var is_playing : bool = false
 
 func _ready():
-	# Detecção Inteligente: Mobile nativo OU Web com tela de toque 🥊🥇
-	is_mobile = OS.has_feature("mobile") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
+	# Detecção V1020: Mobile nativo OU Toucsscreen em qualquer plataforma! 🥊🥇
+	is_mobile = OS.has_feature("mobile") or DisplayServer.is_touchscreen_available()
 
 	
 	# Caso o detector falhe, forçamos para evitar que o usuário fique sem HUD 🏁
