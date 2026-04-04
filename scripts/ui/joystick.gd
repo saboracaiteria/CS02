@@ -27,12 +27,15 @@ func _input(event):
 				joystick_active = true
 				touch_index = event.index
 				_handle_drag(event.position)
+				get_viewport().set_input_as_handled() # BLOQUEIO FÍSICO CONTRA DRIFT 🧱🥊🎯
 		elif event.index == touch_index:
 			_reset_joystick()
+			get_viewport().set_input_as_handled()
 			
 	if event is InputEventScreenDrag:
 		if event.index == touch_index:
 			_handle_drag(event.position)
+			get_viewport().set_input_as_handled() # BLOQUEIO FÍSICO CONTRA DRIFT 🧱🥊🎯
 
 func _handle_drag(touch_pos: Vector2):
 	var center = global_position

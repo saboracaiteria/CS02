@@ -14,15 +14,17 @@ func _ready():
 	round_style.corner_radius_bottom_right = 100
 	round_style.corner_radius_bottom_left = 100
 	
-	# MIRA BLINDADA: Painel de mira é EXATAMENTE a metade direita! 🏙️🎯🥇
+	# MIRA BLINDADA: Painel de mira é 100% da tela para BLINDAR contra toques fantasmas! 🏙️🎯🥇
 	if has_node("LookArea"):
 		var look_area = get_node("LookArea")
-		look_area.anchor_left = 0.5
+		look_area.anchor_left = 0.0
 		look_area.anchor_right = 1.0
 		look_area.anchor_top = 0.0
 		look_area.anchor_bottom = 1.0
-		look_area.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
-		look_area.anchor_left = 0.5
+		look_area.set_anchors_preset(Control.PRESET_FULL_RECT) # 100% da tela para proteção total! 🏗️🕹️🎯
+		look_area.mouse_filter = Control.MOUSE_FILTER_STOP # Agora engole tudo que os botões não pegarem! ✨🏁🥊 
+		move_child(look_area, 0) # Joga para o fundo! 🛡️⚡🥋 
+
 	
 	# Aplicando estilo redondo nos botões 🥋🏹
 	for child in get_children():

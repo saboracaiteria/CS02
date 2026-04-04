@@ -9,9 +9,11 @@ func _gui_input(event):
 	# NOVO SISTEMA: Respeita a ordem dos botões na tela! 🏗️🕹️🎯
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			# BLINDAGEM FÍSICA: Se o toque NASCER na metade esquerda, ignore totalmente para sempre! 🧱🥊
+			# BLINDAGEM FÍSICA: Se o toque NASCER no lado esquerdo, bloqueie totalmente! 🧱🥊
+			# (Isso protege o analógico de girar a mira acidentalmente) ✨🎯🏁
 			var viewport_width = get_viewport_rect().size.x
-			if event.position.x < viewport_width / 2:
+			if event.position.x < viewport_width * 0.45: # Ponto de corte para isolar o analógico 🥊
+				accept_event() # Engole o evento para proteger o player contra drfit
 				return
 				
 			if touch_index == -1:
@@ -19,6 +21,7 @@ func _gui_input(event):
 				accept_event()
 		elif event.index == touch_index:
 			touch_index = -1
+			accept_event() # Engole o evento final para limpar! ✨🥋🛡️
 			
 	if event is InputEventScreenDrag:
 		if event.index == touch_index:
