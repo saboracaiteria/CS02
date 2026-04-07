@@ -256,29 +256,23 @@ func _update_hud(_delta: float) -> void:
 	
 	hud.visible = Global.is_mobile # SÓ APARECE NO MOBILE! V1440 🏙️🎯🥇
 	
-	# State Label
+	# LIMPEZA MOBILE V1460 🏙️🎯🥇: Esconde nomes e stats para tela limpa
 	var state_label = hud.find_child("StateLabel", true)
-	if state_label:
-		var state_text = "WALKING"
-		if is_reloading: state_text = "RELOADING"
-		elif is_ads: state_text = "AIMING"
-		elif is_sprinting: state_text = "SPRINTING"
-		elif is_crouching: state_text = "CROUCHING"
-		elif not is_on_floor(): state_text = "IN AIR"
-		state_label.text = "STATE: " + state_text
-		
-	# Speed Label
+	if state_label: state_label.visible = false
+	
 	var speed_label = hud.find_child("SpeedLabel", true)
-	if speed_label:
-		speed_label.text = "SPEED: %.1f m/s" % velocity.length()
+	if speed_label: speed_label.visible = false
+	
+	var weapon_label = hud.find_child("WeaponLabel", true)
+	if weapon_label: weapon_label.visible = false
+	
+	var hp_label = hud.find_child("HealthLabel", true)
+	if hp_label: hp_label.visible = false
 		
-	# Health
+	# Health Bar (Mantemos a barra pois é essencial)
 	var hp_bar = hud.find_child("HealthBar", true)
 	if hp_bar:
 		hp_bar.value = lerp(hp_bar.value, float(health) * 50.0, 10.0 * _delta) # health 2 = 100%
-	var hp_label = hud.find_child("HealthLabel", true)
-	if hp_label:
-		hp_label.text = "HEALTH: %d" % (health * 50)
 		
 	# Ammo
 	var ammo_label = hud.find_child("AmmoLabel", true)
@@ -287,11 +281,6 @@ func _update_hud(_delta: float) -> void:
 	var ammo_total_label = hud.find_child("AmmoTotal", true)
 	if ammo_total_label:
 		ammo_total_label.text = str(total_ammo)
-		
-	# Weapon Name V1460 ✨
-	var weapon_label = hud.find_child("WeaponLabel", true)
-	if weapon_label and weapon:
-		weapon_label.text = weapon.name.to_upper()
 
 func _input(event):
 	if not is_multiplayer_authority(): return

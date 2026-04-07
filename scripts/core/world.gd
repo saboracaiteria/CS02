@@ -98,9 +98,8 @@ func _apply_premium_style():
 			btn.add_theme_stylebox_override("focus", btn_style)
 
 func _on_host_button_pressed() -> void:
-	# AUTO FULLSCREEN V1440 🏙️🎯🥇 (Safeguarded for WebGL)
-	if not OS.has_feature("web"):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	# AUTO FULLSCREEN V1460 ✨💻📱
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
 	main_menu.hide()
 	$Menu/DollyCamera.hide()
@@ -127,9 +126,8 @@ func _on_host_button_pressed() -> void:
 		upnp_setup()
 
 func _on_join_button_pressed() -> void:
-	# AUTO FULLSCREEN V1440 🏙️🎯🥇 (Safeguarded for WebGL)
-	if not OS.has_feature("web"):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	# AUTO FULLSCREEN V1460 ✨💻📱
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 	main_menu.hide()
 	$Menu/DollyCamera.hide()
