@@ -6,14 +6,14 @@
 /android/
 
 # Build artifacts (GitHub 100MB limit blockers)
-index.html
-index.js
 
-index.wasm
+
+
+
 index.png
 index.zip
 
-*.wasm
+
 *.zip
 
 # User specific ignores
