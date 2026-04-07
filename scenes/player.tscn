@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=3 uid="uid://b2qhxdrnviyqf"]
 
-[ext_resource type="PackedScene" uid="uid://ak47weapon" path="res://assets/weapons/ak.tscn" id="ak_scene"]
+[ext_resource type="PackedScene" uid="uid://animatedpistol" path="res://scenes/animated_pistol.tscn" id="ak_scene"]
 [ext_resource type="Script" path="res://scripts/core/player.gd" id="1_8tdgl"]
 [ext_resource type="PackedScene" uid="uid://c5c1lnw5ajt3c" path="res://scenes/pistol.tscn" id="2_0s6en"]
 [ext_resource type="Texture2D" uid="uid://ctosmto80mu2s" path="res://textures/kenney_particle_pack/star_05.png" id="3_ep0ec"]
@@ -206,7 +206,7 @@ unique_name_in_owner = true
 [node name="pistol" parent="Camera3D/WeaponRoot" instance=ExtResource("2_0s6en")]
 visible = false
 
-[node name="AK" parent="Camera3D/WeaponRoot" instance=ExtResource("ak_scene")]
+[node name="AnimatedPistol" parent="Camera3D/WeaponRoot" instance=ExtResource("ak_scene")]
 visible = false
 
 [node name="DualSMGs" parent="Camera3D/WeaponRoot" instance=ExtResource("7_dual")]

@@ -45,7 +45,7 @@ var sprint_fov : float = 85.0
 var fov_speed : float = 12.0
 
 # INVENTÁRIO V1460 🏙️🎯🥇
-var weapons_list : Array = ["pistol", "AK", "DualSMGs"]
+var weapons_list : Array = ["pistol", "AnimatedPistol", "DualSMGs"]
 var current_weapon_index : int = 0
 
 var BASE_SPEED : float = 5.5
@@ -71,10 +71,10 @@ func _ready() -> void:
 		dual_node.visible = true
 		print("--- DUAL SMGs ATIVADAS COM SUCESSO! ---")
 	else:
-		# Fallback para AK se não houver Dual
-		var ak_node = find_child("AK", true)
-		if ak_node:
-			ak_node.visible = true
+		# Fallback para AnimatedPistol se não houver Dual
+		var anim_pistol = find_child("AnimatedPistol", true)
+		if anim_pistol:
+			anim_pistol.visible = true
 
 	_update_weapon_nodes()
 	
