@@ -1,0 +1,32 @@
+# Godot 4+ specific ignores
+.godot/
+.import/
+
+# Android build ignores
+/android/
+
+# Build artifacts (GitHub 100MB limit blockers)
+index.html
+index.js
+index.pck
+index.wasm
+index.png
+index.zip
+*.pck
+*.wasm
+*.zip
+
+# User specific ignores
+especialista/
+imports/external/
+/exports/
+/builds/
+export_presets.cfg
+*.tmp
+
+# Multiplayer / Temp logs
+logs/
+*.log
+
+# extra
+/.vscode/

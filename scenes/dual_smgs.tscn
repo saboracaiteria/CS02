@@ -1,0 +1,67 @@
+[gd_scene load_steps=12 format=3 uid="uid://dual_smgs_scene"]
+
+[ext_resource type="Script" uid="uid://weapon_base_script" path="res://scripts/core/weapon_base.gd" id="1_base"]
+[ext_resource type="PackedScene" uid="uid://dual_smgs_glb" path="res://models/dual_smgs/dual_smgs.glb" id="2_glb"]
+[ext_resource type="AudioStream" uid="uid://smg_shot" path="res://audio/645317__darkshroom__m9_noisegate-1780.ogg" id="3_audio"]
+[ext_resource type="Texture2D" uid="uid://smg_star" path="res://textures/kenney_particle_pack/star_05.png" id="4_star"]
+
+[sub_resource type="Gradient" id="Gradient_muzzle"]
+offsets = PackedFloat32Array(0, 0.1, 1)
+colors = PackedColorArray(0, 0.8, 1, 1, 0, 0.4, 1, 1, 0, 0.2, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_muzzle"]
+gradient = SubResource("Gradient_muzzle")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_muzzle"]
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.2
+color_ramp = SubResource("GradientTexture1D_muzzle")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_muzzle"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_star")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_muzzle"]
+material = SubResource("StandardMaterial3D_muzzle")
+size = Vector2(0.4, 0.4)
+orientation = 2
+
+[node name="DualSMGs" type="Node3D"]
+script = ExtResource("1_base")
+view_model_offset = Vector3(0, -0.4, -0.45)
+view_model_scale = Vector3(0.015, 0.015, 0.015)
+view_model_rotation = Vector3(0, 180, 0)
+fire_rate = 0.08
+damage = 1
+
+[node name="Model" parent="." instance=ExtResource("2_glb")]
+
+[node name="MuzzleFlash_R" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.1, -0.7)
+emitting = false
+amount = 2
+lifetime = 0.05
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_muzzle")
+draw_pass_1 = SubResource("PlaneMesh_muzzle")
+
+[node name="MuzzleFlash_L" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.1, -0.7)
+emitting = false
+amount = 2
+lifetime = 0.05
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_muzzle")
+draw_pass_1 = SubResource("PlaneMesh_muzzle")
+
+[node name="GunshotSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_audio")
+pitch_scale = 1.5
+bus = &"SFX"

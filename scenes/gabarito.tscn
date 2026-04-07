@@ -1,0 +1,62 @@
+[gd_scene load_steps=11 format=3 uid="uid://b8v5lq5x7v8m8"]
+
+[ext_resource type="Script" path="res://scripts/core/gabarito_controller.gd" id="1_controller"]
+[ext_resource type="PackedScene" uid="uid://ak47weapon" path="res://assets/weapons/ak.tscn" id="1_ak"]
+[ext_resource type="PackedScene" uid="uid://cutckskghm3gy" path="res://imports/pistol.glb" id="2_pistol"]
+[ext_resource type="PackedScene" path="res://scenes/dual_smgs.tscn" id="3_smg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_arms"]
+transparency = 1
+albedo_color = Color(0.12, 0.56, 1, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arms"]
+material = SubResource("StandardMaterial3D_arms")
+size = Vector3(0.4, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.2)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = SubResource("StandardMaterial3D_body")
+
+[node name="Gabarito" type="Node3D"]
+script = ExtResource("1_controller")
+
+[node name="CameraReference" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+current = true
+
+[node name="WeaponRoot" type="Node3D" parent="CameraReference"]
+
+[node name="AK_Gabarito" parent="CameraReference/WeaponRoot" instance=ExtResource("1_ak")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0.35, -0.4, -0.6)
+visible = false
+
+[node name="Pistol_Gabarito" parent="CameraReference/WeaponRoot" instance=ExtResource("2_pistol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.25, -0.5)
+visible = false
+
+[node name="SMG_Gabarito" parent="CameraReference/WeaponRoot" instance=ExtResource("3_smg")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, -0.4, -0.5)
+visible = true
+
+[node name="Reference_Arms" type="Node3D" parent="CameraReference"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.5)
+
+[node name="LeftArm_Helper" type="MeshInstance3D" parent="CameraReference/Reference_Arms"]
+transform = Transform3D(0.965926, 0, -0.258819, 0.12941, 0.866025, 0.482963, 0.224144, -0.5, 0.836516, -0.4, 0, 0.2)
+mesh = SubResource("BoxMesh_arms")
+
+[node name="RightArm_Helper" type="MeshInstance3D" parent="CameraReference/Reference_Arms"]
+transform = Transform3D(0.965926, 0, 0.258819, -0.12941, 0.866025, 0.482963, -0.224144, -0.5, 0.836516, 0.4, 0, 0.2)
+mesh = SubResource("BoxMesh_arms")
+
+[node name="PlayerReference" type="Node3D" parent="."]
+
+[node name="BodyMesh_Helper" type="MeshInstance3D" parent="PlayerReference"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="Ground" type="CSGBox3D" parent="."]
+size = Vector3(10, 0.1, 10)

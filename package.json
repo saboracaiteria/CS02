@@ -1,0 +1,12 @@
+{
+  "name": "cs02-godot-web",
+  "version": "1.0.0",
+  "description": "Servidor local para FPS Godot Web",
+  "main": "local_server.js",
+  "scripts": {
+    "dev": "node local_server.js",
+    "start": "node local_server.js"
+  },
+  "author": "Antigravity",
+  "license": "MIT"
+}

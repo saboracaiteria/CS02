@@ -1,0 +1,398 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="1_tc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/joystick.tscn" id="2_joy"]
+[ext_resource type="Script" path="res://scripts/ui/touch_look_area.gd" id="5_look"]
+[ext_resource type="Script" path="res://scripts/ui/touch_shoot_button.gd" id="6_shoot"]
+[ext_resource type="Script" path="res://scripts/ui/menu/options/save_hud.gd" id="7_savehud"]
+[ext_resource type="Script" path="res://scripts/ui/touch_button.gd" id="8_touch"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_round"]
+bg_color = Color(0.2, 0.2, 0.2, 0.3)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+
+[node name="TouchControls" type="CanvasLayer"]
+layer = 125
+visible = false
+script = ExtResource("1_tc")
+
+[node name="PremiumOverlay" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Vignette" type="ColorRect" parent="PremiumOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.15)
+
+[node name="LookArea" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("5_look")
+
+[node name="MoveJoystick" parent="." instance=ExtResource("2_joy")]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 220.0
+offset_top = -220.0
+offset_right = 220.0
+offset_bottom = -220.0
+grow_vertical = 0
+scale = Vector2(1.5, 1.5)
+
+[node name="ShootButton" type="Button" parent="."]
+modulate = Color(1, 0.1, 0.1, 0.85)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = -320.0
+offset_right = -200.0
+offset_bottom = -140.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+text = "ATIRAR"
+script = ExtResource("6_shoot")
+action_name = "shoot"
+auto_ads = true
+
+[node name="HipfireButton" type="Button" parent="."]
+modulate = Color(1, 0.6, 0.2, 0.85)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -550.0
+offset_right = -80.0
+offset_bottom = -410.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+text = "TIRO"
+script = ExtResource("6_shoot")
+action_name = "shoot"
+
+[node name="SwitchButton" type="Button" parent="."]
+modulate = Color(0.2, 1, 0.6, 0.85)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = -550.0
+offset_right = -240.0
+offset_bottom = -410.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+text = "ARMA"
+script = ExtResource("6_shoot")
+action_name = "switch_weapon"
+
+[node name="JumpButton" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0.8)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -380.0
+offset_right = -40.0
+offset_bottom = -240.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+text = "PULAR"
+script = ExtResource("6_shoot")
+action_name = "jump"
+
+[node name="AdsButton" type="Button" parent="."]
+modulate = Color(0, 0.8, 1, 0.85)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -200.0
+offset_right = -40.0
+offset_bottom = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+text = "MIRA"
+script = ExtResource("6_shoot")
+action_name = "ads"
+
+[node name="ReloadButton" type="Button" parent="."]
+modulate = Color(1, 0.8, 0, 0.85)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -500.0
+offset_top = -480.0
+offset_right = -380.0
+offset_bottom = -360.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_round")
+text = "RECARGA"
+script = ExtResource("6_shoot")
+action_name = "reload"
+
+[node name="StatusPanel" type="Panel" parent="."]
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 380.0
+offset_bottom = 260.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_round")
+
+[node name="VBox" type="VBoxContainer" parent="StatusPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="StateLabel" type="Label" parent="StatusPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "STATE: WALKING"
+
+[node name="SpeedLabel" type="Label" parent="StatusPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/font_size = 18
+text = "SPEED: 0.0 m/s"
+
+[node name="HealthLabel" type="Label" parent="StatusPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 20
+text = "HEALTH: 100"
+
+[node name="HealthBar" type="ProgressBar" parent="StatusPanel/VBox"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_round")
+value = 100.0
+show_percentage = false
+
+[node name="AmmoPanel" type="Panel" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -100.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_round")
+
+[node name="AmmoContainer" type="HBoxContainer" parent="AmmoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_right = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="AmmoLabel" type="Label" parent="AmmoPanel/AmmoContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 44
+text = "30"
+
+[node name="AmmoSlash" type="Label" parent="AmmoPanel/AmmoContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.4)
+theme_override_font_sizes/font_size = 22
+text = " / "
+
+[node name="AmmoTotal" type="Label" parent="AmmoPanel/AmmoContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.7)
+theme_override_font_sizes/font_size = 26
+text = "90"
+
+[node name="WeaponLabel" type="Label" parent="AmmoPanel/AmmoContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.4, 0.7)
+theme_override_font_sizes/font_size = 22
+text = "AK-47"
+
+[node name="FullscreenButton" type="Button" parent="."]
+modulate = Color(0.2, 0.5, 1, 0.8)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 50.0
+offset_right = -30.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 22
+text = "TELA CHEIA"
+script = ExtResource("8_touch")
+action_name = "fullscreen"
+
+[node name="PauseButton" type="Button" parent="."]
+modulate = Color(0.8, 0.8, 0.8, 0.85)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 50.0
+offset_right = -240.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 22
+text = "PAUSAR"
+script = ExtResource("6_shoot")
+action_name = "pause"
+
+[node name="SaveHUDButton" type="Button" parent="."]
+modulate = Color(0, 1, 0.4, 1)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 40.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 26
+text = "SALVAR HUD"
+script = ExtResource("7_savehud")
+
+[node name="Crosshair" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Dot" type="ColorRect" parent="Crosshair"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.8)
+
+[node name="LineL" type="ColorRect" parent="Crosshair"]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -1.0
+offset_right = -5.0
+offset_bottom = 1.0
+mouse_filter = 2
+
+[node name="LineR" type="ColorRect" parent="Crosshair"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -1.0
+offset_right = 20.0
+offset_bottom = 1.0
+mouse_filter = 2
+
+[node name="LineT" type="ColorRect" parent="Crosshair"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -20.0
+offset_right = 1.0
+offset_bottom = -5.0
+mouse_filter = 2
+
+[node name="LineB" type="ColorRect" parent="Crosshair"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 5.0
+offset_right = 1.0
+offset_bottom = 20.0
+mouse_filter = 2
+
+[node name="VersionLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 0, 0.5)
+theme_override_font_sizes/font_size = 14
+text = "V1460 - SELECTOR ARMS"
+horizontal_alignment = 2
+
