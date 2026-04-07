@@ -8,11 +8,11 @@
 # Build artifacts (GitHub 100MB limit blockers)
 index.html
 index.js
-index.pck
+
 index.wasm
 index.png
 index.zip
-*.pck
+
 *.wasm
 *.zip
 
