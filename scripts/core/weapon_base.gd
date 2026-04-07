@@ -1,10 +1,14 @@
+# GABARITO SYSTEM V1460 🏙️🎯🥇
+# Use este script em TODAS as novas armas para manter a escala e posição corretas.
+# DICA: Para evitar que a arma atravesse a parede, mantenha o 'view_model_offset.z' próximo de -0.5.
+# NOTA: Certifique-se de que a Camera3D do jogador tenha o 'Near' definido como 0.01 para evitar clipping.
 extends Node3D
 class_name WeaponBase
 
-@export_category("Gabarito Info")
-@export var view_model_offset: Vector3 = Vector3(0.5, -0.4, -0.6)
+@export_category("Gabarito (Transform)")
+@export var view_model_offset: Vector3 = Vector3(0.5, -0.4, -0.6) # Offset lateral/altura/profundidade
 @export var view_model_rotation: Vector3 = Vector3(0, 0, 0)
-@export var view_model_scale: Vector3 = Vector3(1.0, 1.0, 1.0)
+@export var view_model_scale: Vector3 = Vector3(1.0, 1.0, 1.0) # ESCALA REAL: AK (1.2), Dual (0.02)
 @export var ads_offset: Vector3 = Vector3(0, -0.2, -0.4)
 
 @export_category("Weapon Stats")
@@ -19,7 +23,7 @@ var animation_player: AnimationPlayer
 
 func _ready():
 	animation_player = find_child("AnimationPlayer", true)
-	# Apply gabarito transform
+	# Aplica as transformações do Gabarito automaticamente ✨
 	transform.origin = view_model_offset
 	rotation_degrees = view_model_rotation
 	scale = view_model_scale
