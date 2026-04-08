@@ -7,12 +7,11 @@
 radius = 0.4
 height = 1.8
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
-radius = 0.4
-height = 1.8
+[sub_resource type="BoxMesh" id="BoxMesh_1"]
+size = Vector3(0.8, 1.8, 0.8)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
-albedo_color = Color(1, 0, 0, 1)
+albedo_color = Color(0, 0.4, 1, 1)
 
 [sub_resource type="Animation" id="Animation_1"]
 resource_name = "idle"
@@ -64,7 +63,7 @@ shape = SubResource("CapsuleShape3D_1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_1")
+mesh = SubResource("BoxMesh_1")
 material_override = SubResource("StandardMaterial3D_1")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]

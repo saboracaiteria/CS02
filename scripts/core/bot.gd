@@ -34,11 +34,11 @@ var can_see_enemy: bool = false
 func _physics_process(delta):
 	if is_dead: return
 	
-	# GRAVIDADE PERSISTENTE (NUNCA ZERA!) 🏙️🚀🎯
+	# GRAVIDADE SUPER FORTE (IMÃ DE CHÃO!) 🏙️🚀🎯
 	if not is_on_floor():
-		velocity.y -= gravity * delta
+		velocity.y -= gravity * 5.0 * delta # 5x mais forte
 	else:
-		velocity.y = 0
+		velocity.y = -1.0 # Empurra pro chão
 	
 	_check_for_enemies()
 	

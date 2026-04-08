@@ -82,10 +82,14 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1690 - FINAL BOT AI & RECOIL FIX! 🔫🤖🏙️🚩🥇"
+		label.text = "V1695 - BLUE BOX BOTS & FORCE RELOAD! 🔵🏙️🚀🎯"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
-		add_child(label)
+		var label2 = Label.new()
+		label2.text = "🔥 SE FOR CAPSULA VERMELHA, DÊ CTRL+F5 NO PC OU RECARREGUE O BROWSER! 🔥"
+		label2.modulate = Color(1, 0, 0, 1)
+		label2.position = Vector2(20, 50)
+		add_child(label2)
 		
 		# DEBUG V1260 🛠️🥋🛡️
 		var d_label = Label.new()
