@@ -1,4 +1,6 @@
 extends Button
 
 func _pressed() -> void:
-	get_tree().quit()
+	if multiplayer.multiplayer_peer:
+		multiplayer.multiplayer_peer.close()
+	get_tree().reload_current_scene()

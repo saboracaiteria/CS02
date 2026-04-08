@@ -193,10 +193,12 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.5)
 
 [node name="LeftArm_Helper" type="MeshInstance3D" parent="Camera3D/Skin_Arms"]
+visible = false
 transform = Transform3D(0.965926, 0, -0.258819, 0.12941, 0.866025, 0.482963, 0.224144, -0.5, 0.836516, -0.4, 0, 0.2)
 mesh = SubResource("BoxMesh_arms")
 
 [node name="RightArm_Helper" type="MeshInstance3D" parent="Camera3D/Skin_Arms"]
+visible = false
 transform = Transform3D(0.965926, 0, 0.258819, -0.12941, 0.866025, 0.482963, -0.224144, -0.5, 0.836516, 0.4, 0, 0.2)
 mesh = SubResource("BoxMesh_arms")
 

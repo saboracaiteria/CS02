@@ -45,7 +45,7 @@ var sprint_fov : float = 85.0
 var fov_speed : float = 12.0
 
 # INVENTÁRIO V1460 🏙️🎯🥇
-var weapons_list : Array = ["pistol", "AnimatedPistol", "DualSMGs"]
+var weapons_list : Array = ["AnimatedPistol", "DualSMGs"]
 var current_weapon_index : int = 0
 
 var BASE_SPEED : float = 5.5
@@ -188,8 +188,11 @@ func _auto_normalize_model(model: Node3D) -> void:
 	
 	var max_size = get_max_dim(model)
 	if max_size > 0.05:
-		# Tamanho perfeito padrão de uma arma (80 centímetros):
+		# Tamanho perfeito padrão de uma arma longa (80 centímetros):
 		var target_length = 0.8
+		if model.name.to_lower().contains("pistol") or model.name.to_lower().contains("handgun"):
+			target_length = 0.45
+			
 		var auto_scale = target_length / max_size
 		
 		# Aplica a proporção (somente se a arma atual estiver na escala padrão crua 1.0)
