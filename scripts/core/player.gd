@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1630 - ADS CORE FIX & ANIMATION RESET! 🎯🎭🏙️🥇"
+		label.text = "V1640 - MEGA SCALE & ADS PRECISION! 🎯📏🏙️🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -100,6 +100,10 @@ func _ready() -> void:
 			if hud:
 				hud.visible = false
 				hud.queue_free() # Remove totalmente no PC
+
+	# CROSSHAIR/RAYCAST FIX V1630 🏙️🎯🥇: Ignora a própria arma!
+	raycast.add_exception(self)
+	raycast.add_exception(%WeaponRoot)
 
 	# SINCRONIZA COM O SISTEMA ATIVO V1200 🚀
 	default_fov = Global.default_fov
@@ -274,15 +278,26 @@ func _process(_delta: float) -> void:
 	camera.fov = lerp(camera.fov, fov_target, fov_speed * _delta)
 
 	# ANIMAÇÃO 🕺
-	if anim_player.current_animation != "shoot" and not is_reloading:
-		var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		if input_dir.length() < 0.15: input_dir = Vector2.ZERO
+	if not is_reloading:
+		# Verifica se a arma tem seu próprio player e se ele está ocupado com algo importante V1630 🎭
+		var weapon_anim = weapon.find_child("AnimationPlayer", true) if weapon else null
+		var is_weapon_busy = false
+		if weapon_anim and weapon_anim.is_playing():
+			var busy_anims = ["fire", "shoot", "Shoot", "reload", "Reload", "inspect", "Inspect"]
+			if weapon_anim.current_animation in busy_anims:
+				is_weapon_busy = true
 		
-		if input_dir != Vector2.ZERO and is_on_floor():
-			var anim_to_play = "move"
-			anim_player.play(anim_to_play)
+		if not is_weapon_busy:
+			var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+			if input_dir.length() < 0.15: input_dir = Vector2.ZERO
+			
+			if input_dir != Vector2.ZERO and is_on_floor():
+				anim_player.play("move")
+			else:
+				anim_player.play("idle")
 		else:
-			anim_player.play("idle")
+			# Se a arma está ocupada, garantimos que o player base não force um estado conflitante
+			pass
 
 	# UPDATE PREMIUM HUD V1440 ✨💎
 	_update_hud(_delta)
@@ -517,13 +532,17 @@ func play_shoot_effects() -> void:
 		var weapon_anim = weapon.find_child("AnimationPlayer", true)
 		if weapon_anim:
 			weapon_anim.stop(true) # RESET TOTAL DA ANIMAÇÃO V1630 🎭
+			
 			# Tenta tocar 'fire', 'shoot' ou 'Shoot' (Nomes comuns em packs) 🛡️
-			if weapon_anim.has_animation("fire"):
-				weapon_anim.play("fire")
-			elif weapon_anim.has_animation("shoot"):
-				weapon_anim.play("shoot")
-			elif weapon_anim.has_animation("Shoot"):
-				weapon_anim.play("Shoot")
+			var shot_anim = ""
+			if weapon_anim.has_animation("fire"): shot_anim = "fire"
+			elif weapon_anim.has_animation("shoot"): shot_anim = "shoot"
+			elif weapon_anim.has_animation("Shoot"): shot_anim = "Shoot"
+			
+			if shot_anim != "":
+				weapon_anim.play(shot_anim)
+				# Garante que a animação comece do zero e tenha prioridade
+				weapon_anim.seek(0.0) 
 		else:
 			anim_player.stop(true)
 			anim_player.play("shoot")
