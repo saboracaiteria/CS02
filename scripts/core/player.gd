@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1675 - DEBUG CONSOLE & HOST FIX! 📟🤖🚩🥇"
+		label.text = "V1680 - BOTS ARMED & DANGEROUS! 🔫🤖🏙️🚩🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)

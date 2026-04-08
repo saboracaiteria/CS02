@@ -1,6 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://bot_scene"]
 
 [ext_resource type="Script" path="res://scripts/core/bot.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://c5c1lnw5ajt3c" path="res://scenes/pistol.tscn" id="2_pistol"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
@@ -81,6 +82,9 @@ libraries = {
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
 [node name="WeaponRoot" type="Node3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.3, -0.4)
+
+[node name="pistol" parent="Camera3D/WeaponRoot" instance=ExtResource("2_pistol")]
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 volume_db = -10.0

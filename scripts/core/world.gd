@@ -214,10 +214,19 @@ func upnp_setup() -> void:
 		print("Success! Join Address: %s" % upnp.query_external_address())
 
 func spawn_bots(amount: int):
+	Global.log_error("SISTEMA: Spawnando %d Bots Inimigos..." % amount)
 	for i in range(amount):
 		var bot = Bot.instantiate()
 		bot.name = "Bot_" + str(i)
 		bot.team = "Vermelho"
 		add_child(bot)
-		# Posicionamento inicial dos bots (Espalhado)
-		bot.global_position = Vector3(randf_range(-20, 20), 2, randf_range(-20, 20))
+		# Spawns estratégicos para o time vermelho (Lado oposto do mapa)
+		var bot_spawns = [
+			Vector3(15, 2, 10),
+			Vector3(15, 2, -10),
+			Vector3(20, 2, 0),
+			Vector3(10, 2, 15),
+			Vector3(10, 2, -15)
+		]
+		bot.global_position = bot_spawns[i % bot_spawns.size()]
+		Global.log_error("IA: Bot %d entrou no campo de batalha." % i)

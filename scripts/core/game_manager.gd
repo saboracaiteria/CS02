@@ -4,7 +4,7 @@ signal game_over(winner_team)
 
 var team_blue_score: float = 0.0
 var team_red_score: float = 0.0
-var match_time: float = 300.0 # 5 minutos
+var match_time: float = 180.0 # 3 minutos
 var is_active: bool = false
 
 var zone_ownership = {"A": "Nenhum", "B": "Nenhum", "C": "Nenhum"}
@@ -16,7 +16,7 @@ func _ready():
 func start_round():
 	team_blue_score = 0
 	team_red_score = 0
-	match_time = 300.0
+	match_time = 180.0
 	is_active = true
 
 func _process(delta):

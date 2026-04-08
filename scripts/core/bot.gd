@@ -15,18 +15,24 @@ var fire_rate: float = 0.4
 @onready var weapon = $Camera3D/WeaponRoot
 @onready var gunshot_sound = $AudioStreamPlayer3D
 
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
 func _ready():
 	add_to_group("bot")
 	add_to_group("enemy" if team == "Vermelho" else "ally")
 	nav_agent.path_desired_distance = 0.5
 	nav_agent.target_desired_distance = 0.5
 	
-	# Procura objetivo inicial após o mapa carregar
+	# Aguarda o mundo carregar
 	await get_tree().create_timer(1.0).timeout
 	_find_next_objective()
 
 func _physics_process(delta):
 	if is_dead: return
+	
+	# APLICA GRAVIDADE (FIM DA FLUTUAÇÃO!) 🏙️🚀🎯
+	if not is_on_floor():
+		velocity.y -= gravity * delta
 	
 	_check_for_enemies()
 	
@@ -34,22 +40,27 @@ func _physics_process(delta):
 		var target_pos = target_node.global_position
 		nav_agent.target_position = target_pos
 		
-		if nav_agent.is_navigation_finished():
-			_find_next_objective()
-			return
-			
 		var current_pos = global_position
 		var next_path_pos = nav_agent.get_next_path_position()
-		var new_velocity = (next_path_pos - current_pos).normalized() * speed
 		
+		# Move em direção ao objetivo se não estiver lá
 		if !nav_agent.is_target_reached():
-			velocity = new_velocity
+			var direction = (next_path_pos - current_pos).normalized()
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
+			
 			# Olhar para onde está andando
 			var look_target = Vector3(next_path_pos.x, global_position.y, next_path_pos.z)
 			if global_position.distance_to(look_target) > 0.1:
 				look_at(look_target, Vector3.UP)
 		else:
-			velocity = Vector3.ZERO
+			# CHEGOU NO OBJETIVO (ÁREA): Fica parado para capturar! 🏙️🚩🥇
+			velocity.x = move_toward(velocity.x, 0, speed)
+			velocity.z = move_toward(velocity.z, 0, speed)
+			
+			# Se a área já é nossa, procura outra!
+			if target_node.has_method("get_owner_team") and target_node.get_owner_team() == team:
+				_find_next_objective()
 	
 	move_and_slide()
 	
