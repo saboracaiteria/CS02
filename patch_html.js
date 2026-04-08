@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = './index.html';
 
-// VERSION TRACKER V1530 🏙️🎯🥇
-const VERSION = 'V1530';
+// VERSION TRACKER V1540 🏙️🎯🥇
+const VERSION = 'V1540';
 
 if (fs.existsSync(path)) {
     let content = fs.readFileSync(path, 'utf8');

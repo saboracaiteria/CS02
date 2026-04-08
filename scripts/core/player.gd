@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1530 - AMMO & ARMS SELECTOR! ✨🎯🥇"
+		label.text = "V1540 - AMMO & ARMS SELECTOR! ✨🎯🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -169,18 +169,24 @@ func _update_weapon_nodes() -> void:
 
 # --- AUTO NORMALIZER V1480 🤖📏 ---
 # Qualquer GLB (arma ou futura skin) que entrar aqui ganha escala padrão 100% automática!
-func get_max_dim(node: Node3D) -> float:
+func get_max_dim_recursive(node: Node3D, model_root: Node3D) -> float:
 	var max_dim = 0.0
 	for child in node.get_children():
-		if child is MeshInstance3D:
-			var m_aabb = child.get_aabb()
-			var s = child.scale
-			var size = Vector3(m_aabb.size.x * s.x, m_aabb.size.y * s.y, m_aabb.size.z * s.z)
+		if child is VisualInstance3D:
+			var aabb = child.get_aabb()
+			# Transformação relativa desde a raiz do GLB para obter o tamanho isolado real
+			var rel_transform = model_root.global_transform.affine_inverse() * child.global_transform
+			var s = rel_transform.basis.get_scale()
+			var size = Vector3(aabb.size.x * s.x, aabb.size.y * s.y, aabb.size.z * s.z)
 			max_dim = max(max_dim, max(size.x, max(size.y, size.z)))
 		# Recursão para achar meshes filhos de esqueleto, etc.
-		var child_max = get_max_dim(child)
+		var child_max = get_max_dim_recursive(child, model_root)
 		max_dim = max(max_dim, child_max)
 	return max_dim
+
+func get_max_dim(node: Node3D) -> float:
+	# O cálculo começa isolando a matriz desde a raiz (antes do AutoScale agir na própria raiz)
+	return get_max_dim_recursive(node, node)
 
 func _auto_normalize_model(model: Node3D) -> void:
 	if model.has_meta("auto_scaled"): return
