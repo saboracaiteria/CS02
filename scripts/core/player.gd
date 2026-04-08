@@ -142,6 +142,8 @@ func _update_weapon_nodes() -> void:
 	for child in %WeaponRoot.get_children():
 		if child is Node3D and child.visible:
 			weapon = child
+			_auto_normalize_model(weapon) # MAGIA V1480: AUTO SCALE E ALIGN 📏🪄
+			
 			# Agora busca MuzzleFlash no modelo importado também 🛡️
 			var flash_r = weapon.find_child("MuzzleFlash_R", true)
 			var flash_l = weapon.find_child("MuzzleFlash_L", true)
@@ -161,10 +163,47 @@ func _update_weapon_nodes() -> void:
 	if !muzzle_flash: muzzle_flash = find_child("GPUParticles3D*", true)
 	if !gunshot_sound: gunshot_sound = find_child("GunshotSound*", true)
 	
-	# MIRA DINÂMICA: Ajustada via Gabarito (weapon_base.gd) 🏙️🎯🥇
+	# MIRA DINÂMICA: Ajustada via Gabarito (weapon_base.gd) ou AutoNormalizer 🏙️🎯🥇
 	if weapon and weapon.has_method("get"):
-		# Se a arma for baseada no gabarito, ela já se auto-posicionou! 🛡️
 		pass
+
+# --- AUTO NORMALIZER V1480 🤖📏 ---
+# Qualquer GLB (arma ou futura skin) que entrar aqui ganha escala padrão 100% automática!
+func get_max_dim(node: Node3D) -> float:
+	var max_dim = 0.0
+	for child in node.get_children():
+		if child is MeshInstance3D:
+			var m_aabb = child.get_aabb()
+			var s = child.scale
+			var size = Vector3(m_aabb.size.x * s.x, m_aabb.size.y * s.y, m_aabb.size.z * s.z)
+			max_dim = max(max_dim, max(size.x, max(size.y, size.z)))
+		# Recursão para achar meshes filhos de esqueleto, etc.
+		var child_max = get_max_dim(child)
+		max_dim = max(max_dim, child_max)
+	return max_dim
+
+func _auto_normalize_model(model: Node3D) -> void:
+	if model.has_meta("auto_scaled"): return
+	model.set_meta("auto_scaled", true)
+	
+	var max_size = get_max_dim(model)
+	if max_size > 0.05:
+		# Tamanho perfeito padrão de uma arma (80 centímetros):
+		var target_length = 0.8
+		var auto_scale = target_length / max_size
+		
+		# Aplica a proporção (somente se a arma atual estiver na escala padrão crua 1.0)
+		if model.scale == Vector3.ONE:
+			model.scale = Vector3(auto_scale, auto_scale, auto_scale)
+			print("--- AUTO-SCALE APLICADO NO ", model.name, " (MaxDimension: ", max_size, " -> Scale: ", auto_scale, ") ---")
+			
+	# ROTAÇÃO: Se veio do Blender zerado, vira 180 (Pois Godot mira no -Z)
+	if model.rotation_degrees == Vector3.ZERO:
+		model.rotation_degrees.y = 180
+		
+	# POSIÇÃO: Ajusta para lado direito + fundo para encaixar lindo na primeira pessoa
+	if model.position == Vector3.ZERO:
+		model.position = Vector3(0.2, -0.2, -0.35)
 
 var is_mobile_shooting : bool = false
 
