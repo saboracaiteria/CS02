@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1640 - MEGA SCALE & ADS PRECISION! 🎯📏🏙️🥇"
+		label.text = "V1645 - RECOIL SYSTEM & KICKBACK! 🎯🔫🏙️🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -447,6 +447,23 @@ func _shoot() -> void:
 		
 		if collider and collider.has_method("recieve_damage"):
 			collider.recieve_damage.rpc_id(collider.get_multiplayer_authority())
+	
+	# RECUO V1645 🏙️🎯🔥
+	_apply_recoil()
+
+func _apply_recoil() -> void:
+	if not weapon or not is_multiplayer_authority(): return
+	
+	var v_kick = weapon.get("recoil_vertical") if "recoil_vertical" in weapon else 0.05
+	var h_kick = weapon.get("recoil_horizontal") if "recoil_horizontal" in weapon else 0.02
+	
+	# Recuo da Câmera (Vertical para cima, Horizontal aleatório)
+	camera.rotation.x += v_kick * 0.5 # Sutil na câmera
+	rotate_y(randf_range(-h_kick, h_kick))
+	
+	# "Kick" Visual na Arma (Empurra a arma para trás e para cima)
+	weapon.position.z += 0.1 # Empurrão para trás
+	weapon.position.y += 0.05 # Pulinho para cima
 
 @rpc("call_local")
 func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:

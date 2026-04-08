@@ -16,6 +16,8 @@ class_name WeaponBase
 @export var fire_rate: float = 0.1
 @export var max_ammo: int = 30
 @export var reload_time: float = 1.5
+@export var recoil_vertical: float = 0.05 # Recuo para cima ⬆️
+@export var recoil_horizontal: float = 0.02 # Recuo lateral random ↔️
 
 var animation_player: AnimationPlayer
 @onready var muzzle_flash: GPUParticles3D = find_child("GPUParticles3D*", true)

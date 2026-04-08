@@ -41,6 +41,8 @@ view_model_scale = Vector3(0.015, 0.015, 0.015)
 view_model_rotation = Vector3(0, 180, 0)
 fire_rate = 0.12
 damage = 1
+recoil_vertical = 0.08
+recoil_horizontal = 0.02
 
 [node name="Model" parent="." instance=ExtResource("2_glb")]
 
