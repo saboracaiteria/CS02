@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1620 - BIGGER ARMS & INSPECT (F)! 🎭🏙️🎯🥇"
+		label.text = "V1630 - ADS CORE FIX & ANIMATION RESET! 🎯🎭🏙️🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -247,6 +247,19 @@ func _process(_delta: float) -> void:
 	elif is_crouching: target_speed = CROUCH_SPEED
 	
 	SPEED = target_speed
+
+	# MOVIMENTO SUAVE DE ADS V1630 🎯🏙️🥇
+	if weapon:
+		var target_pos = weapon.view_model_offset
+		var target_fov = Global.fov
+		
+		if is_ads:
+			target_pos = weapon.ads_offset
+			target_fov = Global.fov * 0.7
+		
+		# Interpolação suave para a arma deslizar para o centro
+		weapon.transform.origin = weapon.transform.origin.lerp(target_pos, _delta * 10.0)
+		camera.fov = lerp(camera.fov, target_fov, _delta * 10.0)
 
 	# CROUCH HEIGHT LERP ✨
 	var target_height = 2.0 if !is_crouching else 1.2
@@ -503,7 +516,7 @@ func play_shoot_effects() -> void:
 		# Se a arma tiver seu próprio player (GLB), usamos ele! 🏙️🥇🚀
 		var weapon_anim = weapon.find_child("AnimationPlayer", true)
 		if weapon_anim:
-			weapon_anim.stop()
+			weapon_anim.stop(true) # RESET TOTAL DA ANIMAÇÃO V1630 🎭
 			# Tenta tocar 'fire', 'shoot' ou 'Shoot' (Nomes comuns em packs) 🛡️
 			if weapon_anim.has_animation("fire"):
 				weapon_anim.play("fire")
@@ -512,7 +525,7 @@ func play_shoot_effects() -> void:
 			elif weapon_anim.has_animation("Shoot"):
 				weapon_anim.play("Shoot")
 		else:
-			anim_player.stop()
+			anim_player.stop(true)
 			anim_player.play("shoot")
 	
 	# LÓGICA DE DUAL MUZZLE FLASH V1450 🛡️🚀🥋
