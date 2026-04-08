@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1610 - 100% VISIBLE ARMS & BULLETS! ✨🎯🥇"
+		label.text = "V1620 - BIGGER ARMS & INSPECT (F)! 🎭🏙️🎯🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -379,6 +379,10 @@ func _input(event):
 	if event.is_action_just_released("ads"):
 		is_ads = false
 
+	# INSPECTION V1620 🎭🏙️🎯🥇
+	if event is InputEventKey and event.pressed and event.keycode == KEY_F:
+		_inspect()
+
 	# ATALHO DE TECLADO V1460 🏙️🎯🥇
 	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
 		cycle_weapon()
@@ -442,23 +446,34 @@ func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:
 	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.8).set_delay(1.0)
 	tween.tween_callback(marker.queue_free)
 
+func _inspect() -> void:
+	if is_reloading: return
+	
+	var weapon_anim = weapon.find_child("AnimationPlayer", true)
+	if weapon_anim:
+		for anim in ["inspect", "Inspect", "INSPECT", "idle_inspect"]:
+			if weapon_anim.has_animation(anim):
+				weapon_anim.play(anim)
+				return
+
 func _reload() -> void:
 	if is_reloading or current_ammo == max_ammo or total_ammo <= 0: return
 	
 	is_reloading = true
-	# Se a arma tiver seu próprio player (GLB), usamos ele!
 	var weapon_anim = weapon.find_child("AnimationPlayer", true)
-	if weapon_anim and (weapon_anim.has_animation("reload") or weapon_anim.has_animation("Reload")):
-		if weapon_anim.has_animation("reload"):
-			weapon_anim.play("reload")
-		else:
-			weapon_anim.play("Reload")
-		await weapon_anim.animation_finished
+	if weapon_anim:
+		var found = false
+		for anim in ["reload", "Reload", "RELOAD", "action_reload"]:
+			if weapon_anim.has_animation(anim):
+				weapon_anim.play(anim)
+				found = true
+				await weapon_anim.animation_finished
+				break
+		if !found: await get_tree().create_timer(1.5).timeout
 	elif anim_player.has_animation("reload"):
 		anim_player.play("reload")
 		await anim_player.animation_finished
 	else:
-		# Fallback se não tiver animação de reload
 		await get_tree().create_timer(1.5).timeout
 	
 	var ammo_needed = max_ammo - current_ammo
