@@ -18,6 +18,8 @@
 [ext_resource type="Script" path="res://scripts/ui/menu/options/edit_hud.gd" id="new_script_hud"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/graphics.gd" id="new_script_gfx"]
 [ext_resource type="Texture2D" uid="uid://canaa_crest" path="res://ui/canaa_crest.png" id="101_crest"]
+[ext_resource type="Script" path="res://scripts/core/game_manager.gd" id="200_game"]
+[ext_resource type="PackedScene" uid="uid://c7t8r2h4x8p0v" path="res://scenes/objects/capture_zone.tscn" id="300_zone"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_web"]
 sky_top_color = Color(0.384, 0.455, 0.549, 1)
@@ -131,7 +133,24 @@ offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("4_2328u")
 
-[node name="map" parent="." instance=ExtResource("3_fd0sg")]
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("200_game")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+
+[node name="map" parent="NavigationRegion3D" instance=ExtResource("3_fd0sg")]
+
+[node name="CapturePoint_A" parent="." groups=["capture_zone"] instance=ExtResource("300_zone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -10)
+zone_id = "A"
+
+[node name="CapturePoint_B" parent="." groups=["capture_zone"] instance=ExtResource("300_zone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+zone_id = "B"
+
+[node name="CapturePoint_C" parent="." groups=["capture_zone"] instance=ExtResource("300_zone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 10)
+zone_id = "C"
 
 [node name="Menu" type="CanvasLayer" parent="."]
 layer = 130

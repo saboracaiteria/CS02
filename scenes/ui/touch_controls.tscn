@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/ui/touch_shoot_button.gd" id="6_shoot"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/save_hud.gd" id="7_savehud"]
 [ext_resource type="Script" path="res://scripts/ui/touch_button.gd" id="8_touch"]
+[ext_resource type="Script" path="res://scripts/ui/domination_hud.gd" id="domination_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_round"]
 bg_color = Color(0.2, 0.2, 0.2, 0.3)
@@ -22,6 +23,78 @@ corner_radius_bottom_left = 100
 layer = 125
 visible = false
 script = ExtResource("1_tc")
+
+[node name="DominationHUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 120.0
+grow_horizontal = 2
+script = ExtResource("domination_script")
+
+[node name="TimeLabel" type="Label" parent="DominationHUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -50.0
+offset_top = 10.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "05:00"
+horizontal_alignment = 1
+
+[node name="ScoreBoard" type="HBoxContainer" parent="DominationHUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 50.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="BlueScore" type="Label" parent="DominationHUD/ScoreBoard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.6, 1, 1)
+text = "AZUL: 0"
+
+[node name="RedScore" type="Label" parent="DominationHUD/ScoreBoard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+text = "VERMELHO: 0"
+
+[node name="Status" type="HBoxContainer" parent="DominationHUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 80.0
+offset_right = 60.0
+offset_bottom = 110.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="A" type="Label" parent="DominationHUD/Status"]
+layout_mode = 2
+text = " [A] "
+
+[node name="B" type="Label" parent="DominationHUD/Status"]
+layout_mode = 2
+text = " [B] "
+
+[node name="C" type="Label" parent="DominationHUD/Status"]
+layout_mode = 2
+text = " [C] "
 
 [node name="PremiumOverlay" type="Control" parent="."]
 layout_mode = 3

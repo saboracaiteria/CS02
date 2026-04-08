@@ -38,6 +38,8 @@ var current_ammo : int = 50
 var total_ammo : int = 150
 var max_ammo : int = 50
 var is_reloading : bool = false
+@export var team: String = "Azul"
+@export var health: int = 2
 
 var default_fov : float = 75.0
 var ads_fov : float = 40.0
@@ -82,7 +84,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1665 - RECOIL FIXED & NO DECALS! 🏙️🎯🇧🇷🥇"
+		label.text = "V1670 - DOMINATION MODE & AI BOTS! 🤖🏙️🚩🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)

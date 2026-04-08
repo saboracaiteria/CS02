@@ -7,6 +7,7 @@ extends Node
 @onready var menu_music: AudioStreamPlayer = %MenuMusic
 
 const Player = preload("res://scenes/player.tscn")
+const Bot = preload("res://scenes/entities/bot.tscn")
 const PORT = 9999
 var enet_peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 var paused: bool = false
@@ -55,6 +56,12 @@ func _on_back_pressed() -> void:
 #func _ready() -> void:
 func _ready():
 	_apply_premium_style()
+	
+	# CONEXÃO DE DOMINAÇÃO V1670 🏙️🚩🥇
+	var gm = $GameManager
+	for zone in [$CapturePoint_A, $CapturePoint_B, $CapturePoint_C]:
+		zone.zone_captured.connect(gm._on_zone_captured)
+	
 	# MOUSE VISÍVEL NO MENU! V1210 🖱️🎭
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Global.is_playing = false # Começa em estado de menu!
@@ -121,6 +128,7 @@ func _on_host_button_pressed() -> void:
 
 	add_player(multiplayer.get_unique_id())
 	Global.is_playing = true # AGORA ESTAMOS JOGANDO! 🏙️🎯🥇
+	spawn_bots(5)
 	
 	if host_err == OK:
 		upnp_setup()
@@ -190,3 +198,12 @@ func upnp_setup() -> void:
 		print("Failed to establish upnp connection!")
 	else:
 		print("Success! Join Address: %s" % upnp.query_external_address())
+
+func spawn_bots(amount: int):
+	for i in range(amount):
+		var bot = Bot.instantiate()
+		bot.name = "Bot_" + str(i)
+		bot.team = "Vermelho"
+		add_child(bot)
+		# Posicionamento inicial dos bots (Espalhado)
+		bot.global_position = Vector3(randf_range(-20, 20), 2, randf_range(-20, 20))

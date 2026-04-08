@@ -1,0 +1,66 @@
+extends Area3D
+
+signal zone_captured(team_name, zone_id)
+
+@export var zone_id: String = "A"
+var capture_progress: float = 0.0
+var owning_team: String = "Nenhum" # "Azul", "Vermelho"
+var players_inside: Array = []
+
+@onready var mesh = $MeshInstance3D
+@onready var label = $Label3D
+
+func _ready():
+	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
+	_update_visuals()
+
+func _on_body_entered(body):
+	if body.is_in_group("player") or body.is_in_group("bot"):
+		players_inside.append(body)
+
+func _on_body_exited(body):
+	players_inside.erase(body)
+
+func _process(delta):
+	var team_balance = 0
+	for body in players_inside:
+		if body.get("team") == "Azul": team_balance += 1
+		elif body.get("team") == "Vermelho": team_balance -= 1
+	
+	if team_balance > 0:
+		_process_capture("Azul", delta)
+	elif team_balance < 0:
+		_process_capture("Vermelho", delta)
+	else:
+		# Regressão lenta se estiver vazio
+		if players_inside.is_empty() and capture_progress > 0 and capture_progress < 100:
+			capture_progress = max(0, capture_progress - delta * 5.0)
+	
+	_update_visuals()
+
+func _process_capture(team, delta):
+	if owning_team == team: 
+		capture_progress = 100.0
+		return
+		
+	capture_progress += delta * 20.0 # 5 segundos para capturar
+	if capture_progress >= 100.0:
+		owning_team = team
+		capture_progress = 100.0
+		zone_captured.emit(team, zone_id)
+		_on_captured()
+
+func _on_captured():
+	# Efeito visual de estouro/som aqui
+	pass
+
+func _update_visuals():
+	label.text = "ÁREA %s\n%s\n%d%%" % [zone_id, owning_team, int(capture_progress)]
+	
+	var target_color = Color(0.5, 0.5, 0.5, 0.3)
+	if owning_team == "Azul": target_color = Color(0, 0.4, 1, 0.4)
+	elif owning_team == "Vermelho": target_color = Color(1, 0.1, 0.1, 0.4)
+	
+	if mesh.material_override:
+		mesh.material_override.albedo_color = target_color
