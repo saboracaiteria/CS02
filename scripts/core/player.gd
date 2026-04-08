@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1655 - UI FIX & STABILITY! 🏙️🎯🇧🇷🥇"
+		label.text = "V1660 - CANAÃ DOS CARAJÁS UPDATE! 🏙️🎯🇧🇷🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -457,9 +457,9 @@ func _apply_recoil() -> void:
 	var v_kick = weapon.get("recoil_vertical") if "recoil_vertical" in weapon else 0.05
 	var h_kick = weapon.get("recoil_horizontal") if "recoil_horizontal" in weapon else 0.02
 	
-	# Recuo da Câmera (Vertical para cima, Horizontal aleatório)
-	camera.rotation.x += v_kick * 0.5 # Sutil na câmera
-	rotate_y(randf_range(-h_kick, h_kick))
+	# Recuo da Câmera (Vertical para cima, Horizontal aleatório) - SUAVIZADO V1660 🏙️🎯🥇
+	camera.rotation.x += v_kick * 0.3
+	rotate_y(randf_range(-h_kick, h_kick) * 0.5)
 	
 	# "Kick" Visual na Arma (Empurra a arma para trás e para cima)
 	weapon.position.z += 0.1 # Empurrão para trás

@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://scripts/ui/menu/options/fov.gd" id="new_script_fov"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/edit_hud.gd" id="new_script_hud"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/graphics.gd" id="new_script_gfx"]
+[ext_resource type="Texture2D" uid="uid://canaa_crest" path="res://ui/canaa_crest.png" id="101_crest"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_web"]
 sky_top_color = Color(0.384, 0.455, 0.549, 1)
@@ -147,7 +148,7 @@ root_node = NodePath("../Blur")
 libraries = {
 "": SubResource("AnimationLibrary_lekn2")
 }
-autoplay = "Dolly"
+autoplay = ""
 
 [node name="Blur" type="ColorRect" parent="Menu"]
 visible = false
@@ -347,6 +348,13 @@ theme_override_constants/margin_bottom = 15
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 10
+
+[node name="Crest" type="TextureRect" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("101_crest")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="MainMenuLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
