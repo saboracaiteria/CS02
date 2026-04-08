@@ -91,6 +91,20 @@ shader_parameter/blur_amount = 2.0
 shader_parameter/mix_amount = 0.0
 shader_parameter/color_over = null
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glass"]
+bg_color = Color(0.05, 0.05, 0.15, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 30
+
 [sub_resource type="Theme" id="Theme_utqnk"]
 
 [node name="World" type="Node"]
@@ -158,6 +172,7 @@ offset_left = -180.0
 offset_right = 180.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glass")
 theme = SubResource("Theme_utqnk")
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu/Options"]
@@ -174,29 +189,28 @@ theme_override_constants/separation = 10
 
 [node name="OptionsLabel" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Options
-"
+text = "⚙️ OPÇÕES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Fullscreen" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Fullscreen"
+text = "🖥️ Tela Cheia"
 script = ExtResource("5_abwkb")
 
 [node name="FpsCounter" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "FPS counter"
+text = "📈 Contador de FPS"
 
 [node name="Ping" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "Shows connection trip time to host (in milliseconds)"
-text = "View Ping"
+text = "🌐 Ver Ping"
 
 [node name="SensitivityLabel" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Sensitivity"
+text = "🎯 Sensibilidade"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -206,7 +220,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Mouse sensitivity"
+text = "🖱️ Mouse"
 
 [node name="MouseSensitivity" type="HSlider" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -224,7 +238,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Controller sensitivity"
+text = "🎮 Controle"
 
 [node name="ControllerSensitivity" type="HSlider" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
@@ -247,7 +261,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Camera FOV"
+text = "👁️ Campo de Visão (FOV)"
 
 [node name="FOVSlider" type="HSlider" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
@@ -261,12 +275,12 @@ script = ExtResource("new_script_fov")
 
 [node name="EditHUDButton" type="Button" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "EDIT HUD (MOBILE)"
+text = "📱 AJUSTAR HUD (MOBILE)"
 script = ExtResource("new_script_hud")
 
 [node name="Back" type="Button" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Back"
+text = "⬅️ VOLTAR"
 script = ExtResource("6_2hany")
 
 [node name="PauseMenu" type="PanelContainer" parent="Menu"]
@@ -279,6 +293,7 @@ offset_left = -180.0
 offset_right = 180.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glass")
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu/PauseMenu"]
 layout_mode = 2
@@ -294,24 +309,22 @@ theme_override_constants/separation = 10
 
 [node name="PauseLabel" type="Label" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Pause Menu
+text = "⏸️ PAUSA
 "
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Resume" type="Button" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Resume"
+text = "▶️ CONTINUAR"
 script = ExtResource("7_5cdyw")
-
 [node name="Options" type="Button" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Options
-"
+text = "⚙️ OPÇÕES"
 
 [node name="Quit" type="Button" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Quit"
+text = "🚪 SAIR"
 script = ExtResource("9_ucmny")
 
 [node name="MainMenu" type="PanelContainer" parent="Menu"]
@@ -319,6 +332,7 @@ anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 391.0
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glass")
 theme = SubResource("Theme_utqnk")
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu/MainMenu"]
@@ -335,13 +349,13 @@ theme_override_constants/separation = 10
 
 [node name="MainMenuLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Main Menu"
+text = "🏙️ CS-02: BRASIL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HostButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Host"
+text = "🌐 CRIAR SALA (HOST)"
 script = ExtResource("4_nuahp")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
@@ -351,22 +365,22 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Enter Address Here to join"
+placeholder_text = "Endereço da Sala (IP)..."
 alignment = 1
 
 [node name="JoinButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "  Join  "
+text = "  ENTRAR  "
 
 [node name="OptionsButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 toggle_mode = true
-text = "Options"
+text = "⚙️ OPÇÕES"
 script = ExtResource("6_7g7sm")
 
 [node name="Quit" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Quit"
+text = "🚪 SAIR"
 script = ExtResource("9_ucmny")
 
 [node name="MusicToggle" type="CheckButton" parent="Menu/MainMenu"]
@@ -375,7 +389,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 button_pressed = true
-text = "Music"
+text = "🎵 Música"
 
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
