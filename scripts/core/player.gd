@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1540 - AMMO & ARMS SELECTOR! ✨🎯🥇"
+		label.text = "V1570 - ULTRA GRAPHICS & VFX UPDATE! ✨🎯🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -407,8 +407,43 @@ func _shoot() -> void:
 	play_shoot_effects.rpc()
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
+		var point = raycast.get_collision_point()
+		var normal = raycast.get_collision_normal()
+		
+		# EFEITO DE IMPACTO V1570 🏙️🎯🔥
+		_spawn_impact_decal.rpc(point, normal)
+		
 		if collider and collider.has_method("recieve_damage"):
 			collider.recieve_damage.rpc_id(collider.get_multiplayer_authority())
+
+@rpc("call_local")
+func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:
+	var decal = Node3D.new()
+	var mesh = MeshInstance3D.new()
+	var sphere = SphereMesh.new()
+	sphere.radius = 0.05
+	sphere.height = 0.1
+	mesh.mesh = sphere
+	
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = Color(1, 0.8, 0, 1) # Cor de impacto quente
+	mat.emission_enabled = true
+	mat.emission = Color(1, 0.5, 0, 1)
+	mat.emission_energy_multiplier = 2.0
+	mesh.material_override = mat
+	
+	decal.add_child(mesh)
+	get_tree().root.add_child(decal)
+	decal.global_position = pos
+	
+	# Alinha com a superfície
+	if normal.length() > 0.1:
+		decal.look_at(pos + normal, Vector3.UP if abs(normal.y) < 0.99 else Vector3.FORWARD)
+	
+	# Auto-destruição rápida para manter FPS alto
+	var tween = get_tree().create_tween()
+	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.5).set_delay(0.2)
+	tween.tween_callback(decal.queue_free)
 
 func _reload() -> void:
 	if is_reloading or current_ammo == max_ammo or total_ammo <= 0: return
