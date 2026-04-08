@@ -115,18 +115,22 @@ func _find_next_objective():
 	var best_zone = zones[randi() % zones.size()]
 	target_node = best_zone
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func recieve_damage(damage:= 1) -> void:
+	if is_dead: return
 	health -= damage
+	Global.log_error("DANO: Bot %s recebeu %d de dano. Vida: %d" % [name, damage, health])
 	if health <= 0:
 		_die()
 
 func _die():
+	Global.log_error("SISTEMA: Bot %s foi eliminado!" % name)
 	is_dead = true
 	velocity = Vector3.ZERO
-	# Animação de morte / Sumir
+	collision_layer = 0 # Para de bloquear tiros
 	hide()
-	await get_tree().create_timer(5.0).timeout # Espera respawn
+	# Respawn após 5 segundos
+	await get_tree().create_timer(5.0).timeout 
 	_respawn()
 
 func _respawn():
