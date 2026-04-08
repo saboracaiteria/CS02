@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1580 - NEON BULLET HOLES & ARMS! ✨🎯🥇"
+		label.text = "V1590 - ULTRA ARMS & NEON BOLTS! ✨🎯🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -211,8 +211,8 @@ func _auto_normalize_model(model: Node3D) -> void:
 		model.scale = Vector3(auto_scale, auto_scale, auto_scale)
 		print("--- AUTO-SCALE APLICADO NO ", model.name, " (MaxDimension: ", max_size, " -> Scale: ", auto_scale, ") ---")
 		
-	# POSIÇÃO: Ajusta para lado direito + fundo para encaixar lindo na primeira pessoa
-	if model.position == Vector3.ZERO:
+	# POSIÇÃO: Só ajusta se não for WeaponBase (evita resetar braços e offsets!) 🛡️
+	if not model is WeaponBase and model.position == Vector3.ZERO:
 		model.position = Vector3(0.2, -0.2, -0.35)
 
 var is_mobile_shooting : bool = false
@@ -420,30 +420,25 @@ func _shoot() -> void:
 func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:
 	var decal = Node3D.new()
 	var mesh = MeshInstance3D.new()
-	var disc = QuadMesh.new() # Usar Quad para parecer um buraco na parede
-	disc.size = Vector2(0.12, 0.12)
-	mesh.mesh = disc
+	var cube = BoxMesh.new() # USAR CUBO PARA SER VISÍVEL DE TODOS OS LADOS! 🧊⚡
+	cube.size = Vector3(0.08, 0.08, 0.08)
+	mesh.mesh = cube
 	
 	var mat = StandardMaterial3D.new()
-	mat.transparency = 1
-	mat.shading_mode = 0
-	mat.albedo_color = Color(0, 1, 1, 0.8) # Ciano Neon para visibilidade máxima
+	mat.shading_mode = 0 # Sem sombras para brilhar puro
+	mat.albedo_color = Color(0, 1, 1, 1) # Ciano Neon
 	mat.emission_enabled = true
 	mat.emission = Color(0, 1, 1, 1)
-	mat.emission_energy_multiplier = 4.0
+	mat.emission_energy_multiplier = 8.0 # BRILHO MÁXIMO! 🌟
 	mesh.material_override = mat
 	
 	decal.add_child(mesh)
 	get_tree().root.add_child(decal)
-	decal.global_position = pos + (normal * 0.01) # Leve offset para não dar Z-fighting
+	decal.global_position = pos
 	
-	# Alinha com a superfície
-	if normal.length() > 0.1:
-		decal.look_at(pos + normal, Vector3.UP if abs(normal.y) < 0.99 else Vector3.FORWARD)
-	
-	# Auto-destruição com fade out
+	# Auto-destruição com animação de escala
 	var tween = get_tree().create_tween()
-	tween.tween_property(mesh, "scale", Vector3.ZERO, 1.0).set_delay(1.5)
+	tween.tween_property(mesh, "scale", Vector3.ZERO, 1.2).set_delay(1.0)
 	tween.tween_callback(decal.queue_free)
 
 func _reload() -> void:
