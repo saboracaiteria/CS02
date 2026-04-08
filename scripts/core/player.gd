@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1695 - BLUE BOX BOTS & FORCE RELOAD! 🔵🏙️🚀🎯"
+		label.text = "V1700 - PROFESSIONAL AI UPGRADE! 🧠🤖🏙️🚩🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		var label2 = Label.new()

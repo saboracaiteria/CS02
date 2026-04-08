@@ -27,96 +27,141 @@ func _ready():
 	await get_tree().create_timer(1.0).timeout
 	_find_next_objective()
 
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-var reaction_time: float = 0.6 # Segundos para reagir
-var can_see_enemy: bool = false
+enum State {PATROL, COMBAT, SEARCH}
+var current_state: State = State.PATROL
+
+var last_known_position: Vector3 = Vector3.ZERO
+var search_timer: float = 0.0
+var accuracy: float = 0.0 # Começa em 0 e vai até 1.0 (100%)
+var strafe_timer: float = 0.0
+var strafe_dir: Vector3 = Vector3.ZERO
 
 func _physics_process(delta):
 	if is_dead: return
 	
-	# GRAVIDADE SUPER FORTE (IMÃ DE CHÃO!) 🏙️🚀🎯
+	# GRAVIDADE SEMPRE ATIVA
 	if not is_on_floor():
-		velocity.y -= gravity * 5.0 * delta # 5x mais forte
+		velocity.y -= gravity * 5.0 * delta
 	else:
-		velocity.y = -1.0 # Empurra pro chão
+		velocity.y = -1.0
 	
-	_check_for_enemies()
-	
-	if target_node and !can_see_enemy:
-		# MOVIMENTAÇÃO SEM NAV_MESH (DIRETA COM DESVIO) 🏙️🚩🥇
-		var target_pos = target_node.global_position
-		var dir = (target_pos - global_position).normalized()
-		dir.y = 0 # Mantém no chão
-		
-		# Sensores de desvio (Simples)
-		raycast.target_position = dir * 2.0
-		if raycast.is_colliding():
-			# Se houver parede, tenta desviar para o lado
-			dir = dir.rotated(Vector3.UP, PI/2)
-		
-		velocity.x = dir.x * speed
-		velocity.z = dir.z * speed
-		
-		# Olhar para a direção do movimento
-		var look_target = global_position + dir
-		if global_position.distance_to(look_target) > 0.1:
-			look_at(look_target, Vector3.UP)
-	elif can_see_enemy:
-		# Para para atirar
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
+	match current_state:
+		State.PATROL:
+			_state_patrol(delta)
+		State.COMBAT:
+			_state_combat(delta)
+		State.SEARCH:
+			_state_search(delta)
 	
 	move_and_slide()
+	_update_animations()
+
+func _state_patrol(delta):
+	if _check_for_enemies():
+		current_state = State.COMBAT
+		return
+		
+	if target_node:
+		var dir = (target_node.global_position - global_position).normalized()
+		dir.y = 0
+		velocity.x = dir.x * speed
+		velocity.z = dir.z * speed
+		_smooth_look_at(global_position + dir, delta)
+		
+		# Se chegar na área ou ela for capturada, muda o patrol
+		if global_position.distance_to(target_node.global_position) < 2.0:
+			_find_next_objective()
+
+func _state_combat(delta):
+	var enemy = _check_for_enemies()
+	if !enemy:
+		current_state = State.SEARCH
+		search_timer = 5.0
+		accuracy = 0.0
+		return
+		
+	last_known_position = enemy.global_position
+	_smooth_look_at(enemy.global_position, delta)
 	
-	# Animação Simples
-	if velocity.length() > 0.1:
-		anim_player.play("move")
-	else:
-		anim_player.play("idle")
+	# MIRA GRADUAL: Fica mais preciso com o tempo 🎯
+	accuracy = move_toward(accuracy, 1.0, delta * 0.5)
+	
+	# STRAFING: Anda pros lados para dificultar o seu tiro 🏃💨
+	strafe_timer -= delta
+	if strafe_timer <= 0:
+		strafe_timer = randf_range(0.5, 1.5)
+		strafe_dir = Vector3(randf_range(-1,1), 0, randf_range(-1,1)).normalized()
+	
+	velocity.x = strafe_dir.x * (speed * 0.5)
+	velocity.z = strafe_dir.z * (speed * 0.5)
+	
+	# TIRO
+	shoot_timer += delta
+	if shoot_timer >= 1.0 / fire_rate:
+		if randf() < accuracy: # Só acerta se a precisão permitir
+			_shoot(enemy)
+		else:
+			_shoot(null) # Erra o tiro
+		shoot_timer = 0
+
+func _state_search(delta):
+	search_timer -= delta
+	if search_timer <= 0 or _check_for_enemies():
+		current_state = State.PATROL
+		return
+		
+	# Vai até onde viu o inimigo pela última vez 🕵️‍♂️
+	var dir = (last_known_position - global_position).normalized()
+	dir.y = 0
+	velocity.x = dir.x * speed
+	velocity.z = dir.z * speed
+	_smooth_look_at(last_known_position, delta)
+
+func _smooth_look_at(target: Vector3, delta: float):
+	var look_pos = Vector3(target.x, global_position.y, target.z)
+	if global_position.distance_to(look_pos) > 0.1:
+		var new_transform = transform.looking_at(look_pos, Vector3.UP)
+		transform = transform.interpolate_with(new_transform, delta * 5.0)
 
 func _check_for_enemies():
-	# IA Reativa: Procura o player mais próximo que não seja do mesmo time
-	var enemies = get_tree().get_nodes_in_group("player") + get_tree().get_nodes_in_group("bot")
-	var closest_enemy = null
-	var min_dist = detection_range
-	
-	for enemy in enemies:
-		if enemy == self or enemy.get("team") == team or enemy.get("health") <= 0: continue
-		var dist = global_position.distance_to(enemy.global_position)
-		if dist < min_dist:
-			# Verifica linha de visão real!
-			raycast.target_position = raycast.to_local(enemy.global_position + Vector3(0, 1.5, 0))
+	var enemies = get_tree().get_nodes_in_group("player")
+	for e in enemies:
+		if e.get("team") == team or e.get("health") <= 0: continue
+		var dist = global_position.distance_to(e.global_position)
+		if dist < detection_range:
+			# Raycast de linha de visão
+			raycast.target_position = raycast.to_local(e.global_position + Vector3(0, 1.5, 0))
 			raycast.force_raycast_update()
-			if !raycast.is_colliding() or raycast.get_collider() == enemy:
-				closest_enemy = enemy
-				min_dist = dist
-	
-	if closest_enemy:
-		if !can_see_enemy:
-			can_see_enemy = true
-			await get_tree().create_timer(reaction_time).timeout
-		
-		if can_see_enemy and !is_dead:
-			look_at(closest_enemy.global_position, Vector3.UP)
-			rotation.x = 0 
-			_shoot()
-	else:
-		can_see_enemy = false
+			if !raycast.is_colliding() or raycast.get_collider() == e:
+				return e
+	return null
 
-func _shoot():
-	var now = Time.get_ticks_msec() / 1000.0
-	if now - last_shoot_time < 0.2: return # fire_rate fix
-	last_shoot_time = now
+@onready var hp_bar = $HPBar
+
+func _process(delta):
+	if is_dead: return
+	if hp_bar:
+		hp_bar.text = "HP: %d" % health
+		hp_bar.modulate = Color(1, health/100.0, 0) # Fica vermelho conforme morre
+
+func _shoot(target):
+	if gunshot_sound:
+		gunshot_sound.pitch_scale = randf_range(0.9, 1.1) # Distingue os tiros 🔊
+		gunshot_sound.play()
+		
+	# Muzzle Flash
+	var flash = get_node_or_null("Camera3D/WeaponRoot/MuzzleFlash")
+	if flash:
+		flash.show()
+		await get_tree().create_timer(0.05).timeout
+		flash.hide()
 	
-	if gunshot_sound: gunshot_sound.play()
-	
-	raycast.target_position = Vector3(0, 0, -50)
-	raycast.force_raycast_update()
-	
-	if raycast.is_colliding():
-		var col = raycast.get_collider()
-		if col.has_method("recieve_damage"):
-			col.recieve_damage.rpc_id(col.get_multiplayer_authority(), 1)
+	if target and target.has_method("recieve_damage"):
+		target.recieve_damage.rpc_id(target.get_multiplayer_authority(), 1)
+
+func _update_animations():
+	if velocity.length() > 0.1: anim_player.play("move")
+	else: anim_player.play("idle")
 
 func _find_next_objective():
 	# Procura a Área de Captura (A, B ou C) mais próxima que não seja nossa

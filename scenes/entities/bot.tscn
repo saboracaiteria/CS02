@@ -86,5 +86,20 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0.4, -0.4, -0.6)
 [node name="pistol" parent="Camera3D/WeaponRoot" instance=ExtResource("2_pistol")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
+[node name="MuzzleFlash" type="Label3D" parent="Camera3D/WeaponRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+visible = false
+modulate = Color(1, 1, 0, 1)
+text = "💥"
+font_size = 120
+script = SubResource("GDScript_flash")
+
+[node name="HPBar" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+billboard = 1
+text = "HP: 100"
+font_size = 64
+outline_size = 20
+
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 volume_db = -10.0
