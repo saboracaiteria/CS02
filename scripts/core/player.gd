@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1570 - ULTRA GRAPHICS & VFX UPDATE! ✨🎯🥇"
+		label.text = "V1580 - NEON BULLET HOLES & ARMS! ✨🎯🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -420,29 +420,30 @@ func _shoot() -> void:
 func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:
 	var decal = Node3D.new()
 	var mesh = MeshInstance3D.new()
-	var sphere = SphereMesh.new()
-	sphere.radius = 0.05
-	sphere.height = 0.1
-	mesh.mesh = sphere
+	var disc = QuadMesh.new() # Usar Quad para parecer um buraco na parede
+	disc.size = Vector2(0.12, 0.12)
+	mesh.mesh = disc
 	
 	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(1, 0.8, 0, 1) # Cor de impacto quente
+	mat.transparency = 1
+	mat.shading_mode = 0
+	mat.albedo_color = Color(0, 1, 1, 0.8) # Ciano Neon para visibilidade máxima
 	mat.emission_enabled = true
-	mat.emission = Color(1, 0.5, 0, 1)
-	mat.emission_energy_multiplier = 2.0
+	mat.emission = Color(0, 1, 1, 1)
+	mat.emission_energy_multiplier = 4.0
 	mesh.material_override = mat
 	
 	decal.add_child(mesh)
 	get_tree().root.add_child(decal)
-	decal.global_position = pos
+	decal.global_position = pos + (normal * 0.01) # Leve offset para não dar Z-fighting
 	
 	# Alinha com a superfície
 	if normal.length() > 0.1:
 		decal.look_at(pos + normal, Vector3.UP if abs(normal.y) < 0.99 else Vector3.FORWARD)
 	
-	# Auto-destruição rápida para manter FPS alto
+	# Auto-destruição com fade out
 	var tween = get_tree().create_tween()
-	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.5).set_delay(0.2)
+	tween.tween_property(mesh, "scale", Vector3.ZERO, 1.0).set_delay(1.5)
 	tween.tween_callback(decal.queue_free)
 
 func _reload() -> void:
