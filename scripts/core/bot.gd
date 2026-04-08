@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 @export var team: String = "Vermelho"
 @export var speed: float = 4.0
-@export var health: int = 2
+@export var health: int = 100
 
 var target_node: Node3D = null
 var is_dead: bool = false

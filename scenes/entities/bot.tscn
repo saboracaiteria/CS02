@@ -92,7 +92,6 @@ visible = false
 modulate = Color(1, 1, 0, 1)
 text = "💥"
 font_size = 120
-script = SubResource("GDScript_flash")
 
 [node name="HPBar" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
