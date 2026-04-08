@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1590 - ULTRA ARMS & NEON BOLTS! ✨🎯🥇"
+		label.text = "V1600 - NEON DECALS & ARMS! ✨🎯🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
@@ -418,28 +418,19 @@ func _shoot() -> void:
 
 @rpc("call_local")
 func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:
-	var decal = Node3D.new()
-	var mesh = MeshInstance3D.new()
-	var cube = BoxMesh.new() # USAR CUBO PARA SER VISÍVEL DE TODOS OS LADOS! 🧊⚡
-	cube.size = Vector3(0.08, 0.08, 0.08)
-	mesh.mesh = cube
+	var decal = Decal.new() # USAR DECAL REAL DO GODOT! 🏙️🎯🥇
+	decal.size = Vector3(0.2, 0.2, 0.2)
+	decal.modulate = Color(0, 5, 5, 1) # NEON AZUL FORTE
+	decal.emission_energy = 5.0
 	
-	var mat = StandardMaterial3D.new()
-	mat.shading_mode = 0 # Sem sombras para brilhar puro
-	mat.albedo_color = Color(0, 1, 1, 1) # Ciano Neon
-	mat.emission_enabled = true
-	mat.emission = Color(0, 1, 1, 1)
-	mat.emission_energy_multiplier = 8.0 # BRILHO MÁXIMO! 🌟
-	mesh.material_override = mat
-	
-	decal.add_child(mesh)
 	get_tree().root.add_child(decal)
 	decal.global_position = pos
 	
-	# Auto-destruição com animação de escala
-	var tween = get_tree().create_tween()
-	tween.tween_property(mesh, "scale", Vector3.ZERO, 1.2).set_delay(1.0)
-	tween.tween_callback(decal.queue_free)
+	if normal.length() > 0.1:
+		decal.look_at(pos + normal, Vector3.UP if abs(normal.y) < 0.99 else Vector3.FORWARD)
+	
+	# Auto-destruição
+	get_tree().create_timer(2.0).timeout.connect(decal.queue_free)
 
 func _reload() -> void:
 	if is_reloading or current_ammo == max_ammo or total_ammo <= 0: return
