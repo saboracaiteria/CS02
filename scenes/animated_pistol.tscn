@@ -37,12 +37,12 @@ orientation = 2
 script = ExtResource("1_base")
 view_model_offset = Vector3(0.4, -0.4, -0.6)
 view_model_scale = Vector3(0.08, 0.08, 0.08) # ESCALA SEGURA V1460 ✨🎯🥇
-view_model_rotation = Vector3(0, 90, 0)
+view_model_rotation = Vector3(0, 0, 0)
 fire_rate = 0.12
 damage = 1
 
 [node name="Model" parent="." instance=ExtResource("2_glb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
 
 [node name="MuzzleFlash" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.4)

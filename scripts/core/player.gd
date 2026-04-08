@@ -192,6 +192,12 @@ func _auto_normalize_model(model: Node3D) -> void:
 	if model.has_meta("auto_scaled"): return
 	model.set_meta("auto_scaled", true)
 	
+	# Se a arma já tem WeaponBase, ela gerencia sua própria escala/rotação 🛡️
+	# Não interferir nela evita o conflito que deixava a pistola grande e ao contrário!
+	if model is WeaponBase:
+		print("--- SKIP AUTO-SCALE: WeaponBase detectado em ", model.name, " ---")
+		return
+	
 	var max_size = get_max_dim(model)
 	if max_size > 0.05:
 		# Tamanho perfeito padrão de uma arma longa (80 centímetros):
@@ -201,10 +207,10 @@ func _auto_normalize_model(model: Node3D) -> void:
 			
 		var auto_scale = target_length / max_size
 		
-		# Força a escala suprema ignorando qualquer edição prévia 
+		# Força a escala (apenas para armas SEM WeaponBase)
 		model.scale = Vector3(auto_scale, auto_scale, auto_scale)
 		print("--- AUTO-SCALE APLICADO NO ", model.name, " (MaxDimension: ", max_size, " -> Scale: ", auto_scale, ") ---")
-			
+		
 	# POSIÇÃO: Ajusta para lado direito + fundo para encaixar lindo na primeira pessoa
 	if model.position == Vector3.ZERO:
 		model.position = Vector3(0.2, -0.2, -0.35)
