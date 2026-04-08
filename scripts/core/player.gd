@@ -195,15 +195,10 @@ func _auto_normalize_model(model: Node3D) -> void:
 			
 		var auto_scale = target_length / max_size
 		
-		# Aplica a proporção (somente se a arma atual estiver na escala padrão crua 1.0)
-		if model.scale == Vector3.ONE:
-			model.scale = Vector3(auto_scale, auto_scale, auto_scale)
-			print("--- AUTO-SCALE APLICADO NO ", model.name, " (MaxDimension: ", max_size, " -> Scale: ", auto_scale, ") ---")
+		# Força a escala suprema ignorando qualquer edição prévia 
+		model.scale = Vector3(auto_scale, auto_scale, auto_scale)
+		print("--- AUTO-SCALE APLICADO NO ", model.name, " (MaxDimension: ", max_size, " -> Scale: ", auto_scale, ") ---")
 			
-	# ROTAÇÃO: Se veio do Blender zerado, vira 180 (Pois Godot mira no -Z)
-	if model.rotation_degrees == Vector3.ZERO:
-		model.rotation_degrees.y = 180
-		
 	# POSIÇÃO: Ajusta para lado direito + fundo para encaixar lindo na primeira pessoa
 	if model.position == Vector3.ZERO:
 		model.position = Vector3(0.2, -0.2, -0.35)
