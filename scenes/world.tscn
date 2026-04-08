@@ -18,6 +18,7 @@
 [ext_resource type="Script" path="res://scripts/ui/menu/options/edit_hud.gd" id="new_script_hud"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/graphics.gd" id="new_script_gfx"]
 [ext_resource type="Texture2D" uid="uid://canaa_crest" path="res://ui/canaa_crest.png" id="101_crest"]
+[ext_resource type="Script" path="res://scripts/ui/console.gd" id="console_script"]
 [ext_resource type="Script" path="res://scripts/core/game_manager.gd" id="200_game"]
 [ext_resource type="PackedScene" uid="uid://c7t8r2h4x8p0v" path="res://scenes/objects/capture_zone.tscn" id="300_zone"]
 
@@ -127,6 +128,69 @@ directional_shadow_split_2 = 0.11
 directional_shadow_split_3 = 0.33
 directional_shadow_blend_splits = true
 directional_shadow_max_distance = 99.3
+
+[node name="Debug" type="CanvasLayer" parent="."]
+layer = 128
+script = ExtResource("console_script")
+
+[node name="Control" type="Control" parent="Debug"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="Debug/Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -300.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Debug/Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Debug/Control/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LogLabel" type="Label" parent="Debug/Control/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "CONSOLE INICIADO...
+"
+
+[node name="Close" type="Button" parent="Debug/Control/Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -80.0
+offset_bottom = 40.0
+grow_horizontal = 0
+text = "FECHAR"
+
+[node name="OpenConsole" type="Button" parent="Debug"]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 120.0
+offset_bottom = 100.0
+text = "📟 LOG"
 
 [node name="FpsCounter" type="Label" parent="."]
 offset_right = 40.0
@@ -438,6 +502,8 @@ spawn_path = NodePath("..")
 [connection signal="pressed" from="Menu/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="toggled" from="Menu/MainMenu/MarginContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_toggled"]
 [connection signal="toggled" from="Menu/MainMenu/MarginContainer/VBoxContainer/OptionsButton" to="Menu/Options/MarginContainer/VBoxContainer/Fullscreen" method="_on_options_button_toggled"]
+[connection signal="pressed" from="Debug/Control/Panel/Close" to="Debug" method="_on_close_pressed"]
+[connection signal="pressed" from="Debug/OpenConsole" to="Debug" method="toggle_console"]
 [connection signal="toggled" from="Menu/MainMenu/MusicToggle" to="." method="_on_music_toggle_toggled"]
 
 [editable path="map"]

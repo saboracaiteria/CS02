@@ -57,10 +57,15 @@ func _on_back_pressed() -> void:
 func _ready():
 	_apply_premium_style()
 	
-	# CONEXÃO DE DOMINAÇÃO V1670 🏙️🚩🥇
+	# CONEXÃO DE DOMINAÇÃO V1675 🏙️🚩🥇
 	var gm = $GameManager
-	for zone in [$CapturePoint_A, $CapturePoint_B, $CapturePoint_C]:
-		zone.zone_captured.connect(gm._on_zone_captured)
+	var zones = [$CapturePoint_A, $CapturePoint_B, $CapturePoint_C]
+	for zone in zones:
+		if zone and gm:
+			zone.zone_captured.connect(gm._on_zone_captured)
+			$Debug.log_msg("SISTEMA: Zona %s conectada ao Game Manager!" % zone.zone_id)
+		else:
+			$Debug.log_msg("ERRO: Falha ao conectar zona ou Game Manager!")
 	
 	# MOUSE VISÍVEL NO MENU! V1210 🖱️🎭
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -105,7 +110,7 @@ func _apply_premium_style():
 			btn.add_theme_stylebox_override("focus", btn_style)
 
 func _on_host_button_pressed() -> void:
-	# AUTO FULLSCREEN V1460 ✨💻📱
+	Global.log_error("UI: Botão Host pressionado.")
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
 	main_menu.hide()
@@ -114,24 +119,31 @@ func _on_host_button_pressed() -> void:
 	$Menu/DollyCamera.set_process(false)
 	$Menu/Blur.hide()
 	menu_music.stop()
-
+	
+	Global.log_error("SISTEMA: Criando Servidor na porta %d..." % PORT)
 	var host_err = enet_peer.create_server(PORT)
 	if host_err != OK:
-		print("NET ERROR: %s - Rodando em modo OFFLINE/SINGLE-PLAYER! 🏙️🎯🥇" % host_err)
+		Global.log_error("NET ERROR: %s - Tentando modo offline..." % host_err)
 	else:
 		multiplayer.multiplayer_peer = enet_peer
 		multiplayer.peer_connected.connect(add_player)
 		multiplayer.peer_disconnected.connect(remove_player)
+		Global.log_error("NET: Servidor Online.")
 
 	if options_menu.visible:
 		options_menu.hide()
 
+	Global.log_error("SISTEMA: Adicionando Host à partida...")
 	add_player(multiplayer.get_unique_id())
-	Global.is_playing = true # AGORA ESTAMOS JOGANDO! 🏙️🎯🥇
+	Global.is_playing = true
+	
+	Global.log_error("SISTEMA: Criando Bots...")
 	spawn_bots(5)
 	
 	if host_err == OK:
 		upnp_setup()
+	
+	Global.log_error("SISTEMA: Host completo. Boa partida!")
 
 func _on_join_button_pressed() -> void:
 	# AUTO FULLSCREEN V1460 ✨💻📱
@@ -162,9 +174,11 @@ func _on_music_toggle_toggled(toggled_on: bool) -> void:
 		menu_music.play()
 
 func add_player(peer_id: int) -> void:
+	Global.log_error("SISTEMA: Instanciando jogador %d..." % peer_id)
 	var player: CSPlayer = Player.instantiate()
 	player.name = str(peer_id)
 	add_child(player)
+	Global.log_error("SISTEMA: Jogador %d adicionado à cena." % peer_id)
 	
 	# SPAWN DE ELITE V1460: Busca os spawns do jogador ✨🚀🎯
 	player.global_position = player.spawns[randi() % player.spawns.size()]

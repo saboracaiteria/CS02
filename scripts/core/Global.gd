@@ -6,6 +6,12 @@ extends Node
 var is_mobile : bool = false
 var is_playing : bool = false
 var is_editing_hud : bool = false
+var debug_console : Node = null
+
+func log_error(msg: String):
+	if debug_console:
+		debug_console.log_msg(msg)
+	print("[DEBUG] " + msg)
 
 # Variáveis globais (Sync com os scripts de config) 🏗️
 var sensitivity : float = 0.005

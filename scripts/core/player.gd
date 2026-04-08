@@ -10,8 +10,6 @@ var weapon: Node3D
 var muzzle_flash: GPUParticles3D
 var gunshot_sound: AudioStreamPlayer3D
 
-## Number of shots before a player dies
-@export var health : int = 2
 ## The xyz position of the random spawns, you can add as many as you want!
 @export var spawns: PackedVector3Array = ([
 	Vector3(-18, 0.2, 0),
@@ -84,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1670 - DOMINATION MODE & AI BOTS! 🤖🏙️🚩🥇"
+		label.text = "V1675 - DEBUG CONSOLE & HOST FIX! 📟🤖🚩🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		add_child(label)
