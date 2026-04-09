@@ -107,7 +107,6 @@ func _ready() -> void:
 
 	# CROSSHAIR/RAYCAST FIX V1630 🏙️🎯🥇: Ignora a própria arma!
 	raycast.add_exception(self)
-	raycast.add_exception(%WeaponRoot)
 
 	# SINCRONIZA COM O SISTEMA ATIVO V1200 🚀
 	default_fov = Global.default_fov
