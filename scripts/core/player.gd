@@ -37,7 +37,7 @@ var total_ammo : int = 150
 var max_ammo : int = 50
 var is_reloading : bool = false
 @export var team: String = "Azul"
-@export var health: int = 2
+@export var health: int = 100
 
 var default_fov : float = 75.0
 var ads_fov : float = 40.0
@@ -450,7 +450,8 @@ func _shoot() -> void:
 		_spawn_impact_decal.rpc(point, normal)
 		
 		if collider and collider.has_method("recieve_damage"):
-			collider.recieve_damage.rpc_id(collider.get_multiplayer_authority())
+			var dmg = weapon.damage if weapon and "damage" in weapon else 16
+			collider.recieve_damage.rpc_id(collider.get_multiplayer_authority(), dmg)
 	
 	# RECUO V1645 🏙️🎯🔥
 	_apply_recoil()
@@ -593,7 +594,7 @@ func play_shoot_effects() -> void:
 func recieve_damage(damage:= 1) -> void:
 	health -= damage
 	if health <= 0:
-		health = 2
+		health = 100
 		position = spawns[randi() % spawns.size()]
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:

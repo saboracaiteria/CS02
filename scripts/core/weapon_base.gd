@@ -12,7 +12,7 @@ class_name WeaponBase
 @export var ads_offset: Vector3 = Vector3(0, -0.2, -0.4)
 
 @export_category("Weapon Stats")
-@export var damage: int = 1
+@export var damage: int = 16
 @export var fire_rate: float = 0.1
 @export var max_ammo: int = 30
 @export var reload_time: float = 1.5

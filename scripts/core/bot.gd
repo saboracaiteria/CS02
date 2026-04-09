@@ -160,7 +160,7 @@ func _shoot(target):
 		flash.hide()
 	
 	if target and target.has_method("recieve_damage"):
-		target.recieve_damage.rpc_id(target.get_multiplayer_authority(), 1)
+		target.recieve_damage.rpc_id(target.get_multiplayer_authority(), 16)
 
 func _update_animations():
 	if velocity.length() > 0.1: anim_player.play("move")
@@ -194,6 +194,6 @@ func _die():
 
 func _respawn():
 	global_position = Vector3(randf_range(-10, 10), 2, randf_range(-10, 10))
-	health = 2
+	health = 100
 	is_dead = false
 	show()
