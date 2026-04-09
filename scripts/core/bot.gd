@@ -26,8 +26,12 @@ func _ready():
 	# SNAP DE CHÃO IMEDIATO 🏙️🚀🎯
 	global_position.y = 1.0 # Força pro nível do player
 	
+	# Configuração do Navigation Agent
+	nav_agent.path_desired_distance = 1.5
+	nav_agent.target_desired_distance = 1.5
+	
 	# Aguarda o mundo carregar e busca objetivo
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(1.0).timeout
 	_find_next_objective()
 
 enum State {PATROL, COMBAT, SEARCH}
@@ -65,15 +69,30 @@ func _state_patrol(delta):
 		return
 		
 	if target_node:
-		var dir = (target_node.global_position - global_position).normalized()
+		# Se a zona já for nossa, procura outra! 🏙️🚩🥇
+		if target_node.get("owning_team") == team:
+			_find_next_objective()
+			return
+
+		nav_agent.target_position = target_node.global_position
+		
+		if nav_agent.is_navigation_finished():
+			_find_next_objective()
+			return
+
+		var next_path_pos = nav_agent.get_next_path_position()
+		var dir = (next_path_pos - global_position).normalized()
 		dir.y = 0
+		
 		velocity.x = dir.x * speed
 		velocity.z = dir.z * speed
 		_smooth_look_at(global_position + dir, delta)
 		
-		# Se chegar na área ou ela for capturada, muda o patrol
-		if global_position.distance_to(target_node.global_position) < 2.0:
-			_find_next_objective()
+		# Se chegar na área (fallback se o nav falhar)
+		if global_position.distance_to(target_node.global_position) < 2.5:
+			# Fica na área até capturar!
+			velocity.x = 0
+			velocity.z = 0
 
 func _state_combat(delta):
 	var enemy = _check_for_enemies()
@@ -114,7 +133,9 @@ func _state_search(delta):
 		return
 		
 	# Vai até onde viu o inimigo pela última vez 🕵️‍♂️
-	var dir = (last_known_position - global_position).normalized()
+	nav_agent.target_position = last_known_position
+	var next_path_pos = nav_agent.get_next_path_position()
+	var dir = (next_path_pos - global_position).normalized()
 	dir.y = 0
 	velocity.x = dir.x * speed
 	velocity.z = dir.z * speed
@@ -160,7 +181,8 @@ func _shoot(target):
 		flash.hide()
 	
 	if target and target.has_method("recieve_damage"):
-		target.recieve_damage.rpc_id(target.get_multiplayer_authority(), 16)
+		# Usando call_local para garantir que o dano seja registrado no Host corretamente
+		target.recieve_damage.rpc_id(target.get_multiplayer_authority(), 20)
 
 func _update_animations():
 	if velocity.length() > 0.1: anim_player.play("move")
@@ -171,11 +193,28 @@ func _find_next_objective():
 	var zones = get_tree().get_nodes_in_group("capture_zone")
 	if zones.is_empty(): return
 	
-	var best_zone = zones[randi() % zones.size()]
-	target_node = best_zone
+	# Filtra apenas zonas que não são do nosso time
+	var targets = []
+	for z in zones:
+		if z.get("owning_team") != team:
+			targets.append(z)
+	
+	if targets.is_empty():
+		# Se todas forem nossas, patrulha uma aleatória
+		target_node = zones[randi() % zones.size()]
+	else:
+		# Pega a zona mais próxima entre as capturáveis
+		var closest = targets[0]
+		var min_dist = global_position.distance_to(closest.global_position)
+		for t in targets:
+			var d = global_position.distance_to(t.global_position)
+			if d < min_dist:
+				min_dist = d
+				closest = t
+		target_node = closest
 
 @rpc("any_peer", "call_local")
-func recieve_damage(damage:= 1) -> void:
+func recieve_damage(damage:= 20) -> void:
 	if is_dead: return
 	health -= damage
 	Global.log_error("DANO: Bot %s recebeu %d de dano. Vida: %d" % [name, damage, health])
@@ -193,6 +232,7 @@ func _die():
 	_respawn()
 
 func _respawn():
+	# Spawns fixos ou aleatórios seguros
 	global_position = Vector3(randf_range(-10, 10), 2, randf_range(-10, 10))
 	health = 100
 	is_dead = false
@@ -200,3 +240,4 @@ func _respawn():
 	current_state = State.PATROL
 	_find_next_objective()
 	show()
+

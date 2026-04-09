@@ -266,7 +266,7 @@ func _process(_delta: float) -> void:
 		
 		# Interpolação suave para a arma deslizar para o centro
 		weapon.transform.origin = weapon.transform.origin.lerp(target_pos, _delta * 10.0)
-		camera.fov = lerp(camera.fov, target_fov, _delta * 10.0)
+		camera.fov = lerp(camera.fov, clamp(target_fov, 1.0, 179.0), _delta * 10.0)
 
 	# CROUCH HEIGHT LERP ✨
 	var target_height = 2.0 if !is_crouching else 1.2
@@ -278,7 +278,7 @@ func _process(_delta: float) -> void:
 	var fov_target = default_fov
 	if is_ads: fov_target = ads_fov
 	elif is_sprinting: fov_target = sprint_fov
-	camera.fov = lerp(camera.fov, fov_target, fov_speed * _delta)
+	camera.fov = lerp(camera.fov, clamp(fov_target, 1.0, 179.0), fov_speed * _delta)
 
 	# ANIMAÇÃO 🕺
 	if not is_reloading:
@@ -449,7 +449,8 @@ func _shoot() -> void:
 		_spawn_impact_decal.rpc(point, normal)
 		
 		if collider and collider.has_method("recieve_damage"):
-			var dmg = weapon.damage if weapon and "damage" in weapon else 16
+			var dmg = 20 # Dano base garantido
+			if weapon and "damage" in weapon: dmg = weapon.damage
 			collider.recieve_damage.rpc_id(collider.get_multiplayer_authority(), dmg)
 	
 	# RECUO V1645 🏙️🎯🔥
@@ -589,12 +590,14 @@ func play_shoot_effects() -> void:
 	
 	print("--- EFEITO DE TIRO EXECUTADO (ALTERNADO: ", shoot_right, ") ---")
 
-@rpc("any_peer")
-func recieve_damage(damage:= 1) -> void:
+@rpc("any_peer", "call_local")
+func recieve_damage(damage:= 20) -> void:
 	health -= damage
+	Global.log_error("DANO: Jogador %s recebeu %d de dano. Vida: %d" % [name, damage, health])
 	if health <= 0:
 		health = 100
 		position = spawns[randi() % spawns.size()]
+		Global.log_error("SISTEMA: Jogador %s foi eliminado e respawnou!" % name)
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "shoot":
