@@ -98,23 +98,45 @@ func _ready() -> void:
 		d_label.modulate = Color(0, 1, 0, 0.7)
 		add_child(d_label)
 
-		# PC HEALTH HUD V1740 🏙️❤️🥇 - Sempre visível, até no PC!
+		# HEALTH HUD V1750 🏙️❤️🥇 - PC e Mobile!
 		var pc_hud = CanvasLayer.new()
 		pc_hud.name = "PCHUD"
+		pc_hud.layer = 10 # Acima dos controles touch!
 		add_child(pc_hud)
 		
 		var hp_label = Label.new()
 		hp_label.name = "PCHealthLabel"
-		hp_label.position = Vector2(20, 90)
-		hp_label.add_theme_font_size_override("font_size", 22)
+		
+		# POSIÇÃO ADAPTATIVA: Mobile = topo centro, PC = topo esquerda 📱💻
+		if Global.is_mobile:
+			hp_label.position = Vector2(20, 20)
+			hp_label.add_theme_font_size_override("font_size", 32)
+		else:
+			hp_label.position = Vector2(20, 90)
+			hp_label.add_theme_font_size_override("font_size", 22)
+		
 		hp_label.text = "❤️ 100 HP"
 		pc_hud.add_child(hp_label)
+		
+		# Ammo label para mobile 🔫
+		var ammo_label_hud = Label.new()
+		ammo_label_hud.name = "AmmoHUD"
+		if Global.is_mobile:
+			ammo_label_hud.position = Vector2(20, 70)
+			ammo_label_hud.add_theme_font_size_override("font_size", 26)
+		else:
+			ammo_label_hud.position = Vector2(20, 120)
+			ammo_label_hud.add_theme_font_size_override("font_size", 18)
+		ammo_label_hud.text = "🔫 50 / 150"
+		ammo_label_hud.modulate = Color(1, 1, 1, 0.85)
+		pc_hud.add_child(ammo_label_hud)
 		
 		var dmg_flash = ColorRect.new()
 		dmg_flash.name = "DamageFlash"
 		dmg_flash.color = Color(1, 0, 0, 0)
 		dmg_flash.set_anchors_preset(Control.PRESET_FULL_RECT)
 		pc_hud.add_child(dmg_flash)
+
 
 		# ESCONDE HUD NO PC V1260 🚫📱
 		if not Global.is_mobile:
@@ -323,16 +345,28 @@ func _process(_delta: float) -> void:
 	# UPDATE PREMIUM HUD V1440 ✨💎
 	_update_hud(_delta)
 	
-	# PC HEALTH DISPLAY V1740 ❤️🏙️🥇
+	# UNIFIED HUD DISPLAY V1750 ❤️🔫🏙️🥇 (PC & MOBILE)
 	if is_multiplayer_authority():
 		var pc_hud = find_child("PCHUD", true)
 		if pc_hud:
+			# HP UPDATE ❤️
 			var hp_lbl = pc_hud.find_child("PCHealthLabel", true)
 			if hp_lbl:
 				hp_lbl.text = "❤️ %d HP" % health
 				if health > 60: hp_lbl.modulate = Color(0.4, 1.0, 0.4)
 				elif health > 30: hp_lbl.modulate = Color(1.0, 1.0, 0.2)
 				else: hp_lbl.modulate = Color(1.0, 0.2, 0.2)
+			
+			# AMMO UPDATE 🔫
+			var ammo_lbl = pc_hud.find_child("AmmoHUD", true)
+			if ammo_lbl and weapon:
+				var current_ammo = weapon.ammo if "ammo" in weapon else 0
+				var max_ammo = weapon.max_ammo if "max_ammo" in weapon else 0
+				ammo_lbl.text = "🔫 %d / %d" % [current_ammo, max_ammo]
+				if current_ammo <= (max_ammo * 0.25):
+					ammo_lbl.modulate = Color(1.0, 0.3, 0.3) # Low ammo alert
+				else:
+					ammo_lbl.modulate = Color(1, 1, 1, 0.85)
 
 func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority(): return
