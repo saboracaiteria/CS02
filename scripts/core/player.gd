@@ -79,7 +79,7 @@ func _ready() -> void:
 	_update_weapon_nodes()
 	
 	add_to_group("player") # INDISPENSÁVEL PARA OS BOTÕES HUD! 🏙️🎯🥇
-	
+	if is_multiplayer_authority():
 		# CLEAN HUD V1760 🏙️❤️🔫🥇
 		var pc_hud = CanvasLayer.new()
 		pc_hud.name = "PCHUD"
@@ -129,7 +129,6 @@ func _ready() -> void:
 		death_msg.set_anchors_preset(Control.PRESET_CENTER)
 		death_msg.modulate = Color(1, 1, 1, 0)
 		death_hud.add_child(death_msg)
-
 
 		# ESCONDE HUD NO PC V1260 🚫📱
 		if not Global.is_mobile:
