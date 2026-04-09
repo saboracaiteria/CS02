@@ -1,11 +1,20 @@
 const fs = require('fs');
 const path = './index.html';
 
-// VERSION TRACKER V1710 🛡️🤖🏙️🚩🥇
-const VERSION = 'V1710';
+// VERSION TRACKER V1715 🛠️🤖🏙️🚩🥇
+const VERSION = 'V1715';
 
 if (fs.existsSync(path)) {
     let content = fs.readFileSync(path, 'utf8');
+    
+    // Injeta Eruda para Debug Mobile 🛠️
+    const erudaScript = `
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+    `;
+    if (!content.includes('eruda')) {
+        content = content.replace('</head>', erudaScript + '</head>');
+    }
     
     // Injeta o Reload e Teclas F5/F12 ✨🚀💎🥇
     const patch = `

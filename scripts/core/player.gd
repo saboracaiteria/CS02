@@ -82,7 +82,7 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		var label = Label.new()
-		label.text = "V1710 - TACTICAL GROUND MOVEMENT! 🛡️🤖🏙️🚩🥇"
+		label.text = "V1715 - ERUDA DEBUG & HOST FIX! 🛠️🤖🏙️🚩🥇"
 		label.modulate = Color(1, 1, 0, 1) 
 		label.position = Vector2(20, 20)
 		var label2 = Label.new()

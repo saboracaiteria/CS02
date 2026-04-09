@@ -138,7 +138,9 @@ func _on_host_button_pressed() -> void:
 	Global.is_playing = true
 	
 	Global.log_error("SISTEMA: Criando Bots...")
+	await get_tree().create_timer(1.0).timeout 
 	spawn_bots(5)
+	Global.log_error("SISTEMA: Partida Iniciada! 🏙️🎯🥇")
 	
 	if host_err == OK:
 		upnp_setup()
