@@ -98,6 +98,24 @@ func _ready() -> void:
 		d_label.modulate = Color(0, 1, 0, 0.7)
 		add_child(d_label)
 
+		# PC HEALTH HUD V1740 🏙️❤️🥇 - Sempre visível, até no PC!
+		var pc_hud = CanvasLayer.new()
+		pc_hud.name = "PCHUD"
+		add_child(pc_hud)
+		
+		var hp_label = Label.new()
+		hp_label.name = "PCHealthLabel"
+		hp_label.position = Vector2(20, 90)
+		hp_label.add_theme_font_size_override("font_size", 22)
+		hp_label.text = "❤️ 100 HP"
+		pc_hud.add_child(hp_label)
+		
+		var dmg_flash = ColorRect.new()
+		dmg_flash.name = "DamageFlash"
+		dmg_flash.color = Color(1, 0, 0, 0)
+		dmg_flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+		pc_hud.add_child(dmg_flash)
+
 		# ESCONDE HUD NO PC V1260 🚫📱
 		if not Global.is_mobile:
 			var hud = find_child("TouchControls", true)
@@ -256,13 +274,13 @@ func _process(_delta: float) -> void:
 	SPEED = target_speed
 
 	# MOVIMENTO SUAVE DE ADS V1630 🎯🏙️🥇
-	if weapon:
+	if weapon and weapon.has_method("get") and "view_model_offset" in weapon:
 		var target_pos = weapon.view_model_offset
-		var target_fov = Global.fov
+		var target_fov = default_fov # FIX V1740: Global.fov não existe!
 		
 		if is_ads:
-			target_pos = weapon.ads_offset
-			target_fov = Global.fov * 0.7
+			target_pos = weapon.ads_offset if "ads_offset" in weapon else target_pos
+			target_fov = ads_fov
 		
 		# Interpolação suave para a arma deslizar para o centro
 		weapon.transform.origin = weapon.transform.origin.lerp(target_pos, _delta * 10.0)
@@ -304,6 +322,17 @@ func _process(_delta: float) -> void:
 
 	# UPDATE PREMIUM HUD V1440 ✨💎
 	_update_hud(_delta)
+	
+	# PC HEALTH DISPLAY V1740 ❤️🏙️🥇
+	if is_multiplayer_authority():
+		var pc_hud = find_child("PCHUD", true)
+		if pc_hud:
+			var hp_lbl = pc_hud.find_child("PCHealthLabel", true)
+			if hp_lbl:
+				hp_lbl.text = "❤️ %d HP" % health
+				if health > 60: hp_lbl.modulate = Color(0.4, 1.0, 0.4)
+				elif health > 30: hp_lbl.modulate = Color(1.0, 1.0, 0.2)
+				else: hp_lbl.modulate = Color(1.0, 0.2, 0.2)
 
 func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority(): return
@@ -597,8 +626,19 @@ func play_shoot_effects() -> void:
 
 @rpc("any_peer")
 func recieve_damage(damage:= 20) -> void:
+	if not is_multiplayer_authority(): return # Só processa no peer dono do player!
 	health -= damage
 	Global.log_error("DANO: Jogador %s recebeu %d de dano. Vida: %d" % [name, damage, health])
+	
+	# FLASH DE DANO V1740 🔴 - Tela fica vermelha ao ser atingido!
+	var pc_hud = find_child("PCHUD", true)
+	if pc_hud:
+		var flash = pc_hud.find_child("DamageFlash", true)
+		if flash:
+			flash.color = Color(1, 0, 0, 0.45)
+			var tween = create_tween()
+			tween.tween_property(flash, "color", Color(1, 0, 0, 0), 0.5)
+	
 	if health <= 0:
 		health = 100
 		position = spawns[randi() % spawns.size()]

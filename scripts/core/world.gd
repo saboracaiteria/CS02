@@ -139,7 +139,7 @@ func _on_host_button_pressed() -> void:
 	
 	Global.log_error("SISTEMA: Criando Bots...")
 	await get_tree().create_timer(1.0).timeout 
-	spawn_bots(5)
+	spawn_bots(3) # V1740: Reduzido de 5 para 3 - menos fogo concentrado
 	Global.log_error("SISTEMA: Partida Iniciada! 🏙️🎯🥇")
 	
 	if host_err == OK:
