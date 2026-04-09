@@ -32,6 +32,9 @@ func _ready():
 	
 	# Aguarda o mundo carregar e busca objetivo
 	await get_tree().create_timer(1.0).timeout
+	# STAGGER DE ACURÁCIA: Cada bot começa com acurácia aleatória diferente 🎯
+	# Isso evita que todos os bots atinjam acurácia máxima no mesmo instante!
+	accuracy = randf_range(0.0, 0.3)
 	_find_next_objective()
 
 enum State {PATROL, COMBAT, SEARCH}
@@ -181,8 +184,12 @@ func _shoot(target):
 		flash.hide()
 	
 	if target and target.has_method("recieve_damage"):
-		# Usando call_local para garantir que o dano seja registrado no Host corretamente
-		target.recieve_damage.rpc_id(target.get_multiplayer_authority(), 20)
+		# SMART RPC V1730: Evita erro 'RPC on yourself' 🏙️🎯🥇
+		var target_auth = target.get_multiplayer_authority()
+		if target_auth == multiplayer.get_unique_id():
+			target.recieve_damage(10) # Chamada direta no mesmo peer
+		else:
+			target.recieve_damage.rpc_id(target_auth, 10)
 
 func _update_animations():
 	if velocity.length() > 0.1: anim_player.play("move")
@@ -213,8 +220,8 @@ func _find_next_objective():
 				closest = t
 		target_node = closest
 
-@rpc("any_peer", "call_local")
-func recieve_damage(damage:= 20) -> void:
+@rpc("any_peer")
+func recieve_damage(damage:= 10) -> void:
 	if is_dead: return
 	health -= damage
 	Global.log_error("DANO: Bot %s recebeu %d de dano. Vida: %d" % [name, damage, health])

@@ -449,9 +449,14 @@ func _shoot() -> void:
 		_spawn_impact_decal.rpc(point, normal)
 		
 		if collider and collider.has_method("recieve_damage"):
-			var dmg = 20 # Dano base garantido
+			var dmg = 20 # Dano base
 			if weapon and "damage" in weapon: dmg = weapon.damage
-			collider.recieve_damage.rpc_id(collider.get_multiplayer_authority(), dmg)
+			# SMART RPC V1730: Evita erro 'RPC on yourself' 🏙️🎯🥇
+			var target_auth = collider.get_multiplayer_authority()
+			if target_auth == multiplayer.get_unique_id():
+				collider.recieve_damage(dmg) # Chamada direta no mesmo peer
+			else:
+				collider.recieve_damage.rpc_id(target_auth, dmg)
 	
 	# RECUO V1645 🏙️🎯🔥
 	_apply_recoil()
@@ -590,7 +595,7 @@ func play_shoot_effects() -> void:
 	
 	print("--- EFEITO DE TIRO EXECUTADO (ALTERNADO: ", shoot_right, ") ---")
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer")
 func recieve_damage(damage:= 20) -> void:
 	health -= damage
 	Global.log_error("DANO: Jogador %s recebeu %d de dano. Vida: %d" % [name, damage, health])
