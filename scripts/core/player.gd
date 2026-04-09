@@ -80,62 +80,55 @@ func _ready() -> void:
 	
 	add_to_group("player") # INDISPENSÁVEL PARA OS BOTÕES HUD! 🏙️🎯🥇
 	
-	if is_multiplayer_authority():
-		var label = Label.new()
-		label.text = "V1715 - ERUDA DEBUG & HOST FIX! 🛠️🤖🏙️🚩🥇"
-		label.modulate = Color(1, 1, 0, 1) 
-		label.position = Vector2(20, 20)
-		var label2 = Label.new()
-		label2.text = "🔥 SE FOR CAPSULA VERMELHA, DÊ CTRL+F5 NO PC OU RECARREGUE O BROWSER! 🔥"
-		label2.modulate = Color(1, 0, 0, 1)
-		label2.position = Vector2(20, 50)
-		add_child(label2)
-		
-		# DEBUG V1260 🛠️🥋🛡️
-		var d_label = Label.new()
-		d_label.name = "DebugLabel"
-		d_label.position = Vector2(20, 50)
-		d_label.modulate = Color(0, 1, 0, 0.7)
-		add_child(d_label)
-
-		# HEALTH HUD V1750 🏙️❤️🥇 - PC e Mobile!
+		# CLEAN HUD V1760 🏙️❤️🔫🥇
 		var pc_hud = CanvasLayer.new()
 		pc_hud.name = "PCHUD"
-		pc_hud.layer = 10 # Acima dos controles touch!
+		pc_hud.layer = 15 # Master layer!
 		add_child(pc_hud)
 		
+		# Container de Info (Canto inferior esquerdo)
+		var info_box = Control.new()
+		info_box.name = "InfoBox"
+		info_box.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+		info_box.position = Vector2(30, -110) # Offset do canto
+		pc_hud.add_child(info_box)
+
 		var hp_label = Label.new()
 		hp_label.name = "PCHealthLabel"
+		hp_label.add_theme_font_size_override("font_size", 38)
+		hp_label.text = "❤️ 100"
+		info_box.add_child(hp_label)
 		
-		# POSIÇÃO ADAPTATIVA: Mobile = topo centro, PC = topo esquerda 📱💻
-		if Global.is_mobile:
-			hp_label.position = Vector2(20, 20)
-			hp_label.add_theme_font_size_override("font_size", 32)
-		else:
-			hp_label.position = Vector2(20, 90)
-			hp_label.add_theme_font_size_override("font_size", 22)
-		
-		hp_label.text = "❤️ 100 HP"
-		pc_hud.add_child(hp_label)
-		
-		# Ammo label para mobile 🔫
 		var ammo_label_hud = Label.new()
 		ammo_label_hud.name = "AmmoHUD"
-		if Global.is_mobile:
-			ammo_label_hud.position = Vector2(20, 70)
-			ammo_label_hud.add_theme_font_size_override("font_size", 26)
-		else:
-			ammo_label_hud.position = Vector2(20, 120)
-			ammo_label_hud.add_theme_font_size_override("font_size", 18)
-		ammo_label_hud.text = "🔫 50 / 150"
-		ammo_label_hud.modulate = Color(1, 1, 1, 0.85)
-		pc_hud.add_child(ammo_label_hud)
+		ammo_label_hud.position = Vector2(0, 45)
+		ammo_label_hud.add_theme_font_size_override("font_size", 28)
+		ammo_label_hud.text = "🔫 30 / 150"
+		ammo_label_hud.modulate = Color(1, 1, 1, 0.8)
+		info_box.add_child(ammo_label_hud)
 		
+		# Effect Layer (Flash e Morte)
 		var dmg_flash = ColorRect.new()
 		dmg_flash.name = "DamageFlash"
 		dmg_flash.color = Color(1, 0, 0, 0)
+		dmg_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		dmg_flash.set_anchors_preset(Control.PRESET_FULL_RECT)
 		pc_hud.add_child(dmg_flash)
+
+		var death_hud = ColorRect.new()
+		death_hud.name = "DeathHUD"
+		death_hud.color = Color(0, 0, 0, 0)
+		death_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		death_hud.set_anchors_preset(Control.PRESET_FULL_RECT)
+		pc_hud.add_child(death_hud)
+		
+		var death_msg = Label.new()
+		death_msg.name = "DeathMsg"
+		death_msg.text = "VOCÊ FOI ELIMINADO"
+		death_msg.add_theme_font_size_override("font_size", 48)
+		death_msg.set_anchors_preset(Control.PRESET_CENTER)
+		death_msg.modulate = Color(1, 1, 1, 0)
+		death_hud.add_child(death_msg)
 
 
 		# ESCONDE HUD NO PC V1260 🚫📱
@@ -345,28 +338,26 @@ func _process(_delta: float) -> void:
 	# UPDATE PREMIUM HUD V1440 ✨💎
 	_update_hud(_delta)
 	
-	# UNIFIED HUD DISPLAY V1750 ❤️🔫🏙️🥇 (PC & MOBILE)
+	# UNIFIED CLEAN HUD V1760 ❤️🔫🏙️🥇
 	if is_multiplayer_authority():
 		var pc_hud = find_child("PCHUD", true)
 		if pc_hud:
-			# HP UPDATE ❤️
 			var hp_lbl = pc_hud.find_child("PCHealthLabel", true)
 			if hp_lbl:
-				hp_lbl.text = "❤️ %d HP" % health
+				hp_lbl.text = "❤️ %d" % health
 				if health > 60: hp_lbl.modulate = Color(0.4, 1.0, 0.4)
 				elif health > 30: hp_lbl.modulate = Color(1.0, 1.0, 0.2)
 				else: hp_lbl.modulate = Color(1.0, 0.2, 0.2)
 			
-			# AMMO UPDATE 🔫
 			var ammo_lbl = pc_hud.find_child("AmmoHUD", true)
 			if ammo_lbl and weapon:
 				var current_ammo = weapon.ammo if "ammo" in weapon else 0
 				var max_ammo = weapon.max_ammo if "max_ammo" in weapon else 0
 				ammo_lbl.text = "🔫 %d / %d" % [current_ammo, max_ammo]
 				if current_ammo <= (max_ammo * 0.25):
-					ammo_lbl.modulate = Color(1.0, 0.3, 0.3) # Low ammo alert
+					ammo_lbl.modulate = Color(1.0, 0.3, 0.3)
 				else:
-					ammo_lbl.modulate = Color(1, 1, 1, 0.85)
+					ammo_lbl.modulate = Color(1, 1, 1, 0.8)
 
 func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority(): return
@@ -660,20 +651,35 @@ func play_shoot_effects() -> void:
 
 @rpc("any_peer")
 func recieve_damage(damage:= 20) -> void:
-	if not is_multiplayer_authority(): return # Só processa no peer dono do player!
+	if not is_multiplayer_authority(): return
 	health -= damage
 	Global.log_error("DANO: Jogador %s recebeu %d de dano. Vida: %d" % [name, damage, health])
 	
-	# FLASH DE DANO V1740 🔴 - Tela fica vermelha ao ser atingido!
 	var pc_hud = find_child("PCHUD", true)
-	if pc_hud:
-		var flash = pc_hud.find_child("DamageFlash", true)
-		if flash:
-			flash.color = Color(1, 0, 0, 0.45)
-			var tween = create_tween()
-			tween.tween_property(flash, "color", Color(1, 0, 0, 0), 0.5)
-	
-	if health <= 0:
+	if health > 0:
+		# FLASH DE DANO V1740 🔴
+		if pc_hud:
+			var flash = pc_hud.find_child("DamageFlash", true)
+			if flash:
+				flash.color = Color(1, 0, 0, 0.45)
+				var tween = create_tween()
+				tween.tween_property(flash, "color", Color(1, 0, 0, 0), 0.5)
+	else:
+		# FEEDBACK DE MORTE V1760 💀💤🌑
+		if pc_hud:
+			var death = pc_hud.find_child("DeathHUD", true)
+			var msg = pc_hud.find_child("DeathMsg", true)
+			if death and msg:
+				death.color = Color(0, 0, 0, 1.0) # Tela preta instantânea
+				msg.modulate = Color(1, 1, 1, 1) # Texto branco
+				
+				await get_tree().create_timer(1.5).timeout # Pausa dramática
+				
+				# Fade out para o respawn
+				var tween = create_tween().set_parallel(true)
+				tween.tween_property(death, "color", Color(0, 0, 0, 0), 1.0)
+				tween.tween_property(msg, "modulate", Color(1, 1, 1, 0), 1.0)
+		
 		health = 100
 		position = spawns[randi() % spawns.size()]
 		Global.log_error("SISTEMA: Jogador %s foi eliminado e respawnou!" % name)
