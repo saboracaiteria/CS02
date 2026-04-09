@@ -61,8 +61,11 @@ script = ExtResource("1_script")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_1")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0, 0, 0, 1) # COR PRETA TÁTICA
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.9, 0)
 mesh = SubResource("BoxMesh_1")
 material_override = SubResource("StandardMaterial3D_1")
 

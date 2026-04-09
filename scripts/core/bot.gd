@@ -20,11 +20,12 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
 	add_to_group("bot")
 	add_to_group("enemy" if team == "Vermelho" else "ally")
-	nav_agent.path_desired_distance = 0.5
-	nav_agent.target_desired_distance = 0.5
 	
-	# Aguarda o mundo carregar
-	await get_tree().create_timer(1.0).timeout
+	# SNAP DE CHÃO IMEDIATO 🏙️🚀🎯
+	global_position.y = 1.0 # Força pro nível do player
+	
+	# Aguarda o mundo carregar e busca objetivo
+	await get_tree().create_timer(0.5).timeout
 	_find_next_objective()
 
 enum State {PATROL, COMBAT, SEARCH}

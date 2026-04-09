@@ -11,6 +11,7 @@ var players_inside: Array = []
 @onready var label = $Label3D
 
 func _ready():
+	add_to_group("capture_zone")
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	_update_visuals()
