@@ -8,6 +8,8 @@ var target_node: Node3D = null
 var is_dead: bool = false
 var last_shoot_time: float = 0.0
 var fire_rate: float = 0.4
+var shoot_timer: float = 0.0
+@export var detection_range: float = 40.0
 
 @onready var nav_agent = $NavigationAgent3D
 @onready var raycast = $RayCast3D

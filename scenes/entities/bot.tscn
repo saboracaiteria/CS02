@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://bot_scene"]
+[gd_scene load_steps=10 format=3 uid="uid://bot_scene"]
 
 [ext_resource type="Script" path="res://scripts/core/bot.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://c5c1lnw5ajt3c" path="res://scenes/pistol.tscn" id="2_pistol"]
+[ext_resource type="PackedScene" uid="uid://pistol_scene" path="res://scenes/pistol.tscn" id="2_pistol"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
@@ -11,7 +11,7 @@ height = 1.8
 size = Vector3(0.8, 1.8, 0.8)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
-albedo_color = Color(0, 0.4, 1, 1)
+albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="Animation_1"]
 resource_name = "idle"
@@ -60,9 +60,6 @@ script = ExtResource("1_script")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_1")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
-albedo_color = Color(0, 0, 0, 1) # COR PRETA TÁTICA
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.9, 0)
