@@ -1,8 +1,14 @@
 const fs = require('fs');
 const path = './index.html';
 
-// VERSION TRACKER V1715 🛠️🤖🏙️🚩🥇
-const VERSION = 'V1715';
+// VERSION AUTO-READER: Lê a versão direto do .bat para nunca ficar desatualizado! 🏙️🚀🥇
+let VERSION = 'V1720'; // fallback
+try {
+    const batContent = fs.readFileSync('./AUTO_BUILD_PUSH.bat', 'utf8');
+    const match = batContent.match(/set VERSION=(V\d+)/);
+    if (match) VERSION = match[1];
+} catch(e) {}
+
 
 if (fs.existsSync(path)) {
     let content = fs.readFileSync(path, 'utf8');
