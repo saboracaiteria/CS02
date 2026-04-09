@@ -196,4 +196,7 @@ func _respawn():
 	global_position = Vector3(randf_range(-10, 10), 2, randf_range(-10, 10))
 	health = 100
 	is_dead = false
+	collision_layer = 2 # VOLTA A SER ATINGÍVEL! 🎯🏙️🥇
+	current_state = State.PATROL
+	_find_next_objective()
 	show()
