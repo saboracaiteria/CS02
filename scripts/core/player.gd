@@ -439,15 +439,20 @@ func _shoot() -> void:
 	next_shoot_time = current_time + fire_rate
 	
 	current_ammo -= 1
-	play_shoot_effects.rpc()
+	# SPAWN TRACER V2100 🏙️🎯🥇
+	var from_pos = camera.global_position + (-camera.global_transform.basis.z * 0.5)
+	var to_pos = from_pos + (-camera.global_transform.basis.z * 100.0)
+	
+	if raycast.is_colliding():
+		var point = raycast.get_collision_point()
+		to_pos = point # Ajusta o rastro para o ponto de impacto!
+		_spawn_impact_decal.rpc(point, raycast.get_collision_normal())
+		
+	# DISPARA O RASTRO PARA TODOS OS CLIENTES 📡🏙️🚀
+	_spawn_bullet_tracer.rpc(from_pos, to_pos)
+	
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
-		var point = raycast.get_collision_point()
-		var normal = raycast.get_collision_normal()
-		
-		# EFEITO DE IMPACTO V1570 🏙️🎯🔥
-		_spawn_impact_decal.rpc(point, normal)
-		
 		if collider and collider.has_method("recieve_damage"):
 			var dmg = 20 # Dano base
 			if weapon and "damage" in weapon: dmg = weapon.damage
@@ -499,6 +504,31 @@ func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.1)
 	tween.tween_callback(mesh.queue_free)
+
+@rpc("call_local")
+func _spawn_bullet_tracer(from: Vector3, to: Vector3):
+	# SISTEMA DE TRACER NEON V2100 🏙️🎯🥇
+	var mesh_instance = MeshInstance3D.new()
+	var immediate_mesh = ImmediateMesh.new()
+	var material = StandardMaterial3D.new()
+
+	mesh_instance.mesh = immediate_mesh
+	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+	material.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = Color(0.2, 1.0, 1.0, 1.0) # Ciano Neon para o Player 💎
+	mesh_instance.material_override = material
+
+	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	immediate_mesh.surface_add_vertex(from)
+	immediate_mesh.surface_add_vertex(to)
+	immediate_mesh.surface_end()
+
+	get_tree().root.add_child(mesh_instance)
+
+	var tracer_tween = create_tween()
+	tracer_tween.tween_property(material, "albedo_color:a", 0.0, 0.1) # Some rápido!
+	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _inspect() -> void:
 	if is_reloading: return

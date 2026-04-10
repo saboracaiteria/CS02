@@ -4,24 +4,24 @@ var shadow_btn : CheckButton
 var bloom_btn : CheckButton
 
 func _ready():
-	# 1. Configura o botão principal V2080 🏙️🎯
+	# 1. Configura o botão principal V2100: ALTO POR PADRÃO! 🏙️🎯
 	text = "Qualidade Gráfica Ultra"
-	button_pressed = !Global.is_mobile
+	button_pressed = true # Sempre começa alto agora, tanto PC quanto Mobile
 	
-	# 2. Injeta botões extras se não existirem V2080 🏗️🏹🥋
+	# 2. Injeta botões extras V2100 🏗️🏹🥋
 	var container = get_parent()
 	if container:
 		# Botão de Sombras
 		shadow_btn = CheckButton.new()
 		shadow_btn.text = "Ativar Sombras (PC/Web)"
-		shadow_btn.button_pressed = !Global.is_mobile
+		shadow_btn.button_pressed = true # ALTO POR PADRÃO
 		shadow_btn.toggled.connect(_on_shadow_toggled)
 		container.add_child(shadow_btn)
 		
 		# Botão de Bloom
 		bloom_btn = CheckButton.new()
 		bloom_btn.text = "Ativar Bloom (Brilho)"
-		bloom_btn.button_pressed = !Global.is_mobile
+		bloom_btn.button_pressed = true # ALTO POR PADRÃO
 		bloom_btn.toggled.connect(_on_bloom_toggled)
 		container.add_child(bloom_btn)
 
