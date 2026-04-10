@@ -53,10 +53,18 @@ func _on_back_pressed() -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		options = false
 
-#func _ready() -> void:
+var udp_peer: PacketPeerUDP = PacketPeerUDP.new()
+var broadcast_port: int = 9997
+var is_broadcasting: bool = false
+var discovery_timer: float = 0.0
+
 func _ready():
 	_apply_premium_style()
 	
+	# Configura UDP para o "Auto-Join" 🌐🚀
+	if !OS.has_feature("web"):
+		udp_peer.set_dest_address("255.255.255.255", broadcast_port)
+		
 	# CONEXÃO DE DOMINAÇÃO V1675 🏙️🚩🥇
 	var gm = $GameManager
 	var zones = [$CapturePoint_A, $CapturePoint_B, $CapturePoint_C]
@@ -70,6 +78,29 @@ func _ready():
 	# MOUSE VISÍVEL NO MENU! V1210 🖱️🎭
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Global.is_playing = false # Começa em estado de menu!
+
+func _process(delta: float) -> void:
+	# Lógica de Broadcast do Host 📢
+	if is_broadcasting:
+		discovery_timer += delta
+		if discovery_timer >= 1.0:
+			udp_peer.put_packet("CS02_SERVER".to_utf8_buffer())
+			discovery_timer = 0.0
+	
+	# Lógica de Escuta do Cliente 👂
+	if !is_broadcasting and !Global.is_playing and !OS.has_feature("web"):
+		if udp_peer.get_available_packet_count() > 0:
+			var packet = udp_peer.get_packet().get_string_from_utf8()
+			if packet == "CS02_SERVER":
+				var server_ip = udp_peer.get_packet_ip()
+				Global.log_error("AUTO-JOIN: Servidor encontrado em %s! Conectando..." % server_ip)
+				_join_server(server_ip)
+
+	if paused:
+		$Menu/Blur.show()
+		pause_menu.show()
+		if !controller:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _apply_premium_style():
 	# Estilização Glassmorphism para o Menu
@@ -117,7 +148,10 @@ func get_local_ip() -> String:
 	return "127.0.0.1"
 
 func _on_host_button_pressed() -> void:
-	Global.log_error("UI: Botão Host pressionado.")
+	_setup_host()
+
+func _setup_host():
+	Global.log_error("SISTEMA: Iniciando modo HOST automático...")
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
 	main_menu.hide()
@@ -127,46 +161,34 @@ func _on_host_button_pressed() -> void:
 	$Menu/Blur.hide()
 	menu_music.stop()
 	
-	# MOSTRA IP LOCAL PARA REAL WI-FI MULTIPLAYER 🏙️📶🥇
-	var local_ip = get_local_ip()
-	Global.log_error("SISTEMA: Criando Servidor na porta %d..." % PORT)
-	Global.log_error("DICA: Outros jogadores devem usar o IP: %s" % local_ip)
-	
-	# Feedback na Tela para o Host
-	if %StatusLabel:
-		%StatusLabel.text = "SERVIDOR ATIVO - IP LOCAL: %s" % local_ip
-		%StatusLabel.show()
-	
 	var host_err = enet_peer.create_server(PORT)
-	if host_err != OK:
-		Global.log_error("NET ERROR: %s - Tentando modo offline..." % host_err)
-	else:
+	if host_err == OK:
 		multiplayer.multiplayer_peer = enet_peer
 		multiplayer.peer_connected.connect(add_player)
 		multiplayer.peer_disconnected.connect(remove_player)
-		Global.log_error("NET: Servidor Online.")
-
-	if options_menu.visible:
-		options_menu.hide()
-
-	Global.log_error("SISTEMA: Adicionando Host à partida...")
+		
+		# Inicia Broadcast para outros acharem a sala 📢
+		is_broadcasting = true
+		udp_peer.bind(broadcast_port)
+		
+		Global.log_error("AUTO-NET: Sala aberta e visível na rede local!")
+	
 	add_player(multiplayer.get_unique_id())
 	Global.is_playing = true
-	
-	Global.log_error("SISTEMA: Criando Bots...")
-	await get_tree().create_timer(1.0).timeout 
 	spawn_bots(3)
-	Global.log_error("SISTEMA: Partida Iniciada! 🏙️🎯🥇")
 	
 	if host_err == OK:
 		upnp_setup()
-	
-	Global.log_error("SISTEMA: Host completo. Servidor local em: %s" % local_ip)
 
 func _on_join_button_pressed() -> void:
-	# AUTO FULLSCREEN V1460 ✨💻📱
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	_join_server(address_entry.text)
 
+func _join_server(ip: String):
+	if Global.is_playing: return
+	
+	Global.log_error("SISTEMA: Conectando a %s..." % ip)
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	
 	main_menu.hide()
 	$Menu/DollyCamera.hide()
 	$Menu/DollyCamera.current = false
@@ -174,10 +196,16 @@ func _on_join_button_pressed() -> void:
 	$Menu/Blur.hide()
 	menu_music.stop()
 	
-	enet_peer.create_client(address_entry.text, PORT)
+	var err = enet_peer.create_client(ip, PORT)
+	if err == OK:
+		multiplayer.multiplayer_peer = enet_peer
+		Global.is_playing = true
+	else:
+		Global.log_error("ERRO: Falha ao conectar em %s" % ip)
+		main_menu.show()
+
 	if options_menu.visible:
 		options_menu.hide()
-	multiplayer.multiplayer_peer = enet_peer
 
 func _on_options_button_toggled(toggled_on: bool) -> void:
 	if toggled_on:
