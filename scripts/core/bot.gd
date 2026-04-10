@@ -234,28 +234,26 @@ func _process_aura_damage(delta):
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
-	# SISTEMA DE TRACER "BEAM" V2130 🌊✨💎 - Otimizado para Web
+	# SISTEMA ULTRA-LEVE V2140 🏙️🎯🥇 - Zero Lag para Bots
 	var mesh_instance = MeshInstance3D.new()
-	var beam = CylinderMesh.new()
-	beam.top_radius = 0.02
-	beam.bottom_radius = 0.02
-	beam.height = from.distance_to(to)
-	
-	mesh_instance.mesh = beam
+	var immediate_mesh = ImmediateMesh.new()
+	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 	var material = StandardMaterial3D.new()
 	material.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color(1.0, 0.7, 0.0, 1) # Laranja Fogo 🔥
+	material.albedo_color = Color(1, 0.7, 0, 0.8) # Laranja 🟠
 	mesh_instance.material_override = material
 
 	get_tree().root.add_child(mesh_instance)
-	
-	mesh_instance.look_at_from_position((from + to) / 2, to, Vector3.UP)
-	mesh_instance.rotate_object_local(Vector3.RIGHT, PI/2)
+
+	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	immediate_mesh.surface_add_vertex(from)
+	immediate_mesh.surface_add_vertex(to)
+	immediate_mesh.surface_end()
 
 	var tracer_tween = create_tween()
-	tracer_tween.tween_property(mesh_instance, "scale", Vector3(0, 1, 0), 0.1) 
+	tracer_tween.tween_interval(0.05)
 	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _update_animations():

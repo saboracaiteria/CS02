@@ -486,57 +486,40 @@ func _apply_recoil() -> void:
 
 @rpc("call_local")
 func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
-	# SISTEMA DE IMPACTO ULTRA-RÁPIDO V2090 🏙️🎯🥇🔥
-	var mesh = MeshInstance3D.new()
-	var sphere = SphereMesh.new() 
-	sphere.radius = 0.05
-	sphere.height = 0.1
-	mesh.mesh = sphere
+	# IMPACTO ZERO LAG V2140 🏎️💨 - Apenas um ponto de luz rápido
+	var light = OmniLight3D.new()
+	light.light_color = Color(1, 0.8, 0.2)
+	light.light_energy = 2.0
+	light.omni_range = 1.0
+	light.global_position = pos
+	get_tree().root.add_child(light)
 	
-	var mat = StandardMaterial3D.new()
-	mat.shading_mode = 0 
-	mat.albedo_color = Color(1, 0.5, 0, 1) # LARANJA FAÍSCA 🔥
-	mat.emission_enabled = true
-	mat.emission = Color(1, 0.5, 0, 1)
-	mat.no_depth_test = true 
-	mesh.material_override = mat
-	
-	get_tree().root.add_child(mesh)
-	mesh.global_position = pos
-	
-	# Auto-destruição em TEMPO RECORD (0.1s!) 🏎️💨
-	var tween = get_tree().create_tween()
-	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.1)
-	tween.tween_callback(mesh.queue_free)
+	var tw = create_tween()
+	tw.tween_property(light, "light_energy", 0.0, 0.1)
+	tw.tween_callback(light.queue_free)
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
-	# SISTEMA DE TRACER "BEAM" V2110 🌊✨💎 - Invisibilidade Nunca Mais!
+	# SISTEMA ULTRA-LEVE V2140 🏙️🎯🥇 - Apenas uma linha simples (Zero Lag)
 	var mesh_instance = MeshInstance3D.new()
-	var beam = CylinderMesh.new()
-	beam.top_radius = 0.02
-	beam.bottom_radius = 0.02
-	beam.height = from.distance_to(to)
-	
-	mesh_instance.mesh = beam
+	var immediate_mesh = ImmediateMesh.new()
+	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 	var material = StandardMaterial3D.new()
 	material.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color(0, 1, 1, 1) # Ciano Puro 💎
-	material.emission_enabled = true
-	material.emission = Color(0, 1, 1, 1)
-	material.emission_energy_multiplier = 5.0
+	material.albedo_color = Color(0, 1, 1, 0.8) # Ciano Transparente 💎
 	mesh_instance.material_override = material
 
 	get_tree().root.add_child(mesh_instance)
-	
-	# Posiciona o cilindro entre os dois pontos
-	mesh_instance.look_at_from_position((from + to) / 2, to, Vector3.UP)
-	mesh_instance.rotate_object_local(Vector3.RIGHT, PI/2)
+
+	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	immediate_mesh.surface_add_vertex(from)
+	immediate_mesh.surface_add_vertex(to)
+	immediate_mesh.surface_end()
 
 	var tracer_tween = create_tween()
-	tracer_tween.tween_property(mesh_instance, "scale", Vector3(0, 1, 0), 0.1) # Achata e some
+	tracer_tween.tween_interval(0.05) # Visível por apenas 0.05s
 	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _inspect() -> void:
