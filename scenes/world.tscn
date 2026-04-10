@@ -17,7 +17,6 @@
 [ext_resource type="Script" path="res://scripts/ui/menu/options/fov.gd" id="new_script_fov"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/edit_hud.gd" id="new_script_hud"]
 [ext_resource type="Script" path="res://scripts/ui/menu/options/graphics.gd" id="new_script_gfx"]
-[ext_resource type="Texture2D" uid="uid://canaa_crest" path="res://ui/canaa_crest.png" id="101_crest"]
 [ext_resource type="Script" path="res://scripts/ui/console.gd" id="console_script"]
 [ext_resource type="Script" path="res://scripts/core/game_manager.gd" id="200_game"]
 [ext_resource type="PackedScene" uid="uid://c7t8r2h4x8p0v" path="res://scenes/objects/capture_zone.tscn" id="300_zone"]
@@ -454,12 +453,6 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 10
 
-[node name="Crest" type="TextureRect" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-texture = ExtResource("101_crest")
-expand_mode = 3
-stretch_mode = 5
 
 [node name="MainMenuLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2

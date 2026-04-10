@@ -1,5 +1,5 @@
 @echo off
-set VERSION=V2320
+set VERSION=V2330
 set GODOT_PATH=C:\Users\Terminal\Documents\Godot_4.3\Godot_v4.3-stable_win64.exe
 echo [1/4] EXPORTANDO PROJETO GODOT (%VERSION%)...
 "%GODOT_PATH%" --headless --export-release "Web" "C:\Users\Terminal\Documents\CS02\index.html"
