@@ -229,7 +229,7 @@ func add_player(peer_id: int) -> void:
 	Global.log_error("SISTEMA: Instanciando jogador %d..." % peer_id)
 	var player: CSPlayer = Player.instantiate()
 	player.name = str(peer_id)
-	add_child.call_deferred(player) # CORREÇÃO V2340 🏙️🎯🥇
+	call_deferred("add_child", player) # CORREÇÃO V2390 ✨🎯🥇
 	Global.log_error("SISTEMA: Jogador %d adicionado à cena." % peer_id)
 	
 	# SPAWN DE ELITE V1460: Busca os spawns do jogador ✨🚀🎯
@@ -271,7 +271,7 @@ func spawn_bots(amount: int):
 		var bot = Bot.instantiate()
 		bot.name = "Bot_" + str(i)
 		bot.team = "Vermelho"
-		add_child.call_deferred(bot) # CORREÇÃO V2340 🏙️🎯🥇
+		call_deferred("add_child", bot) # CORREÇÃO V2390 ✨🎯🥇
 		# Spawns estratégicos para o time vermelho (Lado oposto do mapa)
 		var bot_spawns = [
 			Vector3(15, 2, 10),

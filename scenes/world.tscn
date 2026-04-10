@@ -20,7 +20,7 @@
 [ext_resource type="Script" path="res://scripts/ui/console.gd" id="console_script"]
 [ext_resource type="Script" path="res://scripts/core/game_manager.gd" id="200_game"]
 [ext_resource type="PackedScene" uid="uid://c7t8r2h4x8p0v" path="res://scenes/objects/capture_zone.tscn" id="300_zone"]
-[ext_resource type="Texture2D" uid="uid://industrial_bg" path="res://textures/industrial_bg.png" id="industrial_bg_tex"]
+[ext_resource type="Texture2D" path="res://textures/industrial_bg.png" id="industrial_bg_tex"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_web"]
 sky_top_color = Color(0.2, 0.5, 1.0, 1)

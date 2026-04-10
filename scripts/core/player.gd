@@ -536,8 +536,9 @@ func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
 	
 	mesh_instance.global_position = pos + (_normal * 0.02) # Offset para evitar Z-fighting
 	if _normal.length() > 0.1:
-		mesh_instance.look_at(pos + _normal, Vector3.UP)
-	get_tree().root.add_child.call_deferred(mesh_instance)
+		# Recomendado pela Godot para nodes fora da árvore 🏙️🎯🥇
+		mesh_instance.look_at_from_position(mesh_instance.global_position, pos + _normal, Vector3.UP)
+	get_tree().root.call_deferred("add_child", mesh_instance)
 
 	var tw = create_tween()
 	tw.set_parallel(true)

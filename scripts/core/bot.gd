@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 4.0
 @export var health: int = 100
-const VERSION = "V2360" # Fix: Animation Checks
+const VERSION = "V2390" # Fix: Console Errors & Stability
 
 var target_node: Node3D = null
 var is_dead: bool = false
@@ -54,6 +54,7 @@ var strafe_timer: float = 0.0
 var strafe_dir: Vector3 = Vector3.ZERO
 
 func _physics_process(delta):
+	if !is_inside_tree(): return # EVITA ERROS V2390 ✨🎯🥇
 	if is_dead: return
 	
 	# GRAVIDADE SEMPRE ATIVA
