@@ -90,7 +90,8 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(-2, -2),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -0.05, 0)]
+"view_model_offset": Vector3(0, -0.4, -0.9),
+"ads_offset": Vector3(0, -0.3, -0.6)
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -190,7 +191,7 @@ near = 0.01
 
 [node name="Skin_Arms" type="Node3D" parent="Camera3D"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, -0.9)
 
 [node name="LeftArm_Helper" type="MeshInstance3D" parent="Camera3D/Skin_Arms"]
 visible = false
@@ -259,7 +260,7 @@ script = ExtResource("5_fnci2")
 visible = false
 
 [node name="PCHB" type="ProgressBar" parent="PCHUD"]
-anchors_preset = 2
+anchors_preset = 15
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 20.0
