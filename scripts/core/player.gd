@@ -31,7 +31,7 @@ var is_ads : bool = false
 var is_sprinting : bool = false
 var is_crouching : bool = false
 
-# Ammo Management V1440  AK-47 🏙️🎯🥇
+# Ammo Management V1870  AK-47 🏙️🎯🥇
 var current_ammo : int = 50
 var total_ammo : int = 150
 var max_ammo : int = 50
@@ -400,12 +400,14 @@ func _update_hud(_delta: float) -> void:
 	if weapon_label: weapon_label.visible = false
 	
 	var hp_label = hud.find_child("HealthLabel", true)
-	if hp_label: hp_label.visible = false
+	if hp_label:
+		hp_label.visible = true
+		hp_label.text = "HP: %d" % health
 		
 	# Health Bar (Mantemos a barra pois é essencial)
 	var hp_bar = hud.find_child("HealthBar", true)
 	if hp_bar:
-		hp_bar.value = lerp(hp_bar.value, float(health) * 50.0, 10.0 * _delta) # health 2 = 100%
+		hp_bar.value = lerp(hp_bar.value, float(health), 10.0 * _delta) # Formula correta V1870 🏙️🎯🥇
 		
 	# Ammo
 	var ammo_label = hud.find_child("AmmoLabel", true)
@@ -648,7 +650,7 @@ func play_shoot_effects() -> void:
 	
 	print("--- EFEITO DE TIRO EXECUTADO (ALTERNADO: ", shoot_right, ") ---")
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func recieve_damage(damage:= 20) -> void:
 	if not is_multiplayer_authority(): return
 	health -= damage
