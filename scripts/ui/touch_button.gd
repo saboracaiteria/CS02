@@ -3,7 +3,7 @@ extends BaseButton
 @export var action_name: String = ""
 
 var _is_scaling: bool = false
-var _scale_indicator: Label = null
+var _scale_indicator: ColorRect = null
 
 func _ready():
 	pivot_offset = size / 2 # Escala centralizada 💎
