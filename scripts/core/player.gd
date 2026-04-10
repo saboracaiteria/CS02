@@ -85,59 +85,10 @@ func _ready() -> void:
 		if camera: camera.make_current()
 		
 		# Garante que o HUD Mobile esteja visível para testes de HP V1960
-		var mobile_hud = find_child("TouchControls", true)
-		if mobile_hud: 
-			mobile_hud.visible = true
+		var hud = find_child("TouchControls", true)
+		if hud: 
+			hud.visible = true
 			Global.log_error("HUD MOBILE ATIVADO")
-		
-		# Container de Info (Canto inferior esquerdo)
-		var info_box = Control.new()
-		info_box.name = "InfoBox"
-		info_box.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-		info_box.position = Vector2(30, -110) # Offset do canto
-		pc_hud.add_child(info_box)
-
-		var hp_label = Label.new()
-		hp_label.name = "PCHealthLabel"
-		hp_label.add_theme_font_size_override("font_size", 38)
-		hp_label.text = "❤️ 100"
-		info_box.add_child(hp_label)
-		
-		var ammo_label_hud = Label.new()
-		ammo_label_hud.name = "AmmoHUD"
-		ammo_label_hud.position = Vector2(0, 45)
-		ammo_label_hud.add_theme_font_size_override("font_size", 28)
-		ammo_label_hud.text = "🔫 30 / 150"
-		ammo_label_hud.modulate = Color(1, 1, 1, 0.8)
-		info_box.add_child(ammo_label_hud)
-		
-		# Effect Layer (Flash e Morte)
-		var dmg_flash = ColorRect.new()
-		dmg_flash.name = "DamageFlash"
-		dmg_flash.color = Color(1, 0, 0, 0)
-		dmg_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		dmg_flash.set_anchors_preset(Control.PRESET_FULL_RECT)
-		pc_hud.add_child(dmg_flash)
-
-		var death_hud = ColorRect.new()
-		death_hud.name = "DeathHUD"
-		death_hud.color = Color(0, 0, 0, 0)
-		death_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		death_hud.set_anchors_preset(Control.PRESET_FULL_RECT)
-		pc_hud.add_child(death_hud)
-		
-		var death_msg = Label.new()
-		death_msg.name = "DeathMsg"
-		death_msg.text = "VOCÊ FOI ELIMINADO"
-		death_msg.add_theme_font_size_override("font_size", 48)
-		death_msg.set_anchors_preset(Control.PRESET_CENTER)
-		death_msg.modulate = Color(1, 1, 1, 0)
-		death_hud.add_child(death_msg)
-
-		# ESCONDE HUD NO PC V1260 🚫📱
-		if not Global.is_mobile:
-			var hud = find_child("TouchControls", true)
-			if hud:
 				hud.visible = false
 				hud.queue_free() # Remove totalmente no PC
 
