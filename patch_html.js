@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = './index.html';
 
 // VERSION AUTO-READER: Lê a versão direto do .bat para nunca ficar desatualizado! 🏙️🚀🥇
-let VERSION = 'V2050'; // fallback
+let VERSION = 'V2060'; // fallback
 try {
     const batContent = fs.readFileSync('./AUTO_BUILD_PUSH.bat', 'utf8');
     const match = batContent.match(/set VERSION=(V\d+)/);
@@ -19,7 +19,6 @@ if (fs.existsSync(path)) {
 		<script>eruda.init();</script>
 		<script>
 			// --- NATIVE UNLOCK ${VERSION} 🔓🏙️ ---
-			// Força o Canvas a ser capturável por ferramentas externas!
 			(function() {
 				const originalGetContext = HTMLCanvasElement.prototype.getContext;
 				HTMLCanvasElement.prototype.getContext = function(type, attributes) {
@@ -27,9 +26,15 @@ if (fs.existsSync(path)) {
 						attributes = attributes || {};
 						attributes.preserveDrawingBuffer = true; // PERMITE PRINT E GRAVAÇÃO 📸
 						attributes.alpha = true;
+						attributes.antialias = true;
 					}
 					return originalGetContext.call(this, type, attributes);
 				};
+				
+				// DESBLOQUEIA EVENTOS NATIVOS 🔓🏙️
+				window.addEventListener('contextmenu', e => e.stopPropagation(), true);
+				window.addEventListener('touchstart', e => e.stopPropagation(), {passive: true});
+				window.addEventListener('keydown', e => e.stopPropagation(), true);
 			})();
 			
 			function forceReload() {

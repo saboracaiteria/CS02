@@ -84,7 +84,6 @@ body {
 		<script>eruda.init();</script>
 		<script>
 			// --- NATIVE UNLOCK V2050 🔓🏙️ ---
-			// Força o Canvas a ser capturável por ferramentas externas!
 			(function() {
 				const originalGetContext = HTMLCanvasElement.prototype.getContext;
 				HTMLCanvasElement.prototype.getContext = function(type, attributes) {
@@ -92,9 +91,15 @@ body {
 						attributes = attributes || {};
 						attributes.preserveDrawingBuffer = true; // PERMITE PRINT E GRAVAÇÃO 📸
 						attributes.alpha = true;
+						attributes.antialias = true;
 					}
 					return originalGetContext.call(this, type, attributes);
 				};
+				
+				// DESBLOQUEIA EVENTOS NATIVOS 🔓🏙️
+				window.addEventListener('contextmenu', e => e.stopPropagation(), true);
+				window.addEventListener('touchstart', e => e.stopPropagation(), {passive: true});
+				window.addEventListener('keydown', e => e.stopPropagation(), true);
 			})();
 			
 			function forceReload() {
@@ -126,7 +131,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955472,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955504,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
