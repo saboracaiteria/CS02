@@ -249,6 +249,14 @@ autoplay = ""
 visible = false
 material = SubResource("ShaderMaterial_nou27")
 
+[node name="ColorRect_Bronze" type="ColorRect" parent="Menu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.16, 0.1, 0.05, 1)
+
 [node name="Background" type="TextureRect" parent="Menu"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -257,6 +265,15 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("industrial_bg_tex")
 stretch_mode = 6
+
+[node name="FallBackBG" type="ColorRect" parent="Menu"]
+show_behind_parent = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.160784, 0.0980392, 0.0509804, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
