@@ -33,7 +33,7 @@ var is_crouching : bool = false
 
 # Ammo Management V1870  AK-47 🏙️🎯🥇
 var current_ammo : int = 50
-var total_ammo : int = 150
+var total_ammo : int = 150 # V2110
 var max_ammo : int = 50
 var is_reloading : bool = false
 @export var team: String = "Azul"
@@ -507,27 +507,32 @@ func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
-	# SISTEMA DE TRACER NEON V2100 🏙️🎯🥇
+	# SISTEMA DE TRACER "BEAM" V2110 🌊✨💎 - Invisibilidade Nunca Mais!
 	var mesh_instance = MeshInstance3D.new()
-	var immediate_mesh = ImmediateMesh.new()
-	var material = StandardMaterial3D.new()
-
-	mesh_instance.mesh = immediate_mesh
+	var beam = CylinderMesh.new()
+	beam.top_radius = 0.02
+	beam.bottom_radius = 0.02
+	beam.height = from.distance_to(to)
+	
+	mesh_instance.mesh = beam
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
+	var material = StandardMaterial3D.new()
 	material.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color(0.2, 1.0, 1.0, 1.0) # Ciano Neon para o Player 💎
+	material.albedo_color = Color(0, 1, 1, 1) # Ciano Puro 💎
+	material.emission_enabled = true
+	material.emission = Color(0, 1, 1, 1)
+	material.emission_energy_multiplier = 5.0
 	mesh_instance.material_override = material
 
-	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-	immediate_mesh.surface_add_vertex(from)
-	immediate_mesh.surface_add_vertex(to)
-	immediate_mesh.surface_end()
-
 	get_tree().root.add_child(mesh_instance)
+	
+	# Posiciona o cilindro entre os dois pontos
+	mesh_instance.look_at_from_position((from + to) / 2, to, Vector3.UP)
+	mesh_instance.rotate_object_local(Vector3.RIGHT, PI/2)
 
 	var tracer_tween = create_tween()
-	tracer_tween.tween_property(material, "albedo_color:a", 0.0, 0.1) # Some rápido!
+	tracer_tween.tween_property(mesh_instance, "scale", Vector3(0, 1, 0), 0.1) # Achata e some
 	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _inspect() -> void:
