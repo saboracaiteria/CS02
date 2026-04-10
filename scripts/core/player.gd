@@ -381,6 +381,10 @@ func _physics_process(_delta: float) -> void:
 	
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+		
+	# TESTE DE HP V1890 🏙️🎯🥇: Aperte K para tirar dano!
+	if Input.is_key_pressed(KEY_K):
+		recieve_damage(1)
 
 	var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if input_dir.length() < 0.15: input_dir = Vector2.ZERO
@@ -668,6 +672,16 @@ func play_shoot_effects() -> void:
 func recieve_damage(damage:= 20) -> void:
 	if not is_multiplayer_authority(): return
 	health -= damage
+	health = max(0, health) # Não desce abaixo de 0
+	
+	# Feedback de HUD (Piscar) V1890 🏙️🎯🥇
+	var phud = find_child("PCHUD", true)
+	if phud:
+		var lbl = phud.find_child("PCHealthLabel", true)
+		if lbl:
+			lbl.modulate = Color(1, 1, 0) # Amarelo pisca ⚡
+			var tw = create_tween()
+			tw.tween_property(lbl, "modulate", Color(1, 1, 1), 0.2)
 	
 	# Efeito de Balanço de Câmera (Flinch) V1880 🏙️🎯🥇
 	var tilt = randf_range(-0.1, 0.1)

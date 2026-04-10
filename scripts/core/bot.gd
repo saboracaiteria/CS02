@@ -68,6 +68,7 @@ func _physics_process(delta):
 			_state_search(delta)
 	
 	move_and_slide()
+	_process_aura_damage(delta)
 	_update_animations()
 
 func _state_patrol(delta):
@@ -203,11 +204,21 @@ func _shoot(target):
 	
 	if target and target.has_method("recieve_damage"):
 		var target_auth = target.get_multiplayer_authority()
-		var damage_to_deal = 15 # Dano aumentado para teste V1880
+		var damage_to_deal = 20 # Dano aumentado V1890 🏙️🎯🥇
 		if target_auth == multiplayer.get_unique_id():
 			target.recieve_damage(damage_to_deal)
 		else:
 			target.recieve_damage.rpc_id(target_auth, damage_to_deal)
+
+# AURA DE DANO V1890: Se chegar muito perto, toma dano garantido! 🏙️🎯🥇
+func _process_aura_damage(delta):
+	if is_dead: return
+	var player = _check_for_enemies()
+	if player and global_position.distance_to(player.global_position) < 2.5:
+		if randf() < 0.05: # Chance de dano contínuo
+			player.recieve_damage(5)
+
+# Chamar no _physics_process
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
