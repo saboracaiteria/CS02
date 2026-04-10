@@ -603,8 +603,12 @@ func recieve_damage(damage:= 20) -> void:
 	health -= damage
 	health = max(0, health)
 	
-	Global.log_error("DANO: Jogador recebeu %d. HP: %d" % [damage, health])
-	_update_hud(0)
+	# FLASH DE DANO NO HUD V2020 🏙️🎯🥇
+	var hud = find_child("TouchControls", true)
+	if hud:
+		var tw = create_tween()
+		hud.modulate = Color(1, 0, 0) # Vermelho
+		tw.tween_property(hud, "modulate", Color(1, 1, 1), 0.2) # Volta ao normal
 	
 	if health <= 0:
 		Global.log_error("SISTEMA: Jogador morto. Respawn em 1s...")
@@ -615,7 +619,8 @@ func recieve_damage(damage:= 20) -> void:
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "shoot":
-		anim_player.play("idle")
+		if anim_player and anim_player.has_animation("idle"):
+			anim_player.play("idle")
 
 # --- STUBS SUPREMOS V1140: Evitando Erros de Script! 🏗️🛡️🥋 ---
 func _on_input_event(_camera: Node, _event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int):
