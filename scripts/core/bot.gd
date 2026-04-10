@@ -3,6 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 4.0
 @export var health: int = 100
+const VERSION = "V2130"
 
 var target_node: Node3D = null
 var is_dead: bool = false
@@ -10,6 +11,8 @@ var last_shoot_time: float = 0.0
 var fire_rate: float = 0.4
 var shoot_timer: float = 0.0
 @export var detection_range: float = 40.0
+var nav_refresh_timer: float = 0.0 # V2130 - Anti-Lag
+var check_enemy_timer: float = 0.0 # V2130 - Anti-Lag
 
 @onready var nav_agent = $NavigationAgent3D
 @onready var raycast = $RayCast3D
@@ -82,7 +85,11 @@ func _state_patrol(delta):
 			_find_next_objective()
 			return
 
-		nav_agent.target_position = target_node.global_position
+		# OTIMIZAÇÃO V2130: Só recalcula rota 2x por segundo! 🏎️💨
+		nav_refresh_timer -= delta
+		if nav_refresh_timer <= 0:
+			nav_agent.target_position = target_node.global_position
+			nav_refresh_timer = 0.5
 		
 		if nav_agent.is_navigation_finished():
 			_find_next_objective()
@@ -156,6 +163,11 @@ func _smooth_look_at(target: Vector3, delta: float):
 		transform = transform.interpolate_with(new_transform, delta * 5.0)
 
 func _check_for_enemies():
+	# OTIMIZAÇÃO V2130: Só procura inimigos 5x por segundo! 🕵️‍♂️
+	check_enemy_timer -= get_process_delta_time()
+	if check_enemy_timer > 0: return null 
+	check_enemy_timer = 0.2
+
 	var enemies = get_tree().get_nodes_in_group("player")
 	for e in enemies:
 		if e.get("team") == team or e.get("health") <= 0: continue
@@ -222,28 +234,29 @@ func _process_aura_damage(delta):
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
+	# SISTEMA DE TRACER "BEAM" V2130 🌊✨💎 - Otimizado para Web
 	var mesh_instance = MeshInstance3D.new()
-	var immediate_mesh = ImmediateMesh.new()
-	var material = ORMMaterial3D.new()
-
-	mesh_instance.mesh = immediate_mesh
+	var beam = CylinderMesh.new()
+	beam.top_radius = 0.02
+	beam.bottom_radius = 0.02
+	beam.height = from.distance_to(to)
+	
+	mesh_instance.mesh = beam
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color(1, 0.8, 0.2, 1.0) # Amarelo bala ☀️
+	var material = StandardMaterial3D.new()
+	material.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = Color(1.0, 0.7, 0.0, 1) # Laranja Fogo 🔥
 	mesh_instance.material_override = material
 
-	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-	immediate_mesh.surface_add_vertex(from)
-	immediate_mesh.surface_add_vertex(to)
-	immediate_mesh.surface_end()
+	get_tree().root.add_child(mesh_instance)
+	
+	mesh_instance.look_at_from_position((from + to) / 2, to, Vector3.UP)
+	mesh_instance.rotate_object_local(Vector3.RIGHT, PI/2)
 
-	get_parent().add_child(mesh_instance)
-
-	# Auto-destruição ULTRA-RÁPIDA V2090 🏎️💨
-	var tween = create_tween()
-	tween.tween_property(material, "albedo_color:a", 0.0, 0.1)
-	tween.tween_callback(mesh_instance.queue_free)
+	var tracer_tween = create_tween()
+	tracer_tween.tween_property(mesh_instance, "scale", Vector3(0, 1, 0), 0.1) 
+	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _update_animations():
 	if velocity.length() > 0.1: anim_player.play("move")
@@ -278,7 +291,6 @@ func _find_next_objective():
 func recieve_damage(damage:= 10) -> void:
 	if is_dead: return
 	health -= damage
-	Global.log_error("DANO: Bot %s recebeu %d de dano. Vida: %d" % [name, damage, health])
 	if health <= 0:
 		_die()
 
