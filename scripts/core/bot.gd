@@ -173,7 +173,7 @@ func _process(delta):
 
 func _shoot(target):
 	if gunshot_sound:
-		gunshot_sound.pitch_scale = randf_range(0.9, 1.1) # Distingue os tiros 🔊
+		gunshot_sound.pitch_scale = randf_range(0.9, 1.1)
 		gunshot_sound.play()
 		
 	# Muzzle Flash
@@ -183,13 +183,50 @@ func _shoot(target):
 		await get_tree().create_timer(0.05).timeout
 		flash.hide()
 	
+	# Lógica de Rastreador de Bala (Tracer) V1800 🏙️🎯🥇
+	var from_pos = global_position + Vector3.UP * 1.5
+	if weapon: from_pos = weapon.global_position
+	
+	var to_pos = Vector3.ZERO
+	if target:
+		to_pos = target.global_position + Vector3.UP * 1.2
+	else:
+		# Se errar, atira numa direção aleatória à frente
+		var forward = -global_transform.basis.z
+		to_pos = from_pos + (forward.rotated(Vector3.UP, randf_range(-0.5, 0.5)) * 50.0)
+	
+	_spawn_bullet_tracer.rpc(from_pos, to_pos)
+	
 	if target and target.has_method("recieve_damage"):
-		# SMART RPC V1730: Evita erro 'RPC on yourself' 🏙️🎯🥇
 		var target_auth = target.get_multiplayer_authority()
 		if target_auth == multiplayer.get_unique_id():
-			target.recieve_damage(10) # Chamada direta no mesmo peer
+			target.recieve_damage(10)
 		else:
 			target.recieve_damage.rpc_id(target_auth, 10)
+
+@rpc("call_local")
+func _spawn_bullet_tracer(from: Vector3, to: Vector3):
+	var mesh_instance = MeshInstance3D.new()
+	var immediate_mesh = ImmediateMesh.new()
+	var material = ORMMaterial3D.new()
+
+	mesh_instance.mesh = immediate_mesh
+	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = Color(1, 0.8, 0.2, 1.0) # Amarelo bala ☀️
+	mesh_instance.material_override = material
+
+	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	immediate_mesh.surface_add_vertex(from)
+	immediate_mesh.surface_add_vertex(to)
+	immediate_mesh.surface_end()
+
+	get_parent().add_child(mesh_instance)
+
+	var tween = create_tween()
+	tween.tween_property(material, "albedo_color:a", 0.0, 0.15)
+	tween.tween_callback(mesh_instance.queue_free)
 
 func _update_animations():
 	if velocity.length() > 0.1: anim_player.play("move")

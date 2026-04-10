@@ -109,6 +109,13 @@ func _apply_premium_style():
 			btn.add_theme_stylebox_override("pressed", btn_hover)
 			btn.add_theme_stylebox_override("focus", btn_style)
 
+func get_local_ip() -> String:
+	# Busca o IP real da rede local (WiFi/LAN) 🌐
+	for ip in IP.get_local_addresses():
+		if ip.split(".").size() == 4 and not ip.begins_with("127.") and not ip.begins_with("169.254."):
+			return ip
+	return "127.0.0.1"
+
 func _on_host_button_pressed() -> void:
 	Global.log_error("UI: Botão Host pressionado.")
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -120,7 +127,16 @@ func _on_host_button_pressed() -> void:
 	$Menu/Blur.hide()
 	menu_music.stop()
 	
+	# MOSTRA IP LOCAL PARA REAL WI-FI MULTIPLAYER 🏙️📶🥇
+	var local_ip = get_local_ip()
 	Global.log_error("SISTEMA: Criando Servidor na porta %d..." % PORT)
+	Global.log_error("DICA: Outros jogadores devem usar o IP: %s" % local_ip)
+	
+	# Feedback na Tela para o Host
+	if %StatusLabel:
+		%StatusLabel.text = "SERVIDOR ATIVO - IP LOCAL: %s" % local_ip
+		%StatusLabel.show()
+	
 	var host_err = enet_peer.create_server(PORT)
 	if host_err != OK:
 		Global.log_error("NET ERROR: %s - Tentando modo offline..." % host_err)
@@ -139,13 +155,13 @@ func _on_host_button_pressed() -> void:
 	
 	Global.log_error("SISTEMA: Criando Bots...")
 	await get_tree().create_timer(1.0).timeout 
-	spawn_bots(3) # V1740: Reduzido de 5 para 3 - menos fogo concentrado
+	spawn_bots(3)
 	Global.log_error("SISTEMA: Partida Iniciada! 🏙️🎯🥇")
 	
 	if host_err == OK:
 		upnp_setup()
 	
-	Global.log_error("SISTEMA: Host completo. Boa partida!")
+	Global.log_error("SISTEMA: Host completo. Servidor local em: %s" % local_ip)
 
 func _on_join_button_pressed() -> void:
 	# AUTO FULLSCREEN V1460 ✨💻📱
