@@ -93,6 +93,16 @@ func _ready() -> void:
 		flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pc_hud.add_child(flash)
 
+		# Label 3D de Debug V1920 🏙️🎯🥇
+		var hp3d = Label3D.new()
+		hp3d.name = "Health3D"
+		hp3d.text = "HP: 100"
+		hp3d.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		hp3d.position.y = 1.2
+		hp3d.modulate = Color.RED
+		hp3d.outline_modulate = Color.BLACK
+		add_child(hp3d)
+		
 		add_child(pc_hud)
 		
 		# Container de Info (Canto inferior esquerdo)
@@ -395,40 +405,36 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 
-# UPDATE PREMIUM HUD V1440 ✨💎
+# UPDATE UNIFICADO HUD V1920 ✨💎
 func _update_hud(_delta: float) -> void:
-	var hud = find_child("TouchControls", true)
-	if not hud: return
+	var hp_str = "HP: %d" % health
 	
-	hud.visible = Global.is_mobile # SÓ APARECE NO MOBILE! V1440 🏙️🎯🥇
+	# 1. Update PC HUD
+	var pc_hud = find_child("PCHUD", true)
+	if pc_hud:
+		var lbl = pc_hud.find_child("PCHealthLabel", true)
+		if lbl: lbl.text = "❤️ " + hp_str
 	
-	# LIMPEZA MOBILE V1460 🏙️🎯🥇: Esconde nomes e stats para tela limpa
-	var state_label = hud.find_child("StateLabel", true)
-	if state_label: state_label.visible = false
+	# 2. Update Mobile HUD
+	var mobile_hud = find_child("TouchControls", true)
+	if mobile_hud:
+		var hp_label = mobile_hud.find_child("HealthLabel", true)
+		if hp_label: hp_label.text = hp_str
+		var bar = mobile_hud.find_child("HealthBar", true)
+		if bar: bar.value = health
 	
-	var speed_label = hud.find_child("SpeedLabel", true)
-	if speed_label: speed_label.visible = false
-	
-	var weapon_label = hud.find_child("WeaponLabel", true)
-	if weapon_label: weapon_label.visible = false
-	
-	var hp_label = hud.find_child("HealthLabel", true)
-	if hp_label:
-		hp_label.visible = true
-		hp_label.text = "HP: %d" % health
+	# 3. Update Debug 3D
+	var hp3d = get_node_or_null("Health3D")
+	if hp3d: hp3d.text = hp_str
 		
-	# Health Bar (Mantemos a barra pois é essencial)
-	var hp_bar = hud.find_child("HealthBar", true)
-	if hp_bar:
-		hp_bar.value = lerp(hp_bar.value, float(health), 10.0 * _delta) # Formula correta V1870 🏙️🎯🥇
-		
-	# Ammo
-	var ammo_label = hud.find_child("AmmoLabel", true)
-	if ammo_label:
-		ammo_label.text = str(current_ammo)
-	var ammo_total_label = hud.find_child("AmmoTotal", true)
-	if ammo_total_label:
-		ammo_total_label.text = str(total_ammo)
+	# 4. Ammo Unificado
+	var ammo_str = "%d / %d" % [current_weapon_ammo, current_weapon_reserve]
+	if pc_hud:
+		var lbl = pc_hud.find_child("PCAmmoLabel", true)
+		if lbl: lbl.text = "🔫 " + ammo_str
+	if mobile_hud:
+		var lbl = mobile_hud.find_child("AmmoLabel", true)
+		if lbl: lbl.text = ammo_str
 
 func _input(event):
 	if not is_multiplayer_authority(): return
