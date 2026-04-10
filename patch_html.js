@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = './index.html';
 
 // VERSION AUTO-READER: Lê a versão direto do .bat para nunca ficar desatualizado! 🏙️🚀🥇
-let VERSION = 'V2060'; // fallback
+let VERSION = 'V2080'; // fallback
 try {
     const batContent = fs.readFileSync('./AUTO_BUILD_PUSH.bat', 'utf8');
     const match = batContent.match(/set VERSION=(V\d+)/);
@@ -31,10 +31,10 @@ if (fs.existsSync(path)) {
 					return originalGetContext.call(this, type, attributes);
 				};
 				
-				// DESBLOQUEIA EVENTOS NATIVOS 🔓🏙️
-				window.addEventListener('contextmenu', e => e.stopPropagation(), true);
-				window.addEventListener('touchstart', e => e.stopPropagation(), {passive: true});
-				window.addEventListener('keydown', e => e.stopPropagation(), true);
+				// DESBLOQUEIA EVENTOS NATIVOS 🔓🏙️ (RESTAURADOS V2080)
+				window.addEventListener('contextmenu', e => {}, true);
+				window.addEventListener('touchstart', e => {}, {passive: true});
+				// Keydown removido para não travar o Godot!
 			})();
 			
 			function forceReload() {
