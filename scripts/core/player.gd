@@ -81,23 +81,14 @@ func _ready() -> void:
 	add_to_group("player")
 	
 	if is_multiplayer_authority():
-		# CLEAN HUD V1760 🏙️❤️🔫🥇
-		var pc_hud = CanvasLayer.new()
-		pc_hud.name = "PCHUD"
-		pc_hud.layer = 15 # Master layer!
-		
-		# Adiciona Efeito de Dano (Flash) V1900 🏙️🎯🥇
-		var flash = ColorRect.new()
-		flash.name = "DamageFlash"
-		flash.set_anchors_preset(Control.PRESET_FULL_RECT)
-		flash.color = Color(1, 0, 0, 0)
-		flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pc_hud.add_child(flash)
-
-		add_child(pc_hud)
-		
 		# FORÇA CÂMERA V1930 🏙️🎯🥇
 		if camera: camera.make_current()
+		
+		# Garante que o HUD Mobile esteja visível para testes de HP V1960
+		var mobile_hud = find_child("TouchControls", true)
+		if mobile_hud: 
+			mobile_hud.visible = true
+			Global.log_error("HUD MOBILE ATIVADO")
 		
 		# Container de Info (Canto inferior esquerdo)
 		var info_box = Control.new()
@@ -399,28 +390,21 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 
-# UPDATE UNIFICADO HUD V1940 ✨💎
+# UPDATE UNIFICADO HUD V1960 ✨💎
 func _update_hud(_delta: float) -> void:
-	var hp_str = "HP: %d" % health
-	var ammo_str = "%d / %d" % [current_ammo, total_ammo]
-	
-	# 1. Update PC HUD
-	var pc_hud = get_node_or_null("PCHUD")
-	if is_instance_valid(pc_hud):
-		var lbl = pc_hud.find_child("PCHealthLabel", true)
-		if lbl: lbl.text = "❤️ " + hp_str
-		var albl = pc_hud.find_child("PCAmmoLabel", true)
-		if albl: albl.text = "🔫 " + ammo_str
-	
-	# 2. Update Mobile HUD
-	var mobile_hud = get_node_or_null("TouchControls")
-	if is_instance_valid(mobile_hud):
-		var hp_label = mobile_hud.find_child("HealthLabel", true)
-		if hp_label: hp_label.text = hp_str
-		var ammo_label = mobile_hud.find_child("AmmoLabel", true)
-		if ammo_label: ammo_label.text = ammo_str
-		var bar = mobile_hud.find_child("HealthBar", true)
+	# Busca o HUD que já está na cena (TouchControls)
+	var hud = find_child("TouchControls", true)
+	if is_instance_valid(hud):
+		hud.visible = true # Sempre visível para debug de HP!
+		
+		var hp_label = hud.find_child("HealthLabel", true)
+		if hp_label: hp_label.text = "HP: %d" % health
+		
+		var bar = hud.find_child("HealthBar", true)
 		if bar: bar.value = health
+		
+		var albl = hud.find_child("AmmoLabel", true)
+		if albl: albl.text = "%d / %d" % [current_ammo, total_ammo]
 
 func _input(event):
 	if not is_multiplayer_authority(): return
