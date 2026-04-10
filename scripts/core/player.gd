@@ -85,6 +85,7 @@ func _ready() -> void:
 		var pc_hud = CanvasLayer.new()
 		pc_hud.name = "PCHUD"
 		pc_hud.layer = 15 # Master layer!
+		Global.log_error("PASSO 4: Criando HUD PC...")
 		# Adiciona Efeito de Dano (Flash) V1900 🏙️🎯🥇
 		var flash = ColorRect.new()
 		flash.name = "DamageFlash"
@@ -93,6 +94,8 @@ func _ready() -> void:
 		flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pc_hud.add_child(flash)
 
+		add_child(pc_hud)
+		
 		# Label 3D de Debug V1920 🏙️🎯🥇
 		var hp3d = Label3D.new()
 		hp3d.name = "Health3D"
@@ -103,7 +106,10 @@ func _ready() -> void:
 		hp3d.outline_modulate = Color.BLACK
 		add_child(hp3d)
 		
-		add_child(pc_hud)
+		# FORÇA CÂMERA V1930 🏙️🎯🥇
+		if camera: camera.make_current()
+		
+		Global.log_error("PASSO 5: Jogador Pronto!")
 		
 		# Container de Info (Canto inferior esquerdo)
 		var info_box = Control.new()
@@ -405,36 +411,32 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 
-# UPDATE UNIFICADO HUD V1920 ✨💎
+# UPDATE UNIFICADO HUD V1930 ✨💎
 func _update_hud(_delta: float) -> void:
 	var hp_str = "HP: %d" % health
 	
 	# 1. Update PC HUD
-	var pc_hud = find_child("PCHUD", true)
-	if pc_hud:
+	var pc_hud = get_node_or_null("PCHUD")
+	if is_instance_valid(pc_hud):
 		var lbl = pc_hud.find_child("PCHealthLabel", true)
 		if lbl: lbl.text = "❤️ " + hp_str
+		
+		var albl = pc_hud.find_child("PCAmmoLabel", true)
+		if albl: albl.text = "🔫 %d / %d" % [current_weapon_ammo, current_weapon_reserve]
 	
 	# 2. Update Mobile HUD
-	var mobile_hud = find_child("TouchControls", true)
-	if mobile_hud:
+	var mobile_hud = get_node_or_null("TouchControls")
+	if is_instance_valid(mobile_hud):
 		var hp_label = mobile_hud.find_child("HealthLabel", true)
 		if hp_label: hp_label.text = hp_str
 		var bar = mobile_hud.find_child("HealthBar", true)
 		if bar: bar.value = health
+		var albl = mobile_hud.find_child("AmmoLabel", true)
+		if albl: albl.text = "%d / %d" % [current_weapon_ammo, current_weapon_reserve]
 	
 	# 3. Update Debug 3D
 	var hp3d = get_node_or_null("Health3D")
-	if hp3d: hp3d.text = hp_str
-		
-	# 4. Ammo Unificado
-	var ammo_str = "%d / %d" % [current_weapon_ammo, current_weapon_reserve]
-	if pc_hud:
-		var lbl = pc_hud.find_child("PCAmmoLabel", true)
-		if lbl: lbl.text = "🔫 " + ammo_str
-	if mobile_hud:
-		var lbl = mobile_hud.find_child("AmmoLabel", true)
-		if lbl: lbl.text = ammo_str
+	if is_instance_valid(hp3d): hp3d.text = hp_str
 
 func _input(event):
 	if not is_multiplayer_authority(): return
