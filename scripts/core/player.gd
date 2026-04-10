@@ -80,24 +80,19 @@ func _ready() -> void:
 	
 	add_to_group("player")
 	
-	# SINCRONIZAÇÃO DE REDE V1880 🏙️🎯🥇
-	if $MultiplayerSynchronizer:
-		var config = $MultiplayerSynchronizer.replication_config
-		if config:
-			# Adiciona health à sincronização de rede se não estiver lá
-			var has_health = false
-			for i in range(config.get_properties_count()):
-				if config.get_property_path(i) == NodePath(".:health"):
-					has_health = true ; break
-			if not has_health:
-				config.add_property(NodePath(".:health"))
-				config.property_set_replication_mode(NodePath(".:health"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
- # INDISPENSÁVEL PARA OS BOTÕES HUD! 🏙️🎯🥇
 	if is_multiplayer_authority():
 		# CLEAN HUD V1760 🏙️❤️🔫🥇
 		var pc_hud = CanvasLayer.new()
 		pc_hud.name = "PCHUD"
 		pc_hud.layer = 15 # Master layer!
+		# Adiciona Efeito de Dano (Flash) V1900 🏙️🎯🥇
+		var flash = ColorRect.new()
+		flash.name = "DamageFlash"
+		flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+		flash.color = Color(1, 0, 0, 0)
+		flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pc_hud.add_child(flash)
+
 		add_child(pc_hud)
 		
 		# Container de Info (Canto inferior esquerdo)
@@ -672,53 +667,46 @@ func play_shoot_effects() -> void:
 func recieve_damage(damage:= 20) -> void:
 	if not is_multiplayer_authority(): return
 	health -= damage
-	health = max(0, health) # Não desce abaixo de 0
+	health = max(0, health)
 	
-	# Feedback de HUD (Piscar) V1890 🏙️🎯🥇
-	var phud = find_child("PCHUD", true)
-	if phud:
-		var lbl = phud.find_child("PCHealthLabel", true)
-		if lbl:
-			lbl.modulate = Color(1, 1, 0) # Amarelo pisca ⚡
-			var tw = create_tween()
-			tw.tween_property(lbl, "modulate", Color(1, 1, 1), 0.2)
-	
-	# Efeito de Balanço de Câmera (Flinch) V1880 🏙️🎯🥇
-	var tilt = randf_range(-0.1, 0.1)
-	camera.rotation.z += tilt
-	var tween_cam = create_tween()
-	tween_cam.tween_property(camera, "rotation:z", 0.0, 0.2)
-	
-	Global.log_error("DANO: Jogador %s recebeu %d de dano. Vida: %d" % [name, damage, health])
+	Global.log_error("DANO: Jogador recebeu %d. HP: %d" % [damage, health])
 	
 	var pc_hud = find_child("PCHUD", true)
+	
+	# Efeito de Balanço de Câmera (Flinch)
+	camera.rotation.z += randf_range(-0.1, 0.1)
+	var tw_c = create_tween()
+	tw_c.tween_property(camera, "rotation:z", 0.0, 0.2)
+	
 	if health > 0:
-		# FLASH DE DANO V1740 🔴
+		# FEEDBACK DE DANO 🔴⚡
 		if pc_hud:
 			var flash = pc_hud.find_child("DamageFlash", true)
 			if flash:
 				flash.color = Color(1, 0, 0, 0.45)
-				var tween = create_tween()
-				tween.tween_property(flash, "color", Color(1, 0, 0, 0), 0.5)
+				var tw_f = create_tween()
+				tw_f.tween_property(flash, "color", Color(1, 0, 0, 0), 0.5)
+			
+			var hp_lbl = pc_hud.find_child("PCHealthLabel", true)
+			if hp_lbl:
+				hp_lbl.modulate = Color(1, 1, 0)
+				create_tween().tween_property(hp_lbl, "modulate", Color(1, 1, 1), 0.3)
 	else:
-		# FEEDBACK DE MORTE V1760 💀💤🌑
+		# FEEDBACK DE MORTE 💀💤🌑
 		if pc_hud:
 			var death = pc_hud.find_child("DeathHUD", true)
 			var msg = pc_hud.find_child("DeathMsg", true)
 			if death and msg:
-				death.color = Color(0, 0, 0, 1.0) # Tela preta instantânea
-				msg.modulate = Color(1, 1, 1, 1) # Texto branco
-				
-				await get_tree().create_timer(1.5).timeout # Pausa dramática
-				
-				# Fade out para o respawn
-				var tween = create_tween().set_parallel(true)
-				tween.tween_property(death, "color", Color(0, 0, 0, 0), 1.0)
-				tween.tween_property(msg, "modulate", Color(1, 1, 1, 0), 1.0)
+				death.color = Color(0, 0, 0, 1.0)
+				msg.modulate = Color(1, 1, 1, 1)
+				await get_tree().create_timer(1.5).timeout
+				var tw_d = create_tween().set_parallel(true)
+				tw_d.tween_property(death, "color", Color(0, 0, 0, 0), 1.0)
+				tw_d.tween_property(msg, "modulate", Color(1, 1, 1, 0), 1.0)
 		
 		health = 100
 		position = spawns[randi() % spawns.size()]
-		Global.log_error("SISTEMA: Jogador %s foi eliminado e respawnou!" % name)
+		Global.log_error("SISTEMA: Jogador eliminado!")
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "shoot":
