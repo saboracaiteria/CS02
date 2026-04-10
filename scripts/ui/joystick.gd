@@ -17,14 +17,49 @@ var touch_index: int = -1
 var output_vector: Vector2 = Vector2.ZERO
 var default_position: Vector2 # Para resetar no floating! 🏙️🚀
 
+var _edit_touches: Dictionary = {}
+
 func _ready():
+	pivot_offset = size / 2 # Escala centralizada 💎
 	default_position = global_position
 	_reset_joystick()
 
 func _input(event):
 	if Global.is_editing_hud:
-		if event is InputEventScreenDrag and event.position.x < get_viewport_rect().size.x * 0.45:
-			global_position += event.relative
+		if event is InputEventScreenTouch:
+			if event.pressed:
+				_edit_touches[event.index] = event.position
+			else:
+				_edit_touches.erase(event.index)
+		elif event is InputEventScreenDrag:
+			_edit_touches[event.index] = event.position
+			
+			if _edit_touches.size() == 1:
+				# Trava de segurança para mover apenas no lado esquerdo
+				if event.position.x < get_viewport_rect().size.x * 0.5:
+					global_position += event.relative
+					default_position = global_position # Salva a nova base! 🏙️🎯🥇
+			elif _edit_touches.size() == 2:
+				var touch_ids = _edit_touches.keys()
+				var p1 = _edit_touches[touch_ids[0]]
+				var p2 = _edit_touches[touch_ids[1]]
+				
+				var old_p1 = p1
+				var old_p2 = p2
+				if event.index == touch_ids[0]:
+					old_p1 -= event.relative
+				else:
+					old_p2 -= event.relative
+				
+				var old_dist = old_p1.distance_to(old_p2)
+				var new_dist = p1.distance_to(p2)
+				
+				if old_dist > 0:
+					var scale_factor = new_dist / old_dist
+					var new_scale = scale * scale_factor
+					new_scale.x = clamp(new_scale.x, 0.8, 3.0)
+					new_scale.y = clamp(new_scale.y, 0.8, 3.0)
+					scale = new_scale
 		return
 		
 	if event is InputEventScreenTouch:
