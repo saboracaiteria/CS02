@@ -5,23 +5,29 @@ extends Button
 @export var auto_ads: bool = false # CODM STYLE: 1-Tap ADS 🏙️🎯🥇
 var touch_index: int = -1
 var _is_scaling: bool = false # Novo sistema V1470 📏
-var _scale_indicator: Label = null
+var _scale_indicator: ColorRect = null
 
 func _ready():
 	pivot_offset = size / 2 # Garante que a escala ocorra a partir do centro 💎
 	if action_name == "screenshot":
 		pressed.connect(_take_screenshot)
 	
-	# Criar indicador visual de escala (Seta) ↕️
-	_scale_indicator = Label.new()
-	_scale_indicator.text = "↕"
-	_scale_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_scale_indicator.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	# Criar indicador visual de escala (Seta) mais robusto ↕️
+	_scale_indicator = ColorRect.new()
+	_scale_indicator.color = Color(1, 1, 0, 0.5) # Amarelo semi-transparente
 	_scale_indicator.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
-	_scale_indicator.custom_minimum_size = Vector2(40, 0)
-	_scale_indicator.modulate = Color(1, 1, 0, 0.8) # Amarelo vibrante
-	_scale_indicator.add_theme_font_size_override("font_size", 32)
+	_scale_indicator.offset_left = -40
+	_scale_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_scale_indicator)
+	
+	# Texto Centralizado
+	var l = Label.new()
+	l.text = "↕"
+	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_scale_indicator.add_child(l)
+	
 	_scale_indicator.hide()
 
 func _process(_delta):

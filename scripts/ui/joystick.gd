@@ -18,24 +18,30 @@ var output_vector: Vector2 = Vector2.ZERO
 var default_position: Vector2 # Para resetar no floating! 🏙️🚀
 
 var _is_scaling: bool = false
-var _scale_indicator: Label = null
+var _scale_indicator: ColorRect = null
 
 func _ready():
 	# Define um tamanho real para o controle capturar o _gui_input 💎
-	custom_minimum_size = Vector2(250, 250)
-	size = Vector2(250, 250)
-	pivot_offset = size / 2 # Escala centralizada 💎
+	custom_minimum_size = Vector2(200, 200)
+	size = Vector2(200, 200)
+	pivot_offset = Vector2(100, 100) # Centro exato
 	
-	# Criar indicador visual de escala (Seta) ↕️
-	_scale_indicator = Label.new()
-	_scale_indicator.text = "↕"
-	_scale_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_scale_indicator.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	# Criar indicador visual de escala (Seta) mais robusto ↕️
+	_scale_indicator = ColorRect.new()
+	_scale_indicator.color = Color(1, 1, 0, 0.6)
 	_scale_indicator.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
-	_scale_indicator.custom_minimum_size = Vector2(50, 0)
-	_scale_indicator.modulate = Color(1, 1, 0, 0.8) # Amarelo vibrante
-	_scale_indicator.add_theme_font_size_override("font_size", 44)
+	_scale_indicator.offset_left = -40
+	_scale_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_scale_indicator)
+	
+	# Adiciona um texto simples por cima
+	var l = Label.new()
+	l.text = "↕"
+	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_scale_indicator.add_child(l)
+	
 	_scale_indicator.hide()
 	
 	default_position = global_position
@@ -44,6 +50,17 @@ func _ready():
 func _process(_delta):
 	if _scale_indicator:
 		_scale_indicator.visible = Global.is_editing_hud
+	
+	# RESGATE DE EMERGÊNCIA V1060: 🛡️🏗️🎯
+	# Se o joystick acha que está ativo, mas o mouse/toque não está pressionado, RESET!
+	if joystick_active:
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and touch_index == -1:
+			_reset_joystick()
+		# Verificação extra para mobile
+		elif touch_index != -1 and not DisplayServer.is_touchscreen_available():
+			# No PC, se o mouse soltou, reseta independente do index
+			if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+				_reset_joystick()
 
 func _gui_input(event):
 	if Global.is_editing_hud:
@@ -76,11 +93,13 @@ func _input(event):
 				return
 				
 			if is_floating:
-				global_position = event.position # MOVIMENTA O CENTRO DO JOYSTICK! 🏙️🎯🥇
+				global_position = event.position - (size / 2.0 * scale)
 			
-			var touch_dist = (event.position - global_position).length()
-			# Se for floating, a distância é 0 no início, então sempre entra!
-			if touch_dist <= base_radius or is_floating:
+			# Cálculo do centro corrigido para V1480 🏗️🎯
+			var center = global_position + (size / 2.0 * scale)
+			var touch_dist = (event.position - center).length()
+			
+			if touch_dist <= base_radius * scale.x or is_floating:
 				joystick_active = true
 				touch_index = event.index
 				_handle_drag(event.position)
@@ -94,27 +113,21 @@ func _input(event):
 			_handle_drag(event.position)
 			get_viewport().set_input_as_handled()
 
-func _process(_delta):
-	# RESGATE DE EMERGÊNCIA V1060: 🛡️🏗️🎯
-	# Se o joystick acha que está ativo, mas o mouse/toque não está pressionado, RESET!
-	if joystick_active:
-		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and touch_index == -1:
-			_reset_joystick()
-		# Verificação extra para mobile
-		elif touch_index != -1 and not DisplayServer.is_touchscreen_available():
-			# No PC, se o mouse soltou, reseta independente do index
-			if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-				_reset_joystick()
 
 func _handle_drag(touch_pos: Vector2):
-	var center = global_position
+	var center = global_position + (size / 2.0 * scale)
 	var vec = touch_pos - center
-	if vec.length() > base_radius:
-		vec = vec.normalized() * base_radius
+	var max_dist = base_radius * scale.x
 	
-	# No novo sistema visual, position Vector2.ZERO é o CENTRO 🎯
-	knob.position = vec - knob.size / 2.0
-	output_vector = vec / base_radius
+	if vec.length() > max_dist:
+		vec = vec.normalized() * max_dist
+	
+	# No novo sistema visual, knob centralizado com base no parent scale 🎯
+	if knob:
+		# Reposiciona o knob relativo ao centro do controle (100, 100) 🏗️
+		knob.position = (vec / scale) + (size / 2.0) - (knob.size / 2.0)
+	
+	output_vector = vec / max_dist
 	_update_input_map()
 
 func _reset_joystick():
