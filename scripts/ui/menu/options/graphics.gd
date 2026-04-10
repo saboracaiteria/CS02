@@ -2,6 +2,8 @@ extends CheckButton
 
 var shadow_btn : CheckButton
 var bloom_btn : CheckButton
+var res_slider : HSlider
+var res_label : Label
 
 func _ready():
 	# 1. Configura o botão principal V2120: BAIXO POR PADRÃO! 🏙️🎯
@@ -11,6 +13,19 @@ func _ready():
 	# 2. Injeta botões extras V2120 🏗️🏹🥋
 	var container = get_parent()
 	if container:
+		# --- SLIDER DE RESOLUÇÃO (UPSCALE) V2400 🏙️🚀🎯 ---
+		res_label = Label.new()
+		res_label.text = "Resolução 3D (Upscale): 100%"
+		container.add_child(res_label)
+		
+		res_slider = HSlider.new()
+		res_slider.min_value = 0.4
+		res_slider.max_value = 1.0
+		res_slider.step = 0.05
+		res_slider.value = 1.0
+		res_slider.value_changed.connect(_on_res_scale_changed)
+		container.add_child(res_slider)
+
 		# Botão de Sombras
 		shadow_btn = CheckButton.new()
 		shadow_btn.text = "Ativar Sombras (PC/Web)"
@@ -28,12 +43,30 @@ func _ready():
 	# Garante que comece tudo desligado V2120 🔦🚫🌑
 	_on_shadow_toggled(false)
 	_on_bloom_toggled(false)
+	_on_res_scale_changed(1.0) # Começa em 100%
+
+func _on_res_scale_changed(value: float) -> void:
+	# GODOT 4 SUPREMACIA: Resolução Interna Reduzida 🏎️💨
+	get_viewport().scaling_3d_scale = value
+	if value < 1.0:
+		# Usa Bilinear para performance máxima em PCs fracos! 🎮
+		get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	else:
+		get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	
+	if res_label:
+		res_label.text = "Resolução 3D (Upscale): %d%%" % (value * 100)
+	print("RESOLUÇÃO 3D: ", value)
 
 func _toggled(toggled_on: bool) -> void:
 	_on_shadow_toggled(toggled_on)
 	_on_bloom_toggled(toggled_on)
 	if shadow_btn: shadow_btn.button_pressed = toggled_on
 	if bloom_btn: bloom_btn.button_pressed = toggled_on
+	if toggled_on:
+		_on_res_scale_changed(1.0)
+	else:
+		_on_res_scale_changed(0.7) # "Baixa" melhora muito a performance!
 
 func _on_shadow_toggled(toggled_on: bool) -> void:
 	var lights = get_tree().get_nodes_in_group("lights")
