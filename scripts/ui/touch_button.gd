@@ -28,22 +28,16 @@ func _gui_input(event):
 				var p1 = _edit_touches[touch_ids[0]]
 				var p2 = _edit_touches[touch_ids[1]]
 				
-				var old_p1 = p1
-				var old_p2 = p2
-				if event.index == touch_ids[0]:
-					old_p1 -= event.relative
-				else:
-					old_p2 -= event.relative
+				var old_p1 = p1 - (event.relative if event.index == touch_ids[0] else Vector2.ZERO)
+				var old_p2 = p2 - (event.relative if event.index == touch_ids[1] else Vector2.ZERO)
 				
 				var old_dist = old_p1.distance_to(old_p2)
 				var new_dist = p1.distance_to(p2)
 				
-				if old_dist > 0:
+				if old_dist > 5:
 					var scale_factor = new_dist / old_dist
 					var new_scale = scale * scale_factor
-					new_scale.x = clamp(new_scale.x, 0.5, 3.5)
-					new_scale.y = clamp(new_scale.y, 0.5, 3.5)
-					scale = new_scale
+					scale = new_scale.clamp(Vector2(0.5, 0.5), Vector2(3.5, 3.5))
 			
 			accept_event()
 		return
