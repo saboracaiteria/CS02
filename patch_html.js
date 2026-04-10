@@ -13,18 +13,15 @@ try {
 if (fs.existsSync(path)) {
     let content = fs.readFileSync(path, 'utf8');
     
-    // INJETA ERUDA E TECLAS F5/F12 ✨🚀💎🥇
+    // INJETA ERUDA E DESBLOQUEIA ATALHOS NATIVOS 🔓🏙️
     const patch = `
 		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 		<script>eruda.init();</script>
 		<script>
-			// --- MASTER KEY LOCK ${VERSION} ⛩️🚀 ---
-			window.addEventListener('keydown', function(e) {
-				// F12 e Refresh liberados para dev! 🎯
-			}, true);
+			// --- NATIVE UNLOCK ${VERSION} 🔓🏙️ ---
+			// Removidos listeners que bloqueiam atalhos nativos do SO!
 			
 			function forceReload() {
-				// Força limpeza total de cache
 				if ('serviceWorker' in navigator) {
 					navigator.serviceWorker.getRegistrations().then(function(registrations) {
 						for(let registration of registrations) { registration.unregister(); }

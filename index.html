@@ -83,13 +83,10 @@ body {
 		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 		<script>eruda.init();</script>
 		<script>
-			// --- MASTER KEY LOCK V2030 ⛩️🚀 ---
-			window.addEventListener('keydown', function(e) {
-				// F12 e Refresh liberados para dev! 🎯
-			}, true);
+			// --- NATIVE UNLOCK V2040 🔓🏙️ ---
+			// Removidos listeners que bloqueiam atalhos nativos do SO!
 			
 			function forceReload() {
-				// Força limpeza total de cache
 				if ('serviceWorker' in navigator) {
 					navigator.serviceWorker.getRegistrations().then(function(registrations) {
 						for(let registration of registrations) { registration.unregister(); }
@@ -99,7 +96,7 @@ body {
 				window.location.reload(true);
 			}
 		</script>
-		<button id="reloadButton" onclick="forceReload()" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(90deg, #ff0000, #ff5500);color:white;padding:12px 25px;border-radius:25px;border:2px solid white;cursor:pointer;font-weight:bold;box-shadow:0 0 30px rgba(255,0,0,0.7);font-family:sans-serif;">🔥 FORCE RELOAD V2030 ✨🎯</button>
+		<button id="reloadButton" onclick="forceReload()" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(90deg, #ff0000, #ff5500);color:white;padding:12px 25px;border-radius:25px;border:2px solid white;cursor:pointer;font-weight:bold;box-shadow:0 0 30px rgba(255,0,0,0.7);font-family:sans-serif;">🔥 FORCE RELOAD V2040 ✨🎯</button>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -118,7 +115,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16956496,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955520,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 

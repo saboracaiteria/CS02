@@ -622,32 +622,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 		if anim_player and anim_player.has_animation("idle"):
 			anim_player.play("idle")
 
-# --- SISTEMA DE SCREENSHOT WEB/MOBILE V2030 📸🏙️🎯 ---
-func take_screenshot() -> void:
-	await get_tree().process_frame # Espera renderizar
-	var img = get_viewport().get_texture().get_image()
-	var buffer = img.save_png_to_buffer()
-	
-	if OS.has_feature("web"):
-		var base64 = Marshalls.raw_to_base64(buffer)
-		var js_code = """
-			var a = document.createElement('a');
-			a.href = 'data:image/png;base64,' + '%s';
-			a.download = 'CS02_Screenshot_%s.png';
-			a.click();
-		""" % [base64, Time.get_datetime_string_from_system().replace(":", "-")]
-		JavaScriptBridge.eval(js_code)
-		Global.log_error("📸 SCREENSHOT ENVIADA PARA DOWNLOAD!")
-	else:
-		var path = "user://screenshot_%s.png" % Time.get_datetime_string_from_system().replace(":", "-")
-		img.save_png(path)
-		Global.log_error("📸 SCREENSHOT SALVA EM: " + path)
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("screenshot") or (event is InputEventKey and event.pressed and event.keycode == KEY_P):
-		take_screenshot()
-
-# --- STUBS SUPREMOS V1140: Evitando Erros de Script! 🏗️🛡️🥋 ---
+# --- STUBS SUPREMOS V1140 ---
 func _on_input_event(_camera: Node, _event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int):
 	pass
 
