@@ -1,9 +1,9 @@
 extends CharacterBody3D
 class_name CSPlayer
 
-@onready var camera: Camera3D = $Head/Camera3D
-@onready var anim_player: AnimationPlayer = $AnimationPlayer
-@onready var raycast: RayCast3D = $Head/Camera3D/RayCast3D
+var camera: Camera3D
+var raycast: RayCast3D
+var anim_player: AnimationPlayer
 
 # Dynamic references for weapons
 var weapon: Node3D
@@ -58,6 +58,15 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
+	# BUSCA ROBUSTA DE NÓS V2010 🏙️🎯🥇
+	camera = find_child("Camera3D", true, false)
+	raycast = find_child("RayCast3D", true, false)
+	anim_player = find_child("AnimationPlayer", true, false)
+	
+	if !camera:
+		Global.log_error("ERRO CRÍTICO: Camera3D não encontrada! Tentando busca alternativa...")
+		camera = get_viewport().get_camera_3d()
+	
 	# LIMPEZA INICIAL V1450: Esconde todas as armas antes de ativar a desejada! 🏙️🎯🥇
 	print("--- PLAYER READY: MULTIPLAYER ID: ", multiplayer.get_unique_id(), " ---")
 	
@@ -81,24 +90,22 @@ func _ready() -> void:
 	add_to_group("player")
 	
 	if is_multiplayer_authority():
-		# FORÇA CÂMERA V1930 🏙️🎯🥇
-		if camera: camera.make_current()
+		if camera: 
+			camera.make_current()
+			Global.log_error("CAMERA ATIVADA: " + str(camera.name))
 		
-		# Garante que o HUD Mobile esteja visível para testes de HP V1960
 		var hud = find_child("TouchControls", true)
 		if hud: 
 			hud.visible = true
 			Global.log_error("HUD MOBILE ATIVADO")
 
-	# CROSSHAIR/RAYCAST FIX V1630 🏙️🎯🥇: Ignora a própria arma!
-	raycast.add_exception(self)
+	if raycast:
+		raycast.add_exception(self)
 
-	# SINCRONIZA COM O SISTEMA ATIVO V1200 🚀
 	default_fov = Global.default_fov
 	ads_fov = Global.ads_fov
-	camera.fov = default_fov
-	camera.make_current()
-	print("--- CAMERA PLAYER ATIVADA COM SUCESSO! ---")
+	if camera: camera.fov = default_fov
+	print("--- PLAYER PRONTO V2010 ---")
 
 # --- SISTEMA DE TROCA DE ARMAS V1460 🏙️🎯🥇 ---
 func switch_weapon(weapon_name: String) -> void:
