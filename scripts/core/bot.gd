@@ -240,8 +240,9 @@ func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 
 	get_parent().add_child(mesh_instance)
 
+	# Auto-destruição ULTRA-RÁPIDA V2090 🏎️💨
 	var tween = create_tween()
-	tween.tween_property(material, "albedo_color:a", 0.0, 0.15)
+	tween.tween_property(material, "albedo_color:a", 0.0, 0.1)
 	tween.tween_callback(mesh_instance.queue_free)
 
 func _update_animations():

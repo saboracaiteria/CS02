@@ -37,7 +37,7 @@ var total_ammo : int = 150
 var max_ammo : int = 50
 var is_reloading : bool = false
 @export var team: String = "Azul"
-@export var health: int = 100
+@export var health: int = 100 # V2090
 
 var default_fov : float = 75.0
 var ads_fov : float = 40.0
@@ -476,30 +476,29 @@ func _apply_recoil() -> void:
 	weapon.position.z += 0.05 # Empurrão leve
 
 @rpc("call_local")
-func _spawn_impact_decal(pos: Vector3, normal: Vector3) -> void:
-	var marker = Node3D.new()
+func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
+	# SISTEMA DE IMPACTO ULTRA-RÁPIDO V2090 🏙️🎯🥇🔥
 	var mesh = MeshInstance3D.new()
-	var cube = BoxMesh.new() 
-	cube.size = Vector3(0.1, 0.1, 0.1)
-	mesh.mesh = cube
+	var sphere = SphereMesh.new() 
+	sphere.radius = 0.05
+	sphere.height = 0.1
+	mesh.mesh = sphere
 	
 	var mat = StandardMaterial3D.new()
 	mat.shading_mode = 0 
-	mat.albedo_color = Color(0, 1, 1, 1) # NEON AZUL
+	mat.albedo_color = Color(1, 0.5, 0, 1) # LARANJA FAÍSCA 🔥
 	mat.emission_enabled = true
-	mat.emission = Color(0, 1, 1, 1)
-	mat.emission_energy_multiplier = 10.0 # BRILHO MÁXIMO
-	mat.no_depth_test = true # GARANTE QUE APARECE POR CIMA DA PAREDE! 🏙️🎯🥇
+	mat.emission = Color(1, 0.5, 0, 1)
+	mat.no_depth_test = true 
 	mesh.material_override = mat
 	
-	marker.add_child(mesh)
-	get_tree().root.add_child(marker)
-	marker.global_position = pos
+	get_tree().root.add_child(mesh)
+	mesh.global_position = pos
 	
-	# Auto-destruição
+	# Auto-destruição em TEMPO RECORD (0.1s!) 🏎️💨
 	var tween = get_tree().create_tween()
-	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.8).set_delay(1.0)
-	tween.tween_callback(marker.queue_free)
+	tween.tween_property(mesh, "scale", Vector3.ZERO, 0.1)
+	tween.tween_callback(mesh.queue_free)
 
 func _inspect() -> void:
 	if is_reloading: return
