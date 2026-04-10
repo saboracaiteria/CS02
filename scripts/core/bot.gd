@@ -23,6 +23,10 @@ func _ready():
 	add_to_group("bot")
 	add_to_group("enemy" if team == "Vermelho" else "ally")
 	
+	# Ajuste de Máscara de Colisão V1880: Cenário (1) + Jogadores (2)
+	raycast.collision_mask = 3 
+	accuracy = randf_range(0.2, 0.5) # Mais agressivos!
+	
 	# SNAP DE CHÃO IMEDIATO 🏙️🚀🎯
 	global_position.y = 1.0 # Força pro nível do player
 	
@@ -199,10 +203,11 @@ func _shoot(target):
 	
 	if target and target.has_method("recieve_damage"):
 		var target_auth = target.get_multiplayer_authority()
+		var damage_to_deal = 15 # Dano aumentado para teste V1880
 		if target_auth == multiplayer.get_unique_id():
-			target.recieve_damage(10)
+			target.recieve_damage(damage_to_deal)
 		else:
-			target.recieve_damage.rpc_id(target_auth, 10)
+			target.recieve_damage.rpc_id(target_auth, damage_to_deal)
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):

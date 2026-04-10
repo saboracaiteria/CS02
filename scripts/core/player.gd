@@ -78,7 +78,21 @@ func _ready() -> void:
 
 	_update_weapon_nodes()
 	
-	add_to_group("player") # INDISPENSÁVEL PARA OS BOTÕES HUD! 🏙️🎯🥇
+	add_to_group("player")
+	
+	# SINCRONIZAÇÃO DE REDE V1880 🏙️🎯🥇
+	if $MultiplayerSynchronizer:
+		var config = $MultiplayerSynchronizer.replication_config
+		if config:
+			# Adiciona health à sincronização de rede se não estiver lá
+			var has_health = false
+			for i in range(config.get_properties_count()):
+				if config.get_property_path(i) == NodePath(".:health"):
+					has_health = true ; break
+			if not has_health:
+				config.add_property(NodePath(".:health"))
+				config.property_set_replication_mode(NodePath(".:health"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
+ # INDISPENSÁVEL PARA OS BOTÕES HUD! 🏙️🎯🥇
 	if is_multiplayer_authority():
 		# CLEAN HUD V1760 🏙️❤️🔫🥇
 		var pc_hud = CanvasLayer.new()
@@ -654,6 +668,13 @@ func play_shoot_effects() -> void:
 func recieve_damage(damage:= 20) -> void:
 	if not is_multiplayer_authority(): return
 	health -= damage
+	
+	# Efeito de Balanço de Câmera (Flinch) V1880 🏙️🎯🥇
+	var tilt = randf_range(-0.1, 0.1)
+	camera.rotation.z += tilt
+	var tween_cam = create_tween()
+	tween_cam.tween_property(camera, "rotation:z", 0.0, 0.2)
+	
 	Global.log_error("DANO: Jogador %s recebeu %d de dano. Vida: %d" % [name, damage, health])
 	
 	var pc_hud = find_child("PCHUD", true)
