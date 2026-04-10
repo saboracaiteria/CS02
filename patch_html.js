@@ -53,7 +53,7 @@ if (fs.existsSync(path)) {
 				window.location.href = window.location.origin + window.location.pathname + '?v=' + Date.now();
 			}
 		</script>
-		<button id="reloadButton" onclick="forceReload()" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(90deg, #ff0000, #ff5500);color:white;padding:12px 25px;border-radius:25px;border:2px solid white;cursor:pointer;font-weight:bold;box-shadow:0 0 30px rgba(255,0,0,0.7);font-family:sans-serif;">🔥 FORCE RELOAD ${VERSION} ✨🎯</button>
+		<button id="reloadButton" onclick="forceReload()" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(180deg, #b8860b, #5d4037);color:#ffd700;padding:12px 25px;border-radius:5px;border:3px solid #ffd700;cursor:pointer;font-weight:bold;box-shadow:0 4px 15px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2);text-shadow:1px 1px 2px black;font-family:serif;letter-spacing:1px;">🔥 FORCE RELOAD ${VERSION} ✨🎯</button>
 	`;
     
     // Remove patches antigos se existirem! 🛡️
