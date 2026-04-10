@@ -591,47 +591,20 @@ func play_shoot_effects() -> void:
 @rpc("any_peer", "call_local")
 func recieve_damage(damage:= 20) -> void:
 	if not is_multiplayer_authority(): return
+	if health <= 0: return
+	
 	health -= damage
 	health = max(0, health)
 	
 	Global.log_error("DANO: Jogador recebeu %d. HP: %d" % [damage, health])
+	_update_hud(0)
 	
-	var pc_hud = find_child("PCHUD", true)
-	
-	# Efeito de Balanço de Câmera (Flinch)
-	camera.rotation.z += randf_range(-0.1, 0.1)
-	var tw_c = create_tween()
-	tw_c.tween_property(camera, "rotation:z", 0.0, 0.2)
-	
-	if health > 0:
-		# FEEDBACK DE DANO 🔴⚡
-		if pc_hud:
-			var flash = pc_hud.find_child("DamageFlash", true)
-			if flash:
-				flash.color = Color(1, 0, 0, 0.45)
-				var tw_f = create_tween()
-				tw_f.tween_property(flash, "color", Color(1, 0, 0, 0), 0.5)
-			
-			var hp_lbl = pc_hud.find_child("PCHealthLabel", true)
-			if hp_lbl:
-				hp_lbl.modulate = Color(1, 1, 0)
-				create_tween().tween_property(hp_lbl, "modulate", Color(1, 1, 1), 0.3)
-	else:
-		# FEEDBACK DE MORTE 💀💤🌑
-		if pc_hud:
-			var death = pc_hud.find_child("DeathHUD", true)
-			var msg = pc_hud.find_child("DeathMsg", true)
-			if death and msg:
-				death.color = Color(0, 0, 0, 1.0)
-				msg.modulate = Color(1, 1, 1, 1)
-				await get_tree().create_timer(1.5).timeout
-				var tw_d = create_tween().set_parallel(true)
-				tw_d.tween_property(death, "color", Color(0, 0, 0, 0), 1.0)
-				tw_d.tween_property(msg, "modulate", Color(1, 1, 1, 0), 1.0)
-		
+	if health <= 0:
+		Global.log_error("SISTEMA: Jogador morto. Respawn em 1s...")
+		await get_tree().create_timer(1.0).timeout
 		health = 100
-		position = spawns[randi() % spawns.size()]
-		Global.log_error("SISTEMA: Jogador eliminado!")
+		global_position = spawns[randi() % spawns.size()]
+		_update_hud(0)
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "shoot":
