@@ -9,7 +9,7 @@ extends Node
 const Player = preload("res://scenes/player.tscn")
 const Bot = preload("res://scenes/entities/bot.tscn")
 const PORT = 9999
-var enet_peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+var enet_peer: ENetMultiplayerPeer
 var paused: bool = false
 var options: bool = false
 var controller: bool = false
@@ -22,12 +22,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion:
 		controller = false
 
-func _process(_delta: float) -> void:
-	if paused:
-		$Menu/Blur.show()
-		pause_menu.show()
-		if !controller:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _on_resume_pressed() -> void:
 	if !options:
@@ -161,7 +155,13 @@ func _setup_host():
 	$Menu/Blur.hide()
 	menu_music.stop()
 	
-	var host_err = enet_peer.create_server(PORT)
+	var host_err
+	if OS.has_feature("web"):
+		host_err = ERR_UNAVAILABLE
+		Global.log_error("SISTEMA: WEB detectada. Pulando criação de servidor ENet.")
+	else:
+		enet_peer = ENetMultiplayerPeer.new()
+		host_err = enet_peer.create_server(PORT)
 	if host_err == OK:
 		multiplayer.multiplayer_peer = enet_peer
 		multiplayer.peer_connected.connect(add_player)
@@ -196,6 +196,12 @@ func _join_server(ip: String):
 	$Menu/Blur.hide()
 	menu_music.stop()
 	
+	if OS.has_feature("web"):
+		Global.log_error("ERRO: Multiplayer ENet não suportado na Web.")
+		main_menu.show()
+		return
+
+	enet_peer = ENetMultiplayerPeer.new()
 	var err = enet_peer.create_client(ip, PORT)
 	if err == OK:
 		multiplayer.multiplayer_peer = enet_peer
