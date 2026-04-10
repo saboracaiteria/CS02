@@ -13,19 +13,14 @@ try {
 if (fs.existsSync(path)) {
     let content = fs.readFileSync(path, 'utf8');
     
-    // REMOVE ERUDA (DEBUG BUBBLE) V1760 🚫🔮
-    content = content.replace(/<script src=".*eruda.*"><\/script>/g, '');
-    content = content.replace(/<script>eruda.init\(\);<\/script>/g, '');
-
-    
-    // Injeta o Reload e Teclas F5/F12 ✨🚀💎🥇
+    // INJETA ERUDA E TECLAS F5/F12 ✨🚀💎🥇
     const patch = `
+		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+		<script>eruda.init();</script>
 		<script>
 			// --- MASTER KEY LOCK ${VERSION} ⛩️🚀 ---
 			window.addEventListener('keydown', function(e) {
-				if (e.key === 'F5' || e.key === 'F12' || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.shiftKey && e.key === 'R')) {
-					// Libera o F5 apenas se o usuário realmente quiser recarregar tudo!
-				}
+				// F12 e Refresh liberados para dev! 🎯
 			}, true);
 			
 			function forceReload() {

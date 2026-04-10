@@ -80,12 +80,12 @@ body {
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
 	
+		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+		<script>eruda.init();</script>
 		<script>
 			// --- MASTER KEY LOCK V1970 ⛩️🚀 ---
 			window.addEventListener('keydown', function(e) {
-				if (e.key === 'F5' || e.key === 'F12' || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.shiftKey && e.key === 'R')) {
-					// Libera o F5 apenas se o usuário realmente quiser recarregar tudo!
-				}
+				// F12 e Refresh liberados para dev! 🎯
 			}, true);
 			
 			function forceReload() {
@@ -118,7 +118,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955936,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955952,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
