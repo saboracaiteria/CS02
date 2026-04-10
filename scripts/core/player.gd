@@ -356,7 +356,7 @@ func _update_hud(_delta: float) -> void:
 		var hp_label = hud.find_child("HealthLabel", true)
 		if hp_label: 
 			hp_label.text = "HP: %d" % health
-			hp_label.visible = true # GARANTE VERSION=V2240 💻🏹
+			hp_label.visible = true # GARANTE VERSION=V2250 💻🏹
 		
 		var bar = hud.find_child("HealthBar", true)
 		if bar: bar.value = health
@@ -454,6 +454,11 @@ func _shoot() -> void:
 		
 	# DISPARA O RASTRO PARA TODOS OS CLIENTES 📡🏙️🚀
 	_spawn_bullet_tracer.rpc(from_pos, to_pos)
+	
+	# SOM DE TIRO RESTAURADO V2250 🔊🏙️🥇
+	if gunshot_sound:
+		gunshot_sound.pitch_scale = randf_range(0.9, 1.1)
+		gunshot_sound.play()
 	
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
