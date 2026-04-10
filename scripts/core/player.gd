@@ -356,7 +356,7 @@ func _update_hud(_delta: float) -> void:
 		var hp_label = hud.find_child("HealthLabel", true)
 		if hp_label: 
 			hp_label.text = "HP: %d" % health
-			hp_label.visible = true # GARANTE VISIBILIDADE NO PC V2120 💻🏹
+			hp_label.visible = true # GARANTE VERSION=V2230 💻🏹
 		
 		var bar = hud.find_child("HealthBar", true)
 		if bar: bar.value = health
@@ -486,17 +486,32 @@ func _apply_recoil() -> void:
 
 @rpc("call_local")
 func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
-	# IMPACTO ZERO LAG V2140 🏎️💨 - Apenas um ponto de luz rápido
+	# IMPACTO PREMIUM ZERO LAG V2230 🏙️🎯🥇
+	# 1. Luz de Impacto (Brilho rápido)
 	var light = OmniLight3D.new()
 	light.light_color = Color(1, 0.8, 0.2)
-	light.light_energy = 2.0
-	light.omni_range = 1.0
+	light.light_energy = 3.0
+	light.omni_range = 1.2
 	light.global_position = pos
 	get_tree().root.add_child(light)
 	
+	# 2. Marca de Bala (Decal Otimizado) 🛡️
+	var decal = Decal.new()
+	decal.size = Vector3(0.1, 0.1, 0.1)
+	decal.texture_albedo = load("res://icon.svg") # Usando ícone como placeholder
+	decal.modulate = Color.BLACK
+	decal.global_position = pos
+	if _normal.length() > 0.1:
+		decal.look_at(pos + _normal, Vector3.UP)
+	get_tree().root.add_child(decal)
+
 	var tw = create_tween()
+	tw.set_parallel(true)
 	tw.tween_property(light, "light_energy", 0.0, 0.1)
+	tw.tween_property(decal, "modulate:a", 0.0, 5.0).set_delay(5.0) # Some após 10s
+	tw.set_parallel(false)
 	tw.tween_callback(light.queue_free)
+	tw.tween_callback(decal.queue_free)
 
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
