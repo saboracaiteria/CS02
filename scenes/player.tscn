@@ -87,12 +87,11 @@ tracks/0/path = NodePath("Camera3D/WeaponRoot:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(-2, -2),
-"update": 0,
-"view_model_offset": Vector3(0, -0.4, -0.9),
-"ads_offset": Vector3(0, -0.3, -0.6)
-}
+	"times": PackedFloat32Array(0, 1.5),
+	"transitions": PackedFloat32Array(-2, -2),
+	"update": 0,
+	"values": [Vector3(0, 0, 0), Vector3(0, -0.05, 0)]
+	}
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
