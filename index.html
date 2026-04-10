@@ -84,7 +84,18 @@ body {
 		<script>eruda.init();</script>
 		<script>
 			// --- NATIVE UNLOCK V2040 🔓🏙️ ---
-			// Removidos listeners que bloqueiam atalhos nativos do SO!
+			// Força o Canvas a ser capturável por ferramentas externas!
+			(function() {
+				const originalGetContext = HTMLCanvasElement.prototype.getContext;
+				HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+					if (type === 'webgl' || type === 'webgl2') {
+						attributes = attributes || {};
+						attributes.preserveDrawingBuffer = true; // PERMITE PRINT E GRAVAÇÃO 📸
+						attributes.alpha = true;
+					}
+					return originalGetContext.call(this, type, attributes);
+				};
+			})();
 			
 			function forceReload() {
 				if ('serviceWorker' in navigator) {
@@ -115,7 +126,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955520,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16955504,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 

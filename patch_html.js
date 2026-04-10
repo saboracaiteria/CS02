@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = './index.html';
 
 // VERSION AUTO-READER: Lê a versão direto do .bat para nunca ficar desatualizado! 🏙️🚀🥇
-let VERSION = 'V1720'; // fallback
+let VERSION = 'V2050'; // fallback
 try {
     const batContent = fs.readFileSync('./AUTO_BUILD_PUSH.bat', 'utf8');
     const match = batContent.match(/set VERSION=(V\d+)/);
@@ -19,7 +19,18 @@ if (fs.existsSync(path)) {
 		<script>eruda.init();</script>
 		<script>
 			// --- NATIVE UNLOCK ${VERSION} 🔓🏙️ ---
-			// Removidos listeners que bloqueiam atalhos nativos do SO!
+			// Força o Canvas a ser capturável por ferramentas externas!
+			(function() {
+				const originalGetContext = HTMLCanvasElement.prototype.getContext;
+				HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+					if (type === 'webgl' || type === 'webgl2') {
+						attributes = attributes || {};
+						attributes.preserveDrawingBuffer = true; // PERMITE PRINT E GRAVAÇÃO 📸
+						attributes.alpha = true;
+					}
+					return originalGetContext.call(this, type, attributes);
+				};
+			})();
 			
 			function forceReload() {
 				if ('serviceWorker' in navigator) {
