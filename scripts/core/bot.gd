@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 4.0
 @export var health: int = 100
-const VERSION = "V2130"
+const VERSION = "V2360" # Fix: Animation Checks
 
 var target_node: Node3D = null
 var is_dead: bool = false
@@ -257,8 +257,13 @@ func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _update_animations():
-	if velocity.length() > 0.1: anim_player.play("move")
-	else: anim_player.play("idle")
+	var anim_to_play = "move" if velocity.length() > 0.1 else "idle"
+	if anim_player.has_animation(anim_to_play):
+		if anim_player.current_animation != anim_to_play:
+			anim_player.play(anim_to_play)
+	else:
+		# Fallback silencioso para evitar spam no console
+		pass
 
 func _find_next_objective():
 	# Procura a Área de Captura (A, B ou C) mais próxima que não seja nossa

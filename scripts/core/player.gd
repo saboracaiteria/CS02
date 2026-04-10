@@ -61,7 +61,10 @@ func _ready() -> void:
 	# BUSCA ROBUSTA DE NÓS V2010 🏙️🎯🥇
 	camera = find_child("Camera3D", true, false)
 	raycast = find_child("RayCast3D", true, false)
-	anim_player = find_child("AnimationPlayer", true, false)
+	anim_player = get_node_or_null("AnimationPlayer")
+	if !anim_player:
+		# Busca segura V2360: Tenta fallback se o caminho direto falhar
+		anim_player = find_child("AnimationPlayer", false, false)
 	
 	if !camera:
 		Global.log_error("ERRO CRÍTICO: Camera3D não encontrada! Tentando busca alternativa...")
@@ -290,10 +293,11 @@ func _process(_delta: float) -> void:
 			var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 			if input_dir.length() < 0.15: input_dir = Vector2.ZERO
 			
-			if input_dir != Vector2.ZERO and is_on_floor():
-				anim_player.play("move")
-			else:
-				anim_player.play("idle")
+			if anim_player:
+				var anim_to_play = "move" if input_dir != Vector2.ZERO and is_on_floor() else "idle"
+				if anim_player.has_animation(anim_to_play):
+					if anim_player.current_animation != anim_to_play:
+						anim_player.play(anim_to_play)
 		else:
 			# Se a arma está ocupada, garantimos que o player base não force um estado conflitante
 			pass
