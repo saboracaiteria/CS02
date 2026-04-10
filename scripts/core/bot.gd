@@ -245,7 +245,7 @@ func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 	material.albedo_color = Color(1, 0.7, 0, 0.8) # Laranja 🟠
 	mesh_instance.material_override = material
 
-	get_tree().root.add_child(mesh_instance)
+	get_tree().root.add_child.call_deferred(mesh_instance)
 
 	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
 	immediate_mesh.surface_add_vertex(from)

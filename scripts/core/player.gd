@@ -517,7 +517,7 @@ func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
 	light.light_energy = 5.0
 	light.omni_range = 1.5
 	light.global_position = pos
-	get_tree().root.add_child(light)
+	get_tree().root.add_child.call_deferred(light)
 	
 	# 2. Marca de Bala (Mesh Garantido) 🛡️
 	var mesh_instance = MeshInstance3D.new()
@@ -533,7 +533,7 @@ func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
 	mesh_instance.global_position = pos + (_normal * 0.02) # Offset para evitar Z-fighting
 	if _normal.length() > 0.1:
 		mesh_instance.look_at(pos + _normal, Vector3.UP)
-	get_tree().root.add_child(mesh_instance)
+	get_tree().root.add_child.call_deferred(mesh_instance)
 
 	var tw = create_tween()
 	tw.set_parallel(true)
@@ -556,7 +556,7 @@ func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 	material.albedo_color = Color(0, 1, 1, 0.8) # Ciano Transparente 💎
 	mesh_instance.material_override = material
 
-	get_tree().root.add_child(mesh_instance)
+	get_tree().root.add_child.call_deferred(mesh_instance)
 
 	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
 	immediate_mesh.surface_add_vertex(from)

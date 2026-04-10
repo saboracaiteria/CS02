@@ -18,7 +18,7 @@ func _ready():
 	_scale_indicator.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
 	_scale_indicator.offset_left = -40
 	_scale_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_scale_indicator)
+	add_child.call_deferred(_scale_indicator)
 	
 	# Texto Centralizado
 	var l = Label.new()
@@ -26,7 +26,7 @@ func _ready():
 	l.set_anchors_preset(Control.PRESET_FULL_RECT)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_scale_indicator.add_child(l)
+	_scale_indicator.add_child.call_deferred(l)
 	
 	_scale_indicator.hide()
 
