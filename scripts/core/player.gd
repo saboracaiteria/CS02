@@ -98,6 +98,10 @@ func _ready() -> void:
 		if hud: 
 			hud.visible = true
 			Global.log_error("HUD MOBILE ATIVADO")
+			
+	# REDUÇÃO DE ZOOM MOBILE V2290 (40% menos zoom) 📱🎯🥇
+	if Global.is_mobile:
+		ads_fov = 55.0
 
 	if raycast:
 		raycast.add_exception(self)
