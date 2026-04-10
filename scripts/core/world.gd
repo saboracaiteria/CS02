@@ -141,6 +141,18 @@ func get_local_ip() -> String:
 			return ip
 	return "127.0.0.1"
 
+func _clear_menu_visuals():
+	main_menu.hide()
+	options_menu.hide()
+	$Menu/DollyCamera.hide()
+	$Menu/DollyCamera.current = false
+	$Menu/DollyCamera.set_process(false)
+	$Menu/Blur.hide()
+	$Menu/ColorRect_Bronze.hide()
+	$Menu/Background.hide()
+	$Menu/FallBackBG.hide()
+	menu_music.stop()
+
 func _on_host_button_pressed() -> void:
 	_setup_host()
 
@@ -148,12 +160,7 @@ func _setup_host():
 	Global.log_error("SISTEMA: Iniciando modo HOST automático...")
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
-	main_menu.hide()
-	$Menu/DollyCamera.hide()
-	$Menu/DollyCamera.current = false
-	$Menu/DollyCamera.set_process(false)
-	$Menu/Blur.hide()
-	menu_music.stop()
+	_clear_menu_visuals()
 	
 	var host_err
 	if OS.has_feature("web"):
@@ -187,14 +194,7 @@ func _join_server(ip: String):
 	if Global.is_playing: return
 	
 	Global.log_error("SISTEMA: Conectando a %s..." % ip)
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	
-	main_menu.hide()
-	$Menu/DollyCamera.hide()
-	$Menu/DollyCamera.current = false
-	$Menu/DollyCamera.set_process(false)
-	$Menu/Blur.hide()
-	menu_music.stop()
+	_clear_menu_visuals()
 	
 	if OS.has_feature("web"):
 		Global.log_error("ERRO: Multiplayer ENet não suportado na Web.")
