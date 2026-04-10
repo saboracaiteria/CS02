@@ -11,34 +11,32 @@ func _ready():
 	button_pressed = false 
 	
 	# 2. Injeta botões extras V2120 🏗️🏹🥋
-	var container = get_parent()
-	if container:
-		# --- SLIDER DE RESOLUÇÃO (UPSCALE) V2400 🏙️🚀🎯 ---
-		res_label = Label.new()
-		res_label.text = "Resolução 3D (Upscale): 100%"
-		container.add_child(res_label)
-		
-		res_slider = HSlider.new()
-		res_slider.min_value = 0.4
-		res_slider.max_value = 1.0
-		res_slider.step = 0.05
-		res_slider.value = 1.0
-		res_slider.value_changed.connect(_on_res_scale_changed)
-		container.add_child(res_slider)
+	# V2400: Adicionando como vizinhos (siblings) para garantir ordem correta! 🏙️🎯
+	res_label = Label.new()
+	res_label.text = "Resolução 3D (Upscale): 100%"
+	add_sibling.call_deferred(res_label)
+	
+	res_slider = HSlider.new()
+	res_slider.min_value = 0.4
+	res_slider.max_value = 1.0
+	res_slider.step = 0.05
+	res_slider.value = 1.0
+	res_slider.value_changed.connect(_on_res_scale_changed)
+	res_label.add_sibling.call_deferred(res_slider)
 
-		# Botão de Sombras
-		shadow_btn = CheckButton.new()
-		shadow_btn.text = "Ativar Sombras (PC/Web)"
-		shadow_btn.button_pressed = false
-		shadow_btn.toggled.connect(_on_shadow_toggled)
-		container.add_child(shadow_btn)
-		
-		# Botão de Bloom
-		bloom_btn = CheckButton.new()
-		bloom_btn.text = "Ativar Bloom (Brilho)"
-		bloom_btn.button_pressed = false
-		bloom_btn.toggled.connect(_on_bloom_toggled)
-		container.add_child(bloom_btn)
+	# Botão de Sombras
+	shadow_btn = CheckButton.new()
+	shadow_btn.text = "Ativar Sombras (PC/Web)"
+	shadow_btn.button_pressed = false
+	shadow_btn.toggled.connect(_on_shadow_toggled)
+	res_slider.add_sibling.call_deferred(shadow_btn)
+	
+	# Botão de Bloom
+	bloom_btn = CheckButton.new()
+	bloom_btn.text = "Ativar Bloom (Brilho)"
+	bloom_btn.button_pressed = false
+	bloom_btn.toggled.connect(_on_bloom_toggled)
+	shadow_btn.add_sibling.call_deferred(bloom_btn)
 	
 	# Garante que comece tudo desligado V2120 🔦🚫🌑
 	_on_shadow_toggled(false)

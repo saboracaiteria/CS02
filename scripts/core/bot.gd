@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 4.0
 @export var health: int = 100
-const VERSION = "V2400" # Build: Low Graphics & Upscale
+const VERSION = "V2410" # Fix: UI Menu Layout
 
 var target_node: Node3D = null
 var is_dead: bool = false
