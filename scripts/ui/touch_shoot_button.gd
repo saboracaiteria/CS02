@@ -4,12 +4,29 @@ extends Button
 @export var player_node: CharacterBody3D
 @export var auto_ads: bool = false # CODM STYLE: 1-Tap ADS 🏙️🎯🥇
 var touch_index: int = -1
-var _edit_touches: Dictionary = {} # Para redimensionamento V1460 📏🖱️
+var _is_scaling: bool = false # Novo sistema V1470 📏
+var _scale_indicator: Label = null
 
 func _ready():
 	pivot_offset = size / 2 # Garante que a escala ocorra a partir do centro 💎
 	if action_name == "screenshot":
 		pressed.connect(_take_screenshot)
+	
+	# Criar indicador visual de escala (Seta) ↕️
+	_scale_indicator = Label.new()
+	_scale_indicator.text = "↕"
+	_scale_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_scale_indicator.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_scale_indicator.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
+	_scale_indicator.custom_minimum_size = Vector2(40, 0)
+	_scale_indicator.modulate = Color(1, 1, 0, 0.8) # Amarelo vibrante
+	_scale_indicator.add_theme_font_size_override("font_size", 32)
+	add_child(_scale_indicator)
+	_scale_indicator.hide()
+
+func _process(_delta):
+	if _scale_indicator:
+		_scale_indicator.visible = Global.is_editing_hud
 
 func _take_screenshot():
 	# CAPTURA DE ELITE: Foto da tela agora! 📸✨
@@ -27,39 +44,27 @@ func _take_screenshot():
 var player : Node3D = null
 
 func _gui_input(event):
-	# EDIT HUD MODO = ARRASTAR BOTÃO E REDIMENSIONAR (PINCH) 🏗️📏💎
+	# NOVO SISTEMA DE EDIÇÃO V1470: SEM PINÇA, MAIS PRECISÃO 🏗️📏🎯
 	if Global.is_editing_hud:
 		if event is InputEventScreenTouch:
 			if event.pressed:
-				_edit_touches[event.index] = event.position
-			else:
-				_edit_touches.erase(event.index)
+				# Se tocar na metade direita, ativa modo ESCALA 📏
+				if event.position.x > size.x * 0.6:
+					_is_scaling = true
+				else:
+					_is_scaling = false
 			accept_event()
+		
 		elif event is InputEventScreenDrag:
-			_edit_touches[event.index] = event.position
-			
-			if _edit_touches.size() == 1:
-				# Movimentação Simples 🖱️
+			if _is_scaling:
+				# Movimento Vertical: CIMA = Aumenta | BAIXO = Diminui ↕️
+				var sensitivity = 0.01
+				var scale_change = -event.relative.y * sensitivity
+				var new_val = clamp(scale.x + scale_change, 0.4, 3.5)
+				scale = Vector2(new_val, new_val)
+			else:
+				# Movimento Normal: Arrastar posição 🖱️
 				position += event.relative
-			elif _edit_touches.size() == 2:
-				# Redimensionamento Supremo (Pinch) 📏
-				var touch_ids = _edit_touches.keys()
-				var p1 = _edit_touches[touch_ids[0]]
-				var p2 = _edit_touches[touch_ids[1]]
-				
-				# Posições anteriores para calcular a variação de distância
-				var old_p1 = p1 - (event.relative if event.index == touch_ids[0] else Vector2.ZERO)
-				var old_p2 = p2 - (event.relative if event.index == touch_ids[1] else Vector2.ZERO)
-				
-				var old_dist = old_p1.distance_to(old_p2)
-				var new_dist = p1.distance_to(p2)
-				
-				if old_dist > 5:
-					var scale_factor = new_dist / old_dist
-					var new_scale = scale * scale_factor
-					# LimitesCOD: Não muito pequeno, nem gigante! 🎯
-					scale = new_scale.clamp(Vector2(0.5, 0.5), Vector2(3.5, 3.5))
-			
 			accept_event()
 		return
 	
