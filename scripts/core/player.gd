@@ -365,6 +365,16 @@ func _update_hud(_delta: float) -> void:
 		if albl: 
 			albl.text = "%d / %d" % [current_ammo, total_ammo]
 			albl.visible = true
+			
+	# HUD DE PC V2260 ✨💻🥇
+	var pchud = find_child("PCHUD", true)
+	if is_instance_valid(pchud):
+		pchud.visible = not Global.is_mobile
+		if pchud.visible:
+			var pc_hp = pchud.find_child("PCHB", true)
+			if pc_hp: pc_hp.value = health
+			var pc_ammo = pchud.find_child("PCAmmo", true)
+			if pc_ammo: pc_ammo.text = "MUN: %d / %d" % [current_ammo, total_ammo]
 
 func _input(event):
 	if not is_multiplayer_authority(): return
@@ -480,6 +490,11 @@ func _apply_recoil() -> void:
 	
 	var v_kick = weapon.get("recoil_vertical") if "recoil_vertical" in weapon else 0.05
 	var h_kick = weapon.get("recoil_horizontal") if "recoil_horizontal" in weapon else 0.02
+	
+	# RECUO SUAVE MOBILE V2260 📱🎯
+	if Global.is_mobile:
+		v_kick *= 0.7
+		h_kick *= 0.7
 	
 	# Recuo de Elite V1665: Mira Firme e Estável 🏙️🎯🥇
 	# Removemos o salto da câmera para a mira não subir sozinha!
