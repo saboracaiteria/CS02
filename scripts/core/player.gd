@@ -3,7 +3,7 @@ class_name CSPlayer
 
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
-@onready var raycast: RayCast3D = $Camera3D/RayCast3D
+@onready var raycast: RayCast3D = $Head/Camera3D/RayCast3D
 
 # Dynamic references for weapons
 var weapon: Node3D
