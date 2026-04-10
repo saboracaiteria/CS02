@@ -89,8 +89,6 @@ func _ready() -> void:
 		if hud: 
 			hud.visible = true
 			Global.log_error("HUD MOBILE ATIVADO")
-				hud.visible = false
-				hud.queue_free() # Remove totalmente no PC
 
 	# CROSSHAIR/RAYCAST FIX V1630 🏙️🎯🥇: Ignora a própria arma!
 	raycast.add_exception(self)
