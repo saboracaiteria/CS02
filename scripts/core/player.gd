@@ -348,19 +348,23 @@ func _physics_process(_delta: float) -> void:
 
 # UPDATE UNIFICADO HUD V1960 ✨💎
 func _update_hud(_delta: float) -> void:
-	# Busca o HUD que já está na cena (TouchControls)
+	# Busca o HUD que já está na cena (TouchControls ou HUD comum)
 	var hud = find_child("TouchControls", true)
 	if is_instance_valid(hud):
-		hud.visible = true # Sempre visível para debug de HP!
+		hud.visible = true # Sempre visível!
 		
 		var hp_label = hud.find_child("HealthLabel", true)
-		if hp_label: hp_label.text = "HP: %d" % health
+		if hp_label: 
+			hp_label.text = "HP: %d" % health
+			hp_label.visible = true # GARANTE VISIBILIDADE NO PC V2120 💻🏹
 		
 		var bar = hud.find_child("HealthBar", true)
 		if bar: bar.value = health
 		
 		var albl = hud.find_child("AmmoLabel", true)
-		if albl: albl.text = "%d / %d" % [current_ammo, total_ammo]
+		if albl: 
+			albl.text = "%d / %d" % [current_ammo, total_ammo]
+			albl.visible = true
 
 func _input(event):
 	if not is_multiplayer_authority(): return
