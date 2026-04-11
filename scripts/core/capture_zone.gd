@@ -14,6 +14,15 @@ func _ready():
 	add_to_group("capture_zone")
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	
+	# SETUP VISUAL V2480: Único para cada zona! 🎨🏙️🥇
+	if mesh:
+		var mat = StandardMaterial3D.new()
+		mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+		mat.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
+		mat.albedo_color = Color(0.5, 0.5, 0.5, 0.3)
+		mesh.material_override = mat
+		
 	_update_visuals()
 
 func _on_body_entered(body):
@@ -60,8 +69,19 @@ func _update_visuals():
 	label.text = "ÁREA %s\n%s\n%d%%" % [zone_id, owning_team, int(capture_progress)]
 	
 	var target_color = Color(0.5, 0.5, 0.5, 0.3)
-	if owning_team == "Azul": target_color = Color(0, 0.4, 1, 0.4)
-	elif owning_team == "Vermelho": target_color = Color(1, 0.1, 0.1, 0.4)
+	var label_color = Color(1, 1, 1) # Branco Neutro
 	
-	if mesh.material_override:
+	if owning_team == "Azul": 
+		target_color = Color(0, 0.4, 1, 0.4)
+		label_color = Color(0, 0.7, 1)
+	elif owning_team == "Vermelho": 
+		target_color = Color(1, 0.1, 0.1, 0.4)
+		label_color = Color(1, 0.2, 0.2)
+	elif capture_progress > 0:
+		label_color = Color(1, 1, 0) # Amarelo capturando ⚠️
+	
+	if mesh and mesh.material_override:
 		mesh.material_override.albedo_color = target_color
+	
+	if label:
+		label.modulate = label_color

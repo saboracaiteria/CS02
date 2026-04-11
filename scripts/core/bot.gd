@@ -13,6 +13,8 @@ var shoot_timer: float = 0.0
 @export var detection_range: float = 40.0
 var nav_refresh_timer: float = 0.0 # V2130 - Anti-Lag
 var check_enemy_timer: float = 0.0 # V2130 - Anti-Lag
+var stuck_timer: float = 0.0 # V2480 - Anti-Stuck 🏙️🎯🥇
+var last_pos: Vector3 = Vector3.ZERO
 
 @onready var nav_agent = $NavigationAgent3D
 @onready var raycast = $RayCast3D
@@ -102,8 +104,17 @@ func _state_patrol(delta):
 		velocity.z = dir.z * speed
 		_smooth_look_at(global_position + dir, delta)
 		
+		# SISTEMA ANTI-TRAVAMENTO V2480 🛡️🏙️🥇
+		stuck_timer += delta
+		if stuck_timer > 2.0:
+			if global_position.distance_to(last_pos) < 0.5:
+				_find_next_objective() # Força nova busca se estiver parado
+				print("--- BOT %s ESTAVA PRESO. RE-ROTEANDO ---" % name)
+			last_pos = global_position
+			stuck_timer = 0
+		
 		# Se chegar na área ou perto dela
-		if global_position.distance_to(target_node.global_position) < 4.0:
+		if global_position.distance_to(target_node.global_position) < 4.5:
 			# Fica na área até capturar!
 			velocity.x = move_toward(velocity.x, 0, speed * 2 * delta)
 			velocity.z = move_toward(velocity.z, 0, speed * 2 * delta)
