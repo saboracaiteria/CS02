@@ -412,10 +412,6 @@ func _input(event):
 			camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
 
-	# NOVO SISTEMA: Sincronização de Mira & Reload 🏙️🎯🥇
-	if event.is_action_just_pressed("reload"):
-		_reload()
-
 	if event.is_action_just_pressed("respawn"):
 		recieve_damage(2)
 
