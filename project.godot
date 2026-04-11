@@ -13,6 +13,8 @@ config_version=5
 config/name="FPS Multiplayer Template"
 config/tags=PackedStringArray("fps", "gamepad", "menu", "multiplayer")
 run/main_scene="res://scenes/world.tscn"
+run/max_fps=0
+run/low_processor_mode_sleep_usec=0
 config/features=PackedStringArray("4.3", "GL Compatibility")
 boot_splash/bg_color=Color(0.0392157, 0.0392157, 0.0470588, 1)
 boot_splash/show_image=false
@@ -32,6 +34,7 @@ gdscript/warnings/untyped_declaration=1
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/vsync/vsync_mode=0
+window/vsync/use_mail_box=true
 
 [filesystem]
 
@@ -177,6 +180,11 @@ fullscreen={
 
 pointing/emulate_touch_from_mouse=true
 
+[physics]
+common/physics_ticks_per_second=120
+common/max_physics_steps_per_frame=8
+3d/active_soft_world_max_threads=4
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
@@ -186,7 +194,8 @@ rendering_device/vulkan/max_descriptors_per_pool=128
 shading/overrides/force_lambert_over_burley=true
 scaling_3d/mode=0
 scaling_3d/scale=1.0
-shadows/soft_shadow_filter_quality=2
-shadows/directional_shadow/soft_shadow_filter_quality=2
-anti_aliasing/quality/msaa_3d=2
+shadows/soft_shadow_filter_quality=0
+shadows/directional_shadow/soft_shadow_filter_quality=0
+anti_aliasing/quality/msaa_3d=0
 viewport/transparent_background=false
+vram_compression/import_etc2=true
