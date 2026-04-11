@@ -40,9 +40,9 @@ var is_reloading : bool = false
 @export var health: int = 100 # V2090
 
 var default_fov : float = 75.0
-var ads_fov : float = 40.0
+var ads_fov : float = 65.0
 var sprint_fov : float = 85.0
-var fov_speed : float = 12.0
+var fov_speed : float = 30.0
 
 # INVENTÁRIO V1460 🏙️🎯🥇
 var weapons_list : Array = ["AnimatedPistol", "DualSMGs"]

@@ -50,6 +50,15 @@ func _ready():
 			child.add_theme_stylebox_override("focus", round_style)
 			child.clip_contents = true
 	
+	# REDUÇÃO DE BOTÕES EM 50% V2430 📱✨🥊
+	var buttons_to_scale = ["ShootButton", "HipfireButton", "AdsButton", "ReloadButton", "SwitchButton"]
+	for btn_name in buttons_to_scale:
+		if has_node(btn_name):
+			var btn = get_node(btn_name)
+			btn.scale = Vector2(0.5, 0.5)
+			# Pivot no centro para não fugir da posição original!
+			btn.pivot_offset = btn.size / 2.0
+	
 	# Começa totalmente invisível e escondido 🧱🥊
 	visible = false
 	layer = 125 

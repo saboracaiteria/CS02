@@ -31,7 +31,7 @@ func _setup_extra_controls():
 	res_slider.min_value = 0.4
 	res_slider.max_value = 1.0
 	res_slider.step = 0.05
-	res_slider.value = 1.0
+	res_slider.value = 0.5
 	res_slider.value_changed.connect(_on_res_scale_changed)
 	parent.add_child(res_slider)
 	parent.move_child(res_slider, my_idx + 2)
@@ -52,10 +52,10 @@ func _setup_extra_controls():
 	parent.add_child(bloom_btn)
 	parent.move_child(bloom_btn, my_idx + 4)
 	
-	# Inicialização Segura 🛡️
+	# Inicialização Segura 🛡️ (V2430: Começa em 50% por padrão)
 	_on_shadow_toggled(false)
 	_on_bloom_toggled(false)
-	_on_res_scale_changed(1.0)
+	_on_res_scale_changed(0.5)
 
 func _on_res_scale_changed(value: float) -> void:
 	get_viewport().scaling_3d_scale = value
@@ -74,9 +74,11 @@ func _toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		get_viewport().msaa_3d = Viewport.MSAA_2X
 		_on_res_scale_changed(1.0)
+		if res_slider: res_slider.value = 1.0
 	else:
 		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-		_on_res_scale_changed(0.7)
+		_on_res_scale_changed(0.5) # V2430: Volta para 50%
+		if res_slider: res_slider.value = 0.5
 	
 	if shadow_btn: shadow_btn.button_pressed = toggled_on
 	if bloom_btn: bloom_btn.button_pressed = toggled_on
