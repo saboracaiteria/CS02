@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 11.0 # DOBRO DA VELOCIDADE DO PLAYER V2500 🏎️🏃‍♂️💨🏙️🎯🥇
 @export var health: int = 100
-const VERSION = "V4000" # Canaã Procedural V4 🏙️🎯🥇
+const VERSION = "V5000" # Canaã PC Fidelity V5 🏙️🎯🥇
 
 var target_node: Node3D = null
 var is_dead: bool = false
@@ -207,15 +207,13 @@ func _check_for_enemies():
 	return null
 
 func _apply_elite_skin():
-	Global.log_error("SISTEMA: Ativando SKIN PROCEDURAL V4 (Canaã Port) no Bot %s..." % name)
-	
 	# LIMPEZA TOTAL
 	var old_model = get_node_or_null("EliteModel")
 	if old_model: old_model.queue_free()
 	var box_mesh = get_node_or_null("MeshInstance3D")
 	if box_mesh: box_mesh.queue_free()
 	
-	# CRIAÇÃO DO HUMANOIDE PROCEDURAL 🏙️🎯🥇
+	# CRIAÇÃO DO HUMANOIDE PROCEDURAL V5 (Fidelity) 🏙️🎯🥇
 	var skin_script = load("res://scripts/core/procedural_skin.gd")
 	var skinner = Node3D.new()
 	skinner.set_script(skin_script)
@@ -227,9 +225,9 @@ func _apply_elite_skin():
 	if team == "Azul": bot_color = Color(0.0, 0.5, 1.0)
 	
 	skinner.setup(bot_color)
-	skinner.position.y = -0.5 # Ajuste para os pés ficarem no chão
+	skinner.position.y = -0.2 # Ajuste para os pés ficarem no chão (Compensando o PelvePivot Y=1.0)
 	
-	Global.log_error("IA: Bot %s agora e um PROCEDURAL V4!" % name)
+	Global.log_error("IA: Bot %s agora e um HUMANOIDE CANAÃ V5!" % name)
 
 @onready var hp_bar = $HPBar
 
