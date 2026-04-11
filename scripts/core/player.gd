@@ -386,8 +386,11 @@ func _update_hud(_delta: float) -> void:
 		if pchud.visible:
 			var pc_hp = pchud.find_child("PCHB", true)
 			if pc_hp: pc_hp.value = health
+			
 			var pc_ammo = pchud.find_child("PCAmmo", true)
-			if pc_ammo: pc_ammo.text = "MUN: %d / %d" % [current_ammo, total_ammo]
+			var gm = get_tree().get_first_node_in_group("game_manager")
+			if gm and pc_ammo:
+				pc_ammo.text = "MUN: %d / %d  |  KILLS: %d\nAZUL: %d / %d" % [current_ammo, total_ammo, gm.player_kills, int(gm.team_blue_score), int(gm.score_limit)]
 
 func _input(event):
 	if not is_multiplayer_authority(): return

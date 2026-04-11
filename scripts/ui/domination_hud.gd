@@ -12,6 +12,11 @@ var game_manager = null
 func _ready():
 	# Busca o Game Manager no mundo
 	game_manager = get_tree().get_first_node_in_group("game_manager")
+	
+	# GARANTE VISIBILIDADE V2500 🏙️🎯🥇
+	show()
+	visible = true
+	set_process(true)
 
 func _process(_delta):
 	if !game_manager:

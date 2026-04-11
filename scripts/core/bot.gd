@@ -112,14 +112,15 @@ func _state_patrol(delta):
 		velocity.z = dir.z * speed
 		_smooth_look_at(global_position + dir, delta)
 		
-		# SISTEMA ANTI-TRAVAMENTO V2480 🛡️🏙️🥇
+		# SISTEMA ANTI-TRAVAMENTO V2510 🛡️🏙️🥇
 		stuck_timer += delta
-		if stuck_timer > 3.0:
-			if global_position.distance_to(last_pos) < 0.3:
-				# SE ESTIVER MUITO PRESO: Teletransporta um pouco pra cima/frente 🚀
-				global_position += Vector3.UP * 2.1 + (-transform.basis.z * 1.5)
+		if stuck_timer > 2.2: # Mais rápido para detectar!
+			if global_position.distance_to(last_pos) < 0.6:
+				# SALTO DE ESCAPE: Teletransporta para alto + lado aleatório MAIOR para sair de quinas 🎲🚀
+				var escape_dir = Vector3(randf_range(-4.5, 4.5), 4.5, randf_range(-4.5, 4.5))
+				global_position += escape_dir
 				_find_next_objective() 
-				print("--- BOT %s ESTAVA PRESO. USANDO LEVE TELEPORTE ---" % name)
+				print("--- BOT %s PRESO EM QUINA: EXECUTANDO SALTO DE ESCAPE AMPLIFICADO ---" % name)
 			last_pos = global_position
 			stuck_timer = 0
 		
