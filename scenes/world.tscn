@@ -375,7 +375,6 @@ script = ExtResource("7_jhf7u")
 
 [node name="GraphicsQuality" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-button_pressed = true
 text = "Alta Qualidade (Bloom/Glow)"
 script = ExtResource("new_script_gfx")
 

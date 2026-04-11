@@ -52,28 +52,29 @@ func _setup_extra_controls():
 	parent.add_child(bloom_btn)
 	parent.move_child(bloom_btn, my_idx + 4)
 	
-	# Inicialização Segura 🛡️
+	# Inicialização Segura 🛡️ (VOLTANDO AO EQUILÍBRIO PARA GARANTIR FPS)
 	if Global.is_mobile:
-		_on_shadow_toggled(false) # Sombras são pesadas no mobile
+		_on_shadow_toggled(false)
 		_on_bloom_toggled(false)
-		_on_res_scale_changed(0.85) # 85% é um bom equilíbrio de nitidez/performance
-		if res_slider: res_slider.value = 0.85
-		get_viewport().msaa_3d = Viewport.MSAA_DISABLED # MSAA mata o mobile
-		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA # FXAA é leve!
+		_on_res_scale_changed(0.65) # 65% para mobile (Equilíbrio)
+		if res_slider: res_slider.value = 0.65
+		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA # FXAA é o segredo aqui
 		button_pressed = false
-		text = "Qualidade Gráfica: Otimizada"
+		text = "Qualidade Gráfica: Performance"
 	else:
-		_on_shadow_toggled(true)
-		_on_bloom_toggled(true)
-		_on_res_scale_changed(1.0)
-		get_viewport().msaa_3d = Viewport.MSAA_2X # 2X é mais seguro que 4X
+		_on_shadow_toggled(false) # Desativado por padrão para PC também
+		_on_bloom_toggled(false)
+		_on_res_scale_changed(0.75) # 75% para PC (Nítido mas não pesado)
+		if res_slider: res_slider.value = 0.75
+		get_viewport().msaa_3d = Viewport.MSAA_DISABLED # MSAA é muito pesado
 		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
-		button_pressed = true
+		button_pressed = false
+		text = "Qualidade Gráfica: Equilibrada"
 
 func _on_res_scale_changed(value: float) -> void:
 	get_viewport().scaling_3d_scale = value
-	# FSR 1.0 ou Bilinear dependendo da plataforma
-	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if not Global.is_mobile else Viewport.SCALING_3D_MODE_BILINEAR
+	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR # Bilinear é o mais estável na Web
 	
 	if res_label:
 		res_label.text = "Resolução 3D (Upscale): %d%%" % (value * 100)
@@ -83,15 +84,15 @@ func _toggled(toggled_on: bool) -> void:
 	_on_bloom_toggled(toggled_on)
 	
 	if toggled_on:
-		get_viewport().msaa_3d = Viewport.MSAA_4X if not Global.is_mobile else Viewport.MSAA_DISABLED
+		get_viewport().msaa_3d = Viewport.MSAA_2X if not Global.is_mobile else Viewport.MSAA_DISABLED
 		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 		_on_res_scale_changed(1.0)
 		if res_slider: res_slider.value = 1.0
 	else:
 		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED if Global.is_mobile else Viewport.SCREEN_SPACE_AA_FXAA
-		_on_res_scale_changed(0.5 if Global.is_mobile else 0.75)
-		if res_slider: res_slider.value = (0.5 if Global.is_mobile else 0.75)
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA # Mantém FXAA sempre para evitar serrilhado
+		_on_res_scale_changed(0.65 if Global.is_mobile else 0.75)
+		if res_slider: res_slider.value = (0.65 if Global.is_mobile else 0.75)
 	
 	if shadow_btn: shadow_btn.button_pressed = toggled_on
 	if bloom_btn: bloom_btn.button_pressed = toggled_on
