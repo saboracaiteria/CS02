@@ -59,34 +59,58 @@ func _process_capture(team, delta):
 		capture_progress = 100.0
 		return
 		
-	capture_progress += delta * 12.5 # 8 segundos para capturar (100 / 8 = 12.5) ⏱️🏙️🥇
-	if capture_progress >= 100.0:
-		owning_team = team
-		capture_progress = 100.0
-		zone_captured.emit(team, zone_id)
-		_on_captured()
+	if owning_team != "Nenhum":
+		# NEUTRALIZAÇÃO V2500: Primeiro tira o controle do inimigo! 🏙️🎯🥇
+		capture_progress -= delta * 20.0 # Neutraliza em ~5s
+		if capture_progress <= 0:
+			owning_team = "Nenhum"
+			capture_progress = 0
+			print("--- ÁREA %s NEUTRALIZADA ---" % zone_id)
+	else:
+		# CAPTURANDO: Zona neutra sendo tomada ⏱️
+		capture_progress += delta * 12.5 # 8 segundos para capturar (100 / 8 = 12.5)
+		if capture_progress >= 100.0:
+			owning_team = team
+			capture_progress = 100.0
+			zone_captured.emit(team, zone_id)
+			_on_captured()
 
 func _on_captured():
-	# Efeito visual de estouro/som aqui
-	pass
+	# Feedback sonoro ou vibrar pode vir aqui ⚡
+	print("--- ÁREA %s RECUPERADA PELO TIME %s ---" % [zone_id, owning_team])
 
 func _update_visuals():
-	label.text = "ÁREA %s\n%s\n%d%%" % [zone_id, owning_team, int(capture_progress)]
+	var progress_text = ""
+	if owning_team == "Nenhum" and capture_progress > 0:
+		progress_text = "\nCAPTURANDO..." 
+	elif owning_team != "Nenhum" and capture_progress < 100:
+		progress_text = "\nPERDENDO..."
+		
+	label.text = "ÁREA %s\n%s\n%d%%%s" % [zone_id, owning_team, int(capture_progress), progress_text]
 	
-	var target_color = Color(0.5, 0.5, 0.5, 0.3)
-	var label_color = Color(1, 1, 1) # Branco Neutro
+	var target_color = Color(0.5, 0.5, 0.5, 0.2)
+	var label_color = Color(1, 1, 1) 
 	
 	if owning_team == "Azul": 
-		target_color = Color(0, 0.4, 1, 0.4)
-		label_color = Color(0, 0.7, 1)
+		target_color = Color(0, 0.5, 1, 0.6) # Azul mais forte V2500
+		label_color = Color(0, 0.8, 1)
 	elif owning_team == "Vermelho": 
-		target_color = Color(1, 0.1, 0.1, 0.4)
-		label_color = Color(1, 0.2, 0.2)
-	elif capture_progress > 0:
+		target_color = Color(1, 0.2, 0.2, 0.6) # Vermelho mais forte V2500
+		label_color = Color(1, 0.4, 0.4)
+	elif capture_progress > 1:
 		label_color = Color(1, 1, 0) # Amarelo capturando ⚠️
 	
-	if mesh and mesh.material_override:
-		mesh.material_override.albedo_color = target_color
+	# PINTA TODAS AS MESHES DA ZONA V2500 (Base, Poste, etc) 🎨🏙️🥇
+	for child in get_children():
+		if child is MeshInstance3D:
+			if !child.material_override:
+				# Cria material se não tiver
+				var m = StandardMaterial3D.new()
+				m.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+				m.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
+				child.material_override = m
+			
+			child.material_override.albedo_color = target_color
 	
 	if label:
 		label.modulate = label_color
