@@ -85,6 +85,15 @@ func setup(team_color: Color = Color.ORANGE):
 	# BRAÇOS
 	pivots["l_arm"] = _create_arm(pelve, Vector3(-0.25, 0.75, 0), materials["skin"], materials["vest"])
 	pivots["r_arm"] = _create_arm(pelve, Vector3(0.25, 0.75, 0), materials["skin"], materials["vest"])
+	
+	# ARMA PROCEDURAL (Canaã PC Fidelity) 🏙️🎯🥇
+	var weapon_mat = StandardMaterial3D.new()
+	weapon_mat.albedo_color = Color(0.1, 0.1, 0.1) # 0x111111
+	
+	var r_elbow = pivots["r_arm"].elbow
+	var gun = _create_mesh(r_elbow, BoxMesh.new(), Vector3(0, -0.2, 0), weapon_mat)
+	gun.mesh.size = Vector3(0.1, 0.15, 0.6)
+	gun.rotation.x = -PI / 2
 
 func _create_mesh(parent: Node3D, mesh: Mesh, pos: Vector3, mat: Material) -> MeshInstance3D:
 	var mi = MeshInstance3D.new()

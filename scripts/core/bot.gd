@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 11.0 # DOBRO DA VELOCIDADE DO PLAYER V2500 🏎️🏃‍♂️💨🏙️🎯🥇
 @export var health: int = 100
-const VERSION = "V5000" # Canaã PC Fidelity V5 🏙️🎯🥇
+const VERSION = "V5.3" # Canaã Fidelity (Arma e Pés Corrigidos) 🏙️🎯🥇
 
 var target_node: Node3D = null
 var is_dead: bool = false
@@ -225,9 +225,13 @@ func _apply_elite_skin():
 	if team == "Azul": bot_color = Color(0.0, 0.5, 1.0)
 	
 	skinner.setup(bot_color)
-	skinner.position.y = -0.2 # Ajuste para os pés ficarem no chão (Compensando o PelvePivot Y=1.0)
+	skinner.position.y = 0.1 # 🏙️🎯🥇 CORREÇÃO: Altura exata (+0.1) para alinhar a bota (Y=-0.1 relativo) com o chão (Y=0.0 absoluto)
 	
-	Global.log_error("IA: Bot %s agora e um HUMANOIDE CANAÃ V5!" % name)
+	# Esconde arma antiga para usar a arma procedural fixa no braço do bot
+	var old_weapon = get_node_or_null("Camera3D/WeaponRoot")
+	if old_weapon: old_weapon.hide()
+	
+	Global.log_error("IA: Bot %s agora e um HUMANOIDE CANAÃ V5.3!" % name)
 
 @onready var hp_bar = $HPBar
 
