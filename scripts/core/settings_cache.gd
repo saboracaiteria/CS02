@@ -9,13 +9,13 @@ var _cfg := ConfigFile.new()
 
 # Valores padrão do jogo (primeira execução)
 const DEFAULTS := {
-	"render_scale": 0.4,      # 40% para máxima performance no load inicial
-	"shadows": true,          # Sombras ligadas por padrão
-	"bloom": false,           # Bloom desligado por padrão
+	"render_scale": 0.5,      # 50%
+	"shadows": false,         # Sombras desligadas por padrao
+	"bloom": false,
 	"sensitivity": 0.005,
 	"controller_sensitivity": 0.010,
 	"fov": 75.0,
-	"hud_hp_x": -1.0,         # -1 = usar posição padrão
+	"hud_hp_x": -1.0,
 	"hud_hp_y": -1.0,
 	"hud_ammo_x": -1.0,
 	"hud_ammo_y": -1.0,

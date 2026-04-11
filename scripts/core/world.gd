@@ -71,7 +71,12 @@ func _ready():
 	
 	# MOUSE VISÍVEL NO MENU! V1210 🖱️🎭
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	Global.is_playing = false # Começa em estado de menu!
+	Global.is_playing = false
+	
+	# PRÉ-AQUECIMENTO NO MENU V6.1 🔥🏙️🎯🥇
+	# Roda enquanto o player está no menu — zero impacto no gameplay!
+	if ShaderPrewarmer:
+		ShaderPrewarmer.prewarm()
 
 func _process(delta: float) -> void:
 	# Lógica de Broadcast do Host 📢
@@ -183,13 +188,6 @@ func _setup_host():
 	add_player(multiplayer.get_unique_id())
 	Global.is_playing = true
 	spawn_bots.call_deferred(3)
-	
-	# PRÉ-AQUECIMENTO DE SHADERS V6.0 🔥🏙️🎯🥇
-	# Roda 2s após o spawn dos bots para garantir que os materiais já existem na cena
-	get_tree().create_timer(2.0).timeout.connect(func():
-		if ShaderPrewarmer:
-			ShaderPrewarmer.prewarm()
-	)
 	
 	if host_err == OK:
 		upnp_setup()

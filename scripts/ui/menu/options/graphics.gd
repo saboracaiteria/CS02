@@ -27,7 +27,7 @@ func _setup_extra_controls():
 	res_slider.min_value = 0.3
 	res_slider.max_value = 1.0
 	res_slider.step = 0.05
-	res_slider.value = 0.4  # Padrão 40%
+	res_slider.value = 0.5  # Padrão 50%
 	res_slider.value_changed.connect(_on_res_scale_changed)
 	parent.add_child(res_slider)
 	parent.move_child(res_slider, my_idx + 2)
@@ -35,7 +35,7 @@ func _setup_extra_controls():
 	# --- SOMBRAS ---
 	shadow_btn = CheckButton.new()
 	shadow_btn.text = "Ativar Sombras (PC/Web)"
-	shadow_btn.button_pressed = true  # Sombras ativas por padrão
+	shadow_btn.button_pressed = false  # Desativadas por padrão
 	shadow_btn.toggled.connect(_on_shadow_toggled)
 	parent.add_child(shadow_btn)
 	parent.move_child(shadow_btn, my_idx + 3)
@@ -78,11 +78,11 @@ func _load_from_cache():
 	print("[GRÁFICOS] Configurações carregadas do cache (escala=%.0f%%, sombras=%s, bloom=%s)" % [scale_val*100, shadows, bloom])
 
 func _apply_defaults():
-	# 40% resolução, sombras ON, bloom OFF
-	_on_res_scale_changed(0.4)
-	if res_slider: res_slider.value = 0.4
-	_on_shadow_toggled(true)
-	if shadow_btn: shadow_btn.button_pressed = true
+	# 50% resolucao, sombras OFF, bloom OFF
+	_on_res_scale_changed(0.5)
+	if res_slider: res_slider.value = 0.5
+	_on_shadow_toggled(false)
+	if shadow_btn: shadow_btn.button_pressed = false
 	_on_bloom_toggled(false)
 	if bloom_btn: bloom_btn.button_pressed = false
 
