@@ -30,7 +30,9 @@ func _ready():
 	
 	# Ajuste de Máscara de Colisão V1880: Cenário (1) + Jogadores (2)
 	raycast.collision_mask = 3 
-	accuracy = randf_range(0.2, 0.5) # Mais agressivos!
+	
+	# Aguarda o mundo carregar e a malha de navegação assentar V2500 ⏱️🏙️🎯🥇
+	await get_tree().create_timer(1.0).timeout
 	
 	# SNAP DE CHÃO IMEDIATO 🏙️🚀🎯
 	global_position.y = 1.0 # Força pro nível do player
@@ -42,7 +44,7 @@ func _ready():
 	# STAGGER DE ACURÁCIA: Cada bot começa com acurácia aleatória diferente 🎯
 	accuracy = randf_range(0.0, 0.3)
 	_find_next_objective()
-	print("--- BOT %s NASCEU E CORRENDO PARA OBJETIVO ---" % name)
+	print("--- BOT %s PRONTO PARA AÇÃO ---" % name)
 
 enum State {PATROL, COMBAT, SEARCH}
 var current_state: State = State.PATROL
@@ -98,6 +100,11 @@ func _state_patrol(delta):
 			return
 
 		var next_path_pos = nav_agent.get_next_path_position()
+		
+		# FALLBACK V2500: Se a navegação retornar posição inválida ou presa, vai direto! 🚀🏙️🎯🥇
+		if next_path_pos.distance_to(global_position) < 0.2:
+			next_path_pos = target_node.global_position
+			
 		var dir = (next_path_pos - global_position).normalized()
 		dir.y = 0
 		
