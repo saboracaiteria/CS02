@@ -13,10 +13,21 @@ func _ready():
 	# Busca o Game Manager no mundo
 	game_manager = get_tree().get_first_node_in_group("game_manager")
 	
-	# GARANTE VISIBILIDADE V2500 🏙️🎯🥇
+	# GARANTE VISIBILIDADE E CONTRASTE V2500 🏙️🎯🥇
 	show()
-	visible = true
-	set_process(true)
+	_apply_contrast(time_label)
+	_apply_contrast(blue_score)
+	_apply_contrast(red_score)
+	_apply_contrast(status_a)
+	_apply_contrast(status_b)
+	_apply_contrast(status_c)
+
+func _apply_contrast(label):
+	if label:
+		label.add_theme_constant_override("outline_size", 10)
+		label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		label.set("theme_override_font_sizes/font_size", 24)
 
 func _process(_delta):
 	if !game_manager:

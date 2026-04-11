@@ -391,6 +391,16 @@ func _update_hud(_delta: float) -> void:
 			var gm = get_tree().get_first_node_in_group("game_manager")
 			if gm and pc_ammo:
 				pc_ammo.text = "MUN: %d / %d  |  KILLS: %d\nAZUL: %d / %d" % [current_ammo, total_ammo, gm.player_kills, int(gm.team_blue_score), int(gm.score_limit)]
+				_apply_hud_contrast(pc_ammo)
+				
+			var pc_hp_label = pchud.find_child("HPLabel", true) # Se existir label de HP
+			if pc_hp_label: _apply_hud_contrast(pc_hp_label)
+
+func _apply_hud_contrast(label):
+	if label:
+		label.add_theme_constant_override("outline_size", 10)
+		label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 
 func _input(event):
 	if not is_multiplayer_authority(): return
