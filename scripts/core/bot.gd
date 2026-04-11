@@ -65,6 +65,7 @@ func _physics_process(delta):
 	
 	match current_state:
 		State.PATROL:
+			if target_node == null: _find_next_objective()
 			_state_patrol(delta)
 		State.COMBAT:
 			_state_combat(delta)
@@ -106,21 +107,24 @@ func _state_patrol(delta):
 		
 		# SISTEMA ANTI-TRAVAMENTO V2480 🛡️🏙️🥇
 		stuck_timer += delta
-		if stuck_timer > 2.0:
-			if global_position.distance_to(last_pos) < 0.5:
-				_find_next_objective() # Força nova busca se estiver parado
-				print("--- BOT %s ESTAVA PRESO. RE-ROTEANDO ---" % name)
+		if stuck_timer > 3.0:
+			if global_position.distance_to(last_pos) < 0.3:
+				# SE ESTIVER MUITO PRESO: Teletransporta um pouco pra cima/frente 🚀
+				global_position += Vector3.UP * 2.1 + (-transform.basis.z * 1.5)
+				_find_next_objective() 
+				print("--- BOT %s ESTAVA PRESO. USANDO LEVE TELEPORTE ---" % name)
 			last_pos = global_position
 			stuck_timer = 0
 		
-		# Se chegar na área ou perto dela
-		if global_position.distance_to(target_node.global_position) < 4.5:
+		# Se chegar na área ou perto dela (Raio aumentado para 5.0m)
+		if global_position.distance_to(target_node.global_position) < 5.0:
 			# Fica na área até capturar!
-			velocity.x = move_toward(velocity.x, 0, speed * 2 * delta)
-			velocity.z = move_toward(velocity.z, 0, speed * 2 * delta)
-			# Proteção: Se a zona for capturada por nós, busca a próxima IMEDIATAMENTE
+			velocity.x = move_toward(velocity.x, 0, speed * delta)
+			velocity.z = move_toward(velocity.z, 0, speed * delta)
+			# Se a zona já for do nosso time, corre para a PRÓXIMA! 🏁🥇
 			if target_node.get("owning_team") == team:
 				_find_next_objective()
+				return
 
 func _state_combat(delta):
 	var enemy = _check_for_enemies()

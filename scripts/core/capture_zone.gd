@@ -12,6 +12,11 @@ var players_inside: Array = []
 
 func _ready():
 	add_to_group("capture_zone")
+	
+	# CONFIGURAÇÃO DE COLISÃO V2480: Detecta Jogadores e Bots (Camada 2) 🛡️🏙️🥇
+	collision_layer = 0 
+	collision_mask = 2 
+	
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	
