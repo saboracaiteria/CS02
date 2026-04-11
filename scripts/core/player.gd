@@ -494,9 +494,9 @@ func _shoot() -> void:
 			# SMART RPC V1730: Evita erro 'RPC on yourself' 🏙️🎯🥇
 			var target_auth = collider.get_multiplayer_authority()
 			if target_auth == multiplayer.get_unique_id():
-				collider.recieve_damage(dmg) # Chamada direta no mesmo peer
+				collider.recieve_damage(dmg, self) # Chamada direta com self como atacante 🏙️🎯🥇
 			else:
-				collider.recieve_damage.rpc_id(target_auth, dmg)
+				collider.recieve_damage.rpc_id(target_auth, dmg, multiplayer.get_unique_id())
 	
 	# RECUO V1645 🏙️🎯🔥
 	_apply_recoil()

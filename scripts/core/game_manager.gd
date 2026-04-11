@@ -11,6 +11,7 @@ var zone_ownership = {"A": "Nenhum", "B": "Nenhum", "C": "Nenhum"}
 
 var score_limit: float = 600.0 # Aumentado para partidas mais longas V2500 🏆🏙️🥇
 var winner_team: String = ""
+var player_kills: int = 0 # TRACKING DE KILLS INDIVIDUAL 🏙️🎯🥇
 
 func _ready():
 	add_to_group("game_manager")

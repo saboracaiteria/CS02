@@ -28,8 +28,8 @@ func _process(_delta):
 		time_label.text = "%02d:%02d" % [mins, secs]
 		time_label.modulate = Color(1, 1, 1)
 	
-	# Atualiza Placar
-	blue_score.text = "AZUL: %d" % int(game_manager.team_blue_score)
+	# Atualiza Placar e Kills V2500 🏙️🎯🥇
+	blue_score.text = "AZUL: %d  |  KILLS: %d" % [int(game_manager.team_blue_score), game_manager.player_kills]
 	red_score.text = "VERMELHO: %d" % int(game_manager.team_red_score)
 	
 	# Atualiza Ícones das Áreas

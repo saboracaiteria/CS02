@@ -322,11 +322,17 @@ func _find_next_objective():
 				closest = t
 		target_node = closest
 
-@rpc("any_peer")
-func recieve_damage(damage:= 10) -> void:
+@rpc("any_peer", "call_local")
+func recieve_damage(damage:= 10, attacker_id = null) -> void:
 	if is_dead: return
 	health -= damage
 	if health <= 0:
+		# CREDITA KILL AO PLAYER V2500 🏙️🎯🥇
+		var gm = get_tree().get_first_node_in_group("game_manager")
+		if gm:
+			# Se o atacante for o player local (multiplayer ou single)
+			if attacker_id is CSPlayer or (attacker_id is int and attacker_id == 1):
+				gm.player_kills += 1
 		_die()
 
 func _die():
