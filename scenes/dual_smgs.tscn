@@ -35,8 +35,8 @@ orientation = 2
 
 [node name="DualSMGs" type="Node3D"]
 script = ExtResource("1_base")
-view_model_offset = Vector3(0, -0.4, -0.9)
-ads_offset = Vector3(0, -0.3, -0.9)
+view_model_offset = Vector3(0, -0.4, -1.0)
+ads_offset = Vector3(0, -0.35, -1.0)
 view_model_scale = Vector3(0.025, 0.025, 0.025)
 view_model_rotation = Vector3(0, 180, 0)
 fire_rate = 0.08

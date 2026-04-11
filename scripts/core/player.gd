@@ -40,7 +40,7 @@ var is_reloading : bool = false
 @export var health: int = 100 # V2090
 
 var default_fov : float = 75.0
-var ads_fov : float = 70.0
+var ads_fov : float = 73.0
 var sprint_fov : float = 85.0
 var fov_speed : float = 30.0
 
@@ -109,7 +109,7 @@ func _ready() -> void:
 			
 	# REDUÇÃO DE ZOOM MOBILE V2290 (40% menos zoom) 📱🎯🥇
 	if Global.is_mobile:
-		ads_fov = 65.0
+		ads_fov = 73.0
 
 	if raycast:
 		raycast.add_exception(self)
