@@ -263,9 +263,9 @@ func _process(_delta: float) -> void:
 			target_pos = weapon.ads_offset if "ads_offset" in weapon else target_pos
 			target_fov = ads_fov
 		
-		# Interpolação suave para a arma deslizar para o centro
-		weapon.transform.origin = weapon.transform.origin.lerp(target_pos, _delta * 10.0)
-		camera.fov = lerp(camera.fov, clamp(target_fov, 1.0, 179.0), _delta * 10.0)
+		# Interpolação ultra-rápida (V2440: 30.0) 🎯🏙️🥇
+		weapon.transform.origin = weapon.transform.origin.lerp(target_pos, _delta * 30.0)
+		camera.fov = lerp(camera.fov, clamp(target_fov, 1.0, 179.0), _delta * 30.0)
 
 	# CROUCH HEIGHT LERP ✨
 	var target_height = 2.0 if !is_crouching else 1.2
@@ -509,8 +509,8 @@ func _apply_recoil() -> void:
 	camera.rotation.x += v_kick * 0.1 # Quase invisível
 	rotate_y(randf_range(-h_kick, h_kick) * 0.1)
 	
-	# "Kick" Visual na Arma (Apenas empurrão para trás, sem subir do HUD)
-	weapon.position.z += 0.05 # Empurrão leve
+	# "Kick" Visual na Arma (V2440: Recuo mais sutil 0.02)
+	weapon.position.z += 0.02 
 
 @rpc("call_local")
 func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
