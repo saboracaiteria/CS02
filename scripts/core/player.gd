@@ -273,8 +273,8 @@ func _process(_delta: float) -> void:
 		camera.fov = lerp(camera.fov, clamp(target_fov, 1.0, 179.0), _delta * 30.0)
 
 	# CROUCH HEIGHT LERP ✨
-	var target_height = 2.0 if !is_crouching else 1.2
-	var target_cam_y = 1.6 if !is_crouching else 0.8
+	var target_height = 2.1 if !is_crouching else 1.2
+	var target_cam_y = 1.8 if !is_crouching else 0.9
 	$CollisionShape3D.shape.height = lerp($CollisionShape3D.shape.height, target_height, 10.0 * _delta)
 	camera.position.y = lerp(camera.position.y, target_cam_y, 10.0 * _delta)
 
