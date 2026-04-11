@@ -140,10 +140,10 @@ func _handle_drag(touch_pos: Vector2):
 	if vec.length() > max_dist:
 		vec = vec.normalized() * max_dist
 	
-	# No novo sistema visual, knob centralizado com base no parent scale 🎯
+	# Centralização absoluta do Knob V2460 🏙️🎯🥇
 	if knob:
-		# Reposiciona o knob relativo ao centro do controle (100, 100) 🏗️
-		knob.position = (vec / scale) + (size / 2.0) - (knob.size / 2.0)
+		# Posicionamento centrífugo: (Centro do controle + Vetor de força) 
+		knob.position = (size / 2.0) + (vec / scale) - (knob.size / 2.0)
 	
 	output_vector = vec / max_dist
 	_update_input_map()
@@ -153,9 +153,10 @@ func _reset_joystick():
 	touch_index = -1
 	output_vector = Vector2.ZERO
 	if knob:
-		knob.position = -knob.size / 2.0
+		# Volta para o centro exato da bola grande! 🏗️🎯
+		knob.position = (size / 2.0) - (knob.size / 2.0)
 	if is_floating:
-		global_position = default_position # VOLTA PARA A BASE! 🏙️🚀
+		global_position = default_position
 	_update_input_map()
 
 func _update_input_map():

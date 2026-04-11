@@ -40,7 +40,7 @@ var is_reloading : bool = false
 @export var health: int = 100 # V2090
 
 var default_fov : float = 75.0
-var ads_fov : float = 65.0
+var ads_fov : float = 70.0
 var sprint_fov : float = 85.0
 var fov_speed : float = 30.0
 
@@ -512,10 +512,13 @@ func _apply_recoil() -> void:
 	# "Kick" Visual na Arma (V2440: Recuo mais sutil 0.02)
 	weapon.position.z += 0.02 
 
+# PRE-CACHE V2460: Evita a "travadinha" no primeiro tiro! 🏙️🎯🥇🚀
+var _shared_quad = QuadMesh.new()
+var _shared_mat = StandardMaterial3D.new()
+
 @rpc("call_local")
 func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
-	# IMPACTO GARANTIDO V2240 🏙️🎯🥇
-	# 1. Luz de Impacto
+	# 1. Luz de Impacto (Leve)
 	var light = OmniLight3D.new()
 	light.light_color = Color(1, 1, 0.5)
 	light.light_energy = 5.0
@@ -523,20 +526,19 @@ func _spawn_impact_decal(pos: Vector3, _normal: Vector3) -> void:
 	light.global_position = pos
 	get_tree().root.add_child.call_deferred(light)
 	
-	# 2. Marca de Bala (Mesh Garantido) 🛡️
+	# 2. Marca de Bala Otimizada 🛡️
 	var mesh_instance = MeshInstance3D.new()
-	var quad = QuadMesh.new()
-	quad.size = Vector2(0.15, 0.15)
-	mesh_instance.mesh = quad
+	# USAMOS PRE-CACHE AQUI: 🎯
+	if _shared_quad.size == Vector2.ZERO: _shared_quad.size = Vector2(0.15, 0.15)
+	if _shared_mat.albedo_color == Color.WHITE: 
+		_shared_mat.albedo_color = Color(0.1, 0.1, 0.1, 1.0)
+		_shared_mat.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
+		
+	mesh_instance.mesh = _shared_quad
+	mesh_instance.material_override = _shared_mat
 	
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.1, 0.1, 0.1, 1.0)
-	mat.shading_mode = StandardMaterial3D.SHADING_MODE_UNSHADED
-	mesh_instance.material_override = mat
-	
-	mesh_instance.global_position = pos + (_normal * 0.02) # Offset para evitar Z-fighting
+	mesh_instance.global_position = pos + (_normal * 0.02)
 	if _normal.length() > 0.1:
-		# Recomendado pela Godot para nodes fora da árvore 🏙️🎯🥇
 		mesh_instance.look_at_from_position(mesh_instance.global_position, pos + _normal, Vector3.UP)
 	get_tree().root.call_deferred("add_child", mesh_instance)
 
