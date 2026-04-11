@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var team: String = "Vermelho"
 @export var speed: float = 11.0 # DOBRO DA VELOCIDADE DO PLAYER V2500 🏎️🏃‍♂️💨🏙️🎯🥇
 @export var health: int = 100
-const VERSION = "V2460" # Final: Combat Stutter & Analog Fix
+const VERSION = "V4000" # Canaã Procedural V4 🏙️🎯🥇
 
 var target_node: Node3D = null
 var is_dead: bool = false
@@ -44,6 +44,7 @@ func _ready():
 	# STAGGER DE ACURÁCIA: Cada bot começa com acurácia aleatória diferente 🎯
 	accuracy = randf_range(0.0, 0.3)
 	_find_next_objective()
+	_apply_elite_skin()
 	print("--- BOT %s PRONTO PARA AÇÃO ---" % name)
 
 enum State {PATROL, COMBAT, SEARCH}
@@ -205,6 +206,31 @@ func _check_for_enemies():
 				return e
 	return null
 
+func _apply_elite_skin():
+	Global.log_error("SISTEMA: Ativando SKIN PROCEDURAL V4 (Canaã Port) no Bot %s..." % name)
+	
+	# LIMPEZA TOTAL
+	var old_model = get_node_or_null("EliteModel")
+	if old_model: old_model.queue_free()
+	var box_mesh = get_node_or_null("MeshInstance3D")
+	if box_mesh: box_mesh.queue_free()
+	
+	# CRIAÇÃO DO HUMANOIDE PROCEDURAL 🏙️🎯🥇
+	var skin_script = load("res://scripts/core/procedural_skin.gd")
+	var skinner = Node3D.new()
+	skinner.set_script(skin_script)
+	skinner.name = "EliteModel"
+	add_child(skinner)
+	
+	# Configura cores baseadas no time
+	var bot_color = Color(1.0, 0.4, 0.0) # Elite Orange
+	if team == "Azul": bot_color = Color(0.0, 0.5, 1.0)
+	
+	skinner.setup(bot_color)
+	skinner.position.y = -0.5 # Ajuste para os pés ficarem no chão
+	
+	Global.log_error("IA: Bot %s agora e um PROCEDURAL V4!" % name)
+
 @onready var hp_bar = $HPBar
 
 func _process(delta):
@@ -255,8 +281,6 @@ func _process_aura_damage(delta):
 		if randf() < 0.05: # Chance de dano contínuo
 			player.recieve_damage(5)
 
-# Chamar no _physics_process
-
 @rpc("call_local")
 func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 	# SISTEMA ULTRA-LEVE V2140 🏙️🎯🥇 - Zero Lag para Bots
@@ -282,13 +306,25 @@ func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 	tracer_tween.tween_callback(mesh_instance.queue_free)
 
 func _update_animations():
-	var anim_to_play = "move" if velocity.length() > 0.1 else "idle"
-	if anim_player.has_animation(anim_to_play):
-		if anim_player.current_animation != anim_to_play:
-			anim_player.play(anim_to_play)
+	var model_root = get_node_or_null("EliteModel")
+	if !model_root: return
+
+	# Lógica de Morte 💀
+	if is_dead:
+		model_root.rotation.x = lerp(model_root.rotation.x, deg_to_rad(85), 0.2)
+		return
+
+	var speed_f = velocity.length()
+	
+	# Driver Procedural V4 (Canaã) 🏙️🏃‍♂️✨
+	if model_root.has_method("update_animation"):
+		model_root.update_animation(speed_f, get_process_delta_time())
+	
+	# Inclinação de ataque leve 🔫
+	if speed_f > 0.5:
+		model_root.rotation.x = lerp(model_root.rotation.x, -0.1, 0.1)
 	else:
-		# Fallback silencioso para evitar spam no console
-		pass
+		model_root.rotation.x = lerp(model_root.rotation.x, 0.0, 0.1)
 
 func _find_next_objective():
 	# Procura a Área de Captura (A, B ou C) mais próxima que não seja nossa
