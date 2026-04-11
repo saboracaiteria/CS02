@@ -13,6 +13,9 @@ var players_inside: Array = []
 func _ready():
 	add_to_group("capture_zone")
 	
+	# DIMINUIR ÁREA PELA METADE V2500 📏🏙️🎯🥇
+	scale = Vector3(0.5, 1.0, 0.5) 
+	
 	# CONFIGURAÇÃO DE COLISÃO V2480: Detecta Jogadores e Bots (Camada 2) 🛡️🏙️🥇
 	collision_layer = 0 
 	collision_mask = 2 
@@ -60,15 +63,15 @@ func _process_capture(team, delta):
 		return
 		
 	if owning_team != "Nenhum":
-		# NEUTRALIZAÇÃO V2500: Primeiro tira o controle do inimigo! 🏙️🎯🥇
-		capture_progress -= delta * 20.0 # Neutraliza em ~5s
+		# VELOCIDADE DOBRADA V2500: Neutraliza em ~3s ⏱️🏙️🎯🥇
+		capture_progress -= delta * 33.3 
 		if capture_progress <= 0:
 			owning_team = "Nenhum"
 			capture_progress = 0
 			print("--- ÁREA %s NEUTRALIZADA ---" % zone_id)
 	else:
-		# CAPTURANDO: Zona neutra sendo tomada ⏱️
-		capture_progress += delta * 12.5 # 8 segundos para capturar (100 / 8 = 12.5)
+		# VELOCIDADE DOBRADA V2500: Captura em ~4s ⏱️🏙️🎯🥇
+		capture_progress += delta * 25.0 
 		if capture_progress >= 100.0:
 			owning_team = team
 			capture_progress = 100.0

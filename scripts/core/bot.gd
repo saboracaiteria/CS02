@@ -123,8 +123,8 @@ func _state_patrol(delta):
 			last_pos = global_position
 			stuck_timer = 0
 		
-		# Se chegar na área ou perto dela (Raio aumentado para 5.0m)
-		if global_position.distance_to(target_node.global_position) < 5.0:
+		# Se chegar na área ou perto dela (Raio ajustado para 2.5m - METADE) 🏙️🎯🥇
+		if global_position.distance_to(target_node.global_position) < 2.5:
 			# Fica na área até capturar!
 			velocity.x = move_toward(velocity.x, 0, speed * delta)
 			velocity.z = move_toward(velocity.z, 0, speed * delta)
