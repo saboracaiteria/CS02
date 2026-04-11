@@ -81,12 +81,17 @@ func _ready() -> void:
 	var dual_node = find_child("DualSMGs", true)
 	if dual_node:
 		dual_node.visible = true
+		current_weapon_index = weapons_list.find("DualSMGs")
 		print("--- DUAL SMGs ATIVADAS COM SUCESSO! ---")
 	else:
 		# Fallback para AnimatedPistol se não houver Dual
 		var anim_pistol = find_child("AnimatedPistol", true)
 		if anim_pistol:
 			anim_pistol.visible = true
+			current_weapon_index = weapons_list.find("AnimatedPistol")
+
+	# Garante que o index seja válido
+	if current_weapon_index == -1: current_weapon_index = 0
 
 	_update_weapon_nodes()
 	
@@ -432,9 +437,16 @@ func _input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_F:
 		_inspect()
 
-	# ATALHO DE TECLADO V1460 🏙️🎯🥇
-	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
-		cycle_weapon()
+	# ATALHO DE TECLADO V2470 🏙️🎯🥇
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_Q:
+			cycle_weapon()
+		elif event.keycode == KEY_1:
+			switch_weapon(weapons_list[0])
+			current_weapon_index = 0
+		elif event.keycode == KEY_2 and weapons_list.size() > 1:
+			switch_weapon(weapons_list[1])
+			current_weapon_index = 1
 
 	if event.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY

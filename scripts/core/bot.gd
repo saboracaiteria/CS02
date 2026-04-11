@@ -104,11 +104,14 @@ func _state_patrol(delta):
 		velocity.z = dir.z * speed
 		_smooth_look_at(global_position + dir, delta)
 		
-		# Se chegar na área (fallback se o nav falhar)
-		if global_position.distance_to(target_node.global_position) < 2.5:
+		# Se chegar na área ou perto dela
+		if global_position.distance_to(target_node.global_position) < 4.0:
 			# Fica na área até capturar!
-			velocity.x = 0
-			velocity.z = 0
+			velocity.x = move_toward(velocity.x, 0, speed * 2 * delta)
+			velocity.z = move_toward(velocity.z, 0, speed * 2 * delta)
+			# Proteção: Se a zona for capturada por nós, busca a próxima IMEDIATAMENTE
+			if target_node.get("owning_team") == team:
+				_find_next_objective()
 
 func _state_combat(delta):
 	var enemy = _check_for_enemies()

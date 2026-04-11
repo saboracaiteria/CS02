@@ -9,6 +9,7 @@ var _scale_indicator: ColorRect = null
 
 func _ready():
 	pivot_offset = size / 2 # Garante que a escala ocorra a partir do centro 💎
+	focus_mode = FOCUS_NONE # IMPORTANTE V2470: Evita precisar de 2 cliques! 🏙️🎯🥇
 	if action_name == "screenshot":
 		pressed.connect(_take_screenshot)
 	
