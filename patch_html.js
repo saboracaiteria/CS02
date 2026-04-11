@@ -15,6 +15,44 @@ if (fs.existsSync(path)) {
     
     // INJETA ERUDA E DESBLOQUEIA ATALHOS NATIVOS 🔓🏙️
     const patch = `
+		<style>
+		@media screen and (orientation: portrait) {
+		    #rotate-screen { display: flex !important; }
+		    #canvas { display: none !important; }
+		}
+		#rotate-screen {
+		    display: none;
+		    position: fixed;
+		    top: 0; left: 0; width: 100vw; height: 100vh;
+		    background: #050505;
+		    z-index: 9999999;
+		    flex-direction: column;
+		    align-items: center;
+		    justify-content: center;
+		    color: #ffd700;
+		    font-family: Arial, sans-serif;
+		    text-align: center;
+		    padding: 20px;
+		    box-sizing: border-box;
+		}
+		.rotate-icon {
+		    width: 60px; height: 100px;
+		    margin-bottom: 20px;
+		    border: 4px solid #00f3ff;
+		    border-radius: 10px;
+		    animation: rotateAnim 2.5s infinite ease-in-out;
+		}
+		@keyframes rotateAnim {
+		    0% { transform: rotate(0deg); }
+		    50% { transform: rotate(90deg); }
+		    100% { transform: rotate(90deg); }
+		}
+		</style>
+		<div id="rotate-screen">
+		    <div class="rotate-icon"></div>
+		    <h1 style="font-size: 28px; text-transform: uppercase;">GIRE O CELULAR</h1>
+		    <p style="color: #00f3ff; font-size: 16px;">Modo paisagem obrigatório para operar taticamente.</p>
+		</div>
 		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 		<script>eruda.init();</script>
 		<script>

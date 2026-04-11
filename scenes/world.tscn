@@ -23,10 +23,10 @@
 [ext_resource type="Texture2D" path="res://textures/industrial_bg.png" id="industrial_bg_tex"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_web"]
-sky_top_color = Color(0.2, 0.5, 1.0, 1)
-sky_horizon_color = Color(0.5, 0.8, 1.0, 1)
-ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
-ground_horizon_color = Color(0.646, 0.656, 0.67, 1)
+sky_top_color = Color(0.125, 0.05, 0.25, 1)
+sky_horizon_color = Color(1, 0.45, 0.1, 1)
+ground_bottom_color = Color(0.05, 0.05, 0.08, 1)
+ground_horizon_color = Color(1, 0.35, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_78err"]
 sky_material = SubResource("ProceduralSkyMaterial_web")
@@ -48,8 +48,8 @@ glow_bloom = 0.1
 glow_blend_mode = 1
 glow_hdr_threshold = 0.8
 fog_enabled = true
-fog_light_color = Color(0.517647, 0.552941, 0.607843, 1)
-fog_density = 0.001
+fog_light_color = Color(1, 0.5, 0.3, 1)
+fog_density = 0.005
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wntx8"]
 
@@ -131,7 +131,8 @@ camera_attributes = SubResource("CameraAttributesPractical_wntx8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.835807, -0.47011, 0.283589, -0.375944, 0.866496, 0.328406, -0.400115, 0.167871, -0.900959, 0, 4.88489, 0)
-light_energy = 5.0
+light_color = Color(1, 0.6, 0.3, 1)
+light_energy = 2.5
 shadow_enabled = true
 shadow_bias = 0.0
 directional_shadow_split_1 = 0.04
