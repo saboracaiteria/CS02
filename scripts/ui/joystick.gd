@@ -26,6 +26,24 @@ func _ready():
 	size = Vector2(200, 200)
 	pivot_offset = Vector2(100, 100) # Centro exato
 	
+	# ESTILO REDONDO SUPREMO V2450 🏗️🕹️🎯🥊
+	var base_style = StyleBoxFlat.new()
+	base_style.bg_color = Color(1, 1, 1, 0.08) # Glassmorphism leve
+	base_style.set_corner_radius_all(100)
+	base_style.border_width_left = 4
+	base_style.border_width_top = 4
+	base_style.border_width_right = 4
+	base_style.border_width_bottom = 4
+	base_style.border_color = Color(1, 1, 1, 0.3)
+	if base: base.add_theme_stylebox_override("panel", base_style)
+	
+	var knob_style = StyleBoxFlat.new()
+	knob_style.bg_color = Color(1, 1, 1, 0.4)
+	knob_style.set_corner_radius_all(100)
+	knob_style.shadow_size = 5
+	knob_style.shadow_color = Color(0, 0, 0, 0.4)
+	if knob: knob.add_theme_stylebox_override("panel", knob_style)
+
 	# Criar indicador visual de escala (Seta) mais robusto ↕️
 	_scale_indicator = ColorRect.new()
 	_scale_indicator.color = Color(1, 1, 0, 0.6)
