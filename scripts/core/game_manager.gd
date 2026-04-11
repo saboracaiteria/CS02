@@ -9,7 +9,7 @@ var is_active: bool = false
 
 var zone_ownership = {"A": "Nenhum", "B": "Nenhum", "C": "Nenhum"}
 
-var score_limit: float = 200.0 # Pontuação para vencer CODM Style 🏆🏙️🥇
+var score_limit: float = 600.0 # Aumentado para partidas mais longas V2500 🏆🏙️🥇
 var winner_team: String = ""
 
 func _ready():
@@ -38,8 +38,10 @@ func _process(delta):
 		if zone == "Azul": blue_zones += 1
 		elif zone == "Vermelho": red_zones += 1
 		
-	team_blue_score += blue_zones * delta * 1.5 # Ajustado para CODM Style
-	team_red_score += red_zones * delta * 1.5
+	if !is_multiplayer_authority(): return # Segurança para não multiplicar pontos 🛡️🏙️🥇
+	
+	team_blue_score += blue_zones * delta * 0.5 # Mais lento e estratégico
+	team_red_score += red_zones * delta * 0.5
 	
 	# Checa Vitória por Pontuação 🏆
 	if team_blue_score >= score_limit:
