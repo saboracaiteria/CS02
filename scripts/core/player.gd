@@ -109,7 +109,7 @@ func _ready() -> void:
 			
 	# REDUÇÃO DE ZOOM MOBILE V2290 (40% menos zoom) 📱🎯🥇
 	if Global.is_mobile:
-		ads_fov = 55.0
+		ads_fov = 65.0
 
 	if raycast:
 		raycast.add_exception(self)
