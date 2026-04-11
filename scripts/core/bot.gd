@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 @export var team: String = "Vermelho"
-@export var speed: float = 5.5 # Aumentado para 5.5 para 'correr' 🏃‍♂️💨
+@export var speed: float = 11.0 # DOBRO DA VELOCIDADE DO PLAYER V2500 🏎️🏃‍♂️💨🏙️🎯🥇
 @export var health: int = 100
 const VERSION = "V2460" # Final: Combat Stutter & Analog Fix
 
