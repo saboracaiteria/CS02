@@ -1,6 +1,6 @@
 extends Label
 
-var fps_bool := false
+var fps_bool := true
 var ping_bool := false
 
 func _process(_delta: float) -> void:

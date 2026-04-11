@@ -8,7 +8,7 @@ var res_label : Label
 func _ready():
 	# 1. Configuração Visual do Botão
 	text = "Qualidade Gráfica Ultra"
-	button_pressed = false 
+	button_pressed = true 
 	
 	# 2. Injeção Robusta V2420 ✨🎯
 	# Usamos um timer curto ou deferred para garantir que o menu já esteja montado
@@ -31,7 +31,7 @@ func _setup_extra_controls():
 	res_slider.min_value = 0.4
 	res_slider.max_value = 1.0
 	res_slider.step = 0.05
-	res_slider.value = 0.5
+	res_slider.value = 1.0
 	res_slider.value_changed.connect(_on_res_scale_changed)
 	parent.add_child(res_slider)
 	parent.move_child(res_slider, my_idx + 2)
@@ -52,33 +52,46 @@ func _setup_extra_controls():
 	parent.add_child(bloom_btn)
 	parent.move_child(bloom_btn, my_idx + 4)
 	
-	# Inicialização Segura 🛡️ (V2430: Começa em 50% por padrão)
-	_on_shadow_toggled(false)
-	_on_bloom_toggled(false)
-	_on_res_scale_changed(0.5)
+	# Inicialização Segura 🛡️
+	if Global.is_mobile:
+		_on_shadow_toggled(false) # Sombras são pesadas no mobile
+		_on_bloom_toggled(false)
+		_on_res_scale_changed(0.85) # 85% é um bom equilíbrio de nitidez/performance
+		if res_slider: res_slider.value = 0.85
+		get_viewport().msaa_3d = Viewport.MSAA_DISABLED # MSAA mata o mobile
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA # FXAA é leve!
+		button_pressed = false
+		text = "Qualidade Gráfica: Otimizada"
+	else:
+		_on_shadow_toggled(true)
+		_on_bloom_toggled(true)
+		_on_res_scale_changed(1.0)
+		get_viewport().msaa_3d = Viewport.MSAA_2X # 2X é mais seguro que 4X
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+		button_pressed = true
 
 func _on_res_scale_changed(value: float) -> void:
 	get_viewport().scaling_3d_scale = value
-	# Bilinear é o rei da performance na Web 👑
-	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	# FSR 1.0 ou Bilinear dependendo da plataforma
+	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if not Global.is_mobile else Viewport.SCALING_3D_MODE_BILINEAR
 	
 	if res_label:
 		res_label.text = "Resolução 3D (Upscale): %d%%" % (value * 100)
-	print("LOG [GRÁFICOS]: Resolução escalada para ", value)
 
 func _toggled(toggled_on: bool) -> void:
 	_on_shadow_toggled(toggled_on)
 	_on_bloom_toggled(toggled_on)
 	
-	# MSAA (Anti-Aliasing) V2420: Desligar se não for ULTRA 🚫🏙️
 	if toggled_on:
-		get_viewport().msaa_3d = Viewport.MSAA_2X
+		get_viewport().msaa_3d = Viewport.MSAA_4X if not Global.is_mobile else Viewport.MSAA_DISABLED
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 		_on_res_scale_changed(1.0)
 		if res_slider: res_slider.value = 1.0
 	else:
 		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-		_on_res_scale_changed(0.5) # V2430: Volta para 50%
-		if res_slider: res_slider.value = 0.5
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED if Global.is_mobile else Viewport.SCREEN_SPACE_AA_FXAA
+		_on_res_scale_changed(0.5 if Global.is_mobile else 0.75)
+		if res_slider: res_slider.value = (0.5 if Global.is_mobile else 0.75)
 	
 	if shadow_btn: shadow_btn.button_pressed = toggled_on
 	if bloom_btn: bloom_btn.button_pressed = toggled_on
