@@ -9,6 +9,9 @@ var is_active: bool = false
 
 var zone_ownership = {"A": "Nenhum", "B": "Nenhum", "C": "Nenhum"}
 
+var score_limit: float = 200.0 # Pontuação para vencer CODM Style 🏆🏙️🥇
+var winner_team: String = ""
+
 func _ready():
 	add_to_group("game_manager")
 	start_round()
@@ -17,6 +20,7 @@ func start_round():
 	team_blue_score = 0
 	team_red_score = 0
 	match_time = 180.0
+	winner_team = ""
 	is_active = true
 
 func _process(delta):
@@ -24,7 +28,7 @@ func _process(delta):
 	
 	match_time -= delta
 	if match_time <= 0:
-		_finish_match()
+		_finish_match("Tempo Esgotado")
 		return
 		
 	# Ganha pontos por zonas dominadas
@@ -34,14 +38,29 @@ func _process(delta):
 		if zone == "Azul": blue_zones += 1
 		elif zone == "Vermelho": red_zones += 1
 		
-	team_blue_score += blue_zones * delta * 2.0
-	team_red_score += red_zones * delta * 2.0
+	team_blue_score += blue_zones * delta * 1.5 # Ajustado para CODM Style
+	team_red_score += red_zones * delta * 1.5
+	
+	# Checa Vitória por Pontuação 🏆
+	if team_blue_score >= score_limit:
+		_finish_match("Azul")
+	elif team_red_score >= score_limit:
+		_finish_match("Vermelho")
 
 func _on_zone_captured(team, zone_id):
 	zone_ownership[zone_id] = team
 	print("MANJEDOURA: Time ", team, " capturou a Área ", zone_id)
 
-func _finish_match():
+func _finish_match(winner):
+	if !is_active: return
 	is_active = false
-	var winner = "Azul" if team_blue_score > team_red_score else "Vermelho"
-	game_over.emit(winner)
+	winner_team = winner
+	if winner == "Tempo Esgotado":
+		winner_team = "Azul" if team_blue_score > team_red_score else "Vermelho"
+	
+	game_over.emit(winner_team)
+	print("--- PARTIDA FINALIZADA! VENCEDOR: ", winner_team, " ---")
+	
+	# Reinicia após 10 segundos para não ser eterna! 🏙️🎯🥇
+	await get_tree().create_timer(10.0).timeout
+	get_tree().reload_current_scene()

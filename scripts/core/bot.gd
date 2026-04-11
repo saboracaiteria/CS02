@@ -297,10 +297,18 @@ func _find_next_objective():
 		# Se todas forem nossas, patrulha uma aleatória
 		target_node = zones[randi() % zones.size()]
 	else:
-		# Pega a zona mais próxima entre as capturáveis
-		var closest = targets[0]
-		var min_dist = global_position.distance_to(closest.global_position)
+		# PRIORIDADE MÁXIMA V2500: Recuperar áreas do inimigo primeiro! 🏙️🎯🥇
+		var enemy_zones = []
 		for t in targets:
+			if t.get("owning_team") != "Nenhum":
+				enemy_zones.append(t)
+		
+		var list_to_search = enemy_zones if !enemy_zones.is_empty() else targets
+		
+		# Pega a zona mais próxima entre as filtradas
+		var closest = list_to_search[0]
+		var min_dist = global_position.distance_to(closest.global_position)
+		for t in list_to_search:
 			var d = global_position.distance_to(t.global_position)
 			if d < min_dist:
 				min_dist = d

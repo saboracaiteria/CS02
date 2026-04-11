@@ -19,9 +19,14 @@ func _process(_delta):
 		return
 		
 	# Atualiza Tempo
-	var mins = int(game_manager.match_time) / 60
-	var secs = int(game_manager.match_time) % 60
-	time_label.text = "%02d:%02d" % [mins, secs]
+	if game_manager.winner_team != "":
+		time_label.text = "PARTIDA FINALIZADA!"
+		time_label.modulate = Color(0, 1, 0) # Verde vitória
+	else:
+		var mins = int(game_manager.match_time) / 60
+		var secs = int(game_manager.match_time) % 60
+		time_label.text = "%02d:%02d" % [mins, secs]
+		time_label.modulate = Color(1, 1, 1)
 	
 	# Atualiza Placar
 	blue_score.text = "AZUL: %d" % int(game_manager.team_blue_score)
