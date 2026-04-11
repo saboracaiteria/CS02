@@ -1,6 +1,6 @@
 extends Node3D
 
-# --- SISTEMA DE SKIN PROCEDURAL V5 (Canaã PC Fidelity) 🏙️🎯🥇 ---
+# --- SISTEMA DE SKIN PROCEDURAL V5.2 (Fidelidade Estética) 🏙️🎯🥇 ---
 # Replicando FIELMENTE a estrutura e movimentos do projeto Canaã PC.
 
 var walk_cycle: float = 0.0
@@ -37,12 +37,12 @@ func setup(team_color: Color = Color.ORANGE):
 	# TRONCO
 	var torso = _create_mesh(pelve, CapsuleMesh.new(), Vector3(0, 0.3, 0), materials["torso"])
 	torso.mesh.radius = 0.2
-	torso.mesh.height = 0.6
+	torso.mesh.height = 1.0 # Em Godot, height = height + 2*radius
 	
 	# COLETE
 	var vest = _create_mesh(pelve, CapsuleMesh.new(), Vector3(0, 0.4, 0), materials["vest"])
 	vest.mesh.radius = 0.22
-	vest.mesh.height = 0.4
+	vest.mesh.height = 0.84
 	
 	# PESCOÇO
 	var neck = _create_mesh(pelve, CylinderMesh.new(), Vector3(0, 0.65, 0), materials["skin"])
@@ -58,7 +58,7 @@ func setup(team_color: Color = Color.ORANGE):
 	
 	var head = _create_mesh(head_pivot, CapsuleMesh.new(), Vector3.ZERO, materials["skin"])
 	head.mesh.radius = 0.12
-	head.mesh.height = 0.3 # 0.15 * 2
+	head.mesh.height = 0.39
 	
 	# OLHOS (Canaã Fidelity) 🏙️🎯🥇
 	var eye_mat = StandardMaterial3D.new()
@@ -76,15 +76,15 @@ func setup(team_color: Color = Color.ORANGE):
 	# CAPACETE
 	var helmet = _create_mesh(head_pivot, CapsuleMesh.new(), Vector3(0, 0.08, 0), materials["helmet"])
 	helmet.mesh.radius = 0.13
-	helmet.mesh.height = 0.16
+	helmet.mesh.height = 0.34
 	
 	# PERNAS
 	pivots["l_leg"] = _create_leg(pelve, Vector3(-0.12, 0, 0), materials["vest"], materials["boot"])
 	pivots["r_leg"] = _create_leg(pelve, Vector3(0.12, 0, 0), materials["vest"], materials["boot"])
 	
 	# BRAÇOS
-	pivots["l_arm"] = _create_arm(pelve, Vector3(-0.25, 0.7, 0), materials["skin"])
-	pivots["r_arm"] = _create_arm(pelve, Vector3(0.25, 0.7, 0), materials["skin"])
+	pivots["l_arm"] = _create_arm(pelve, Vector3(-0.25, 0.75, 0), materials["skin"], materials["vest"])
+	pivots["r_arm"] = _create_arm(pelve, Vector3(0.25, 0.75, 0), materials["skin"], materials["vest"])
 
 func _create_mesh(parent: Node3D, mesh: Mesh, pos: Vector3, mat: Material) -> MeshInstance3D:
 	var mi = MeshInstance3D.new()
@@ -102,43 +102,56 @@ func _create_leg(parent: Node3D, pos: Vector3, mat_vest: Material, mat_boot: Mat
 	# Coxa
 	var coxa = _create_mesh(pivot, CapsuleMesh.new(), Vector3(0, -0.25, 0), mat_vest)
 	coxa.mesh.radius = 0.08
-	coxa.mesh.height = 0.4
+	coxa.mesh.height = 0.56
 	
-	# Canela Pivot
+	# Canela Pivot & Joelho
 	var canela_pivot = Node3D.new()
 	canela_pivot.position.y = -0.25
 	coxa.add_child(canela_pivot)
 	
+	var joelho = _create_mesh(canela_pivot, SphereMesh.new(), Vector3.ZERO, mat_boot)
+	joelho.mesh.radius = 0.085
+	joelho.mesh.height = 0.17
+	
 	# Canela
 	var canela = _create_mesh(canela_pivot, CapsuleMesh.new(), Vector3(0, -0.25, 0), mat_vest)
 	canela.mesh.radius = 0.08
-	canela.mesh.height = 0.4
+	canela.mesh.height = 0.56
 	
 	# Bota
-	var boot = _create_mesh(canela, BoxMesh.new(), Vector3(0, -0.25, -0.05), mat_boot)
-	boot.mesh.size = Vector3(0.15, 0.12, 0.25)
+	var boot = _create_mesh(canela, BoxMesh.new(), Vector3(0, -0.28, -0.05), mat_boot)
+	boot.mesh.size = Vector3(0.16, 0.14, 0.28)
 	
 	return {"hip": pivot, "knee": canela_pivot}
 
-func _create_arm(parent: Node3D, pos: Vector3, mat: Material) -> Dictionary:
+func _create_arm(parent: Node3D, pos: Vector3, mat: Material, mat_joint: Material) -> Dictionary:
 	var pivot = Node3D.new()
 	pivot.position = pos
 	parent.add_child(pivot)
 	
+	# Ombro
+	var ombro = _create_mesh(pivot, SphereMesh.new(), Vector3.ZERO, mat_joint)
+	ombro.mesh.radius = 0.075
+	ombro.mesh.height = 0.15
+	
 	# Biceps
 	var biceps = _create_mesh(pivot, CapsuleMesh.new(), Vector3(0, -0.2, 0), mat)
 	biceps.mesh.radius = 0.06
-	biceps.mesh.height = 0.35
+	biceps.mesh.height = 0.47
 	
 	# Cotovelo
 	var elbow = Node3D.new()
 	elbow.position.y = -0.2
 	biceps.add_child(elbow)
 	
+	var cotovelo_mesh = _create_mesh(elbow, SphereMesh.new(), Vector3.ZERO, mat_joint)
+	cotovelo_mesh.mesh.radius = 0.065
+	cotovelo_mesh.mesh.height = 0.13
+	
 	# Antebraço
 	var forearm = _create_mesh(elbow, CapsuleMesh.new(), Vector3(0, -0.2, 0), mat)
 	forearm.mesh.radius = 0.06
-	forearm.mesh.height = 0.35
+	forearm.mesh.height = 0.47
 	
 	return {"shoulder": pivot, "elbow": elbow}
 
