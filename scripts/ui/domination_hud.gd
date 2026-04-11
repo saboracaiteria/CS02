@@ -43,14 +43,17 @@ func _process(_delta):
 			time_label.text = "💀 DERROTA! 💀"
 			time_label.modulate = Color(1, 0, 0) # Vermelho Derrota
 		
-		# Aumenta escala se possível (visual impact)
-		time_label.scale = Vector2(2.5, 2.5) 
+		# Aumenta escala e move para o centro EXATO da tela
+		time_label.scale = Vector2(3.5, 3.5) 
+		time_label.pivot_offset = time_label.size / 2.0
+		time_label.global_position = get_viewport_rect().size / 2.0 - time_label.size / 2.0
 	else:
 		var mins = int(game_manager.match_time) / 60
 		var secs = int(game_manager.match_time) % 60
 		time_label.text = "%02d:%02d" % [mins, secs]
 		time_label.modulate = Color(1, 1, 1)
 		time_label.scale = Vector2(1, 1)
+		time_label.pivot_offset = Vector2.ZERO
 	
 	# Atualiza Placar e Kills V2500 🏙️🎯🥇
 	blue_score.text = "AZUL: %d  |  KILLS: %d" % [int(game_manager.team_blue_score), game_manager.player_kills]
