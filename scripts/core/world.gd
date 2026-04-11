@@ -184,6 +184,13 @@ func _setup_host():
 	Global.is_playing = true
 	spawn_bots.call_deferred(3)
 	
+	# PRÉ-AQUECIMENTO DE SHADERS V6.0 🔥🏙️🎯🥇
+	# Roda 2s após o spawn dos bots para garantir que os materiais já existem na cena
+	get_tree().create_timer(2.0).timeout.connect(func():
+		if ShaderPrewarmer:
+			ShaderPrewarmer.prewarm()
+	)
+	
 	if host_err == OK:
 		upnp_setup()
 
