@@ -1,9 +1,9 @@
 extends CharacterBody3D
 
 @export var team: String = "Vermelho"
-@export var speed: float = 11.0 # DOBRO DA VELOCIDADE DO PLAYER V2500 🏎️🏃‍♂️💨🏙️🎯🥇
+@export var speed: float = 5.5 # Reduzido em 50% para combate tático 🏙️🎯🥇
 @export var health: int = 100
-const VERSION = "V5.3" # Canaã Fidelity (Arma e Pés Corrigidos) 🏙️🎯🥇
+const VERSION = "V5.4" # Canaã Combat Stance (Armas, Velocidade e HUD) 🏙️🎯🥇
 
 var target_node: Node3D = null
 var is_dead: bool = false

@@ -166,7 +166,7 @@ func _create_arm(parent: Node3D, pos: Vector3, mat: Material, mat_joint: Materia
 
 func update_animation(speed: float, delta: float):
 	if speed > 0.1:
-		walk_cycle += delta * speed * 1.5
+		walk_cycle += delta * speed * 0.8 # Reduzido a velocidade do ciclo de animação
 	else:
 		walk_cycle = lerp(walk_cycle, 0.0, 0.1)
 		
@@ -184,11 +184,13 @@ func update_animation(speed: float, delta: float):
 		pivots["r_leg"].hip.rotation.x = baseCrouch - legSwing
 		pivots["r_leg"].knee.rotation.x = baseKnee - abs(sin(wc)) * 0.5
 		
-	# Movimento de braços oposto as pernas
-	if pivots.has("l_arm"):
-		pivots["l_arm"].shoulder.rotation.x = 1.5 + legSwing * 0.8
+	# Posição de Combate (Flanqueamento Tático) 🏙️🎯🥇
 	if pivots.has("r_arm"):
-		pivots["r_arm"].shoulder.rotation.x = 1.5 - legSwing * 0.8
+		# Braço armado levantado mirando firme para frente (PI/2) com leve "respiração"
+		pivots["r_arm"].shoulder.rotation.x = (PI / 2) + sin(wc * 0.5) * 0.05
+	if pivots.has("l_arm"):
+		# Braço esquerdo erguido taticamente
+		pivots["l_arm"].shoulder.rotation.x = (PI / 2.5) + legSwing * 0.2
 	
 	# Balanço de cabeça
 	if pivots.has("head"):
