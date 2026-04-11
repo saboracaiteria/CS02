@@ -45,7 +45,7 @@ func _process_capture(team, delta):
 		capture_progress = 100.0
 		return
 		
-	capture_progress += delta * 20.0 # 5 segundos para capturar
+	capture_progress += delta * 12.5 # 8 segundos para capturar (100 / 8 = 12.5) ⏱️🏙️🥇
 	if capture_progress >= 100.0:
 		owning_team = team
 		capture_progress = 100.0

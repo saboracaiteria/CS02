@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 @export var team: String = "Vermelho"
-@export var speed: float = 4.0
+@export var speed: float = 5.5 # Aumentado para 5.5 para 'correr' 🏃‍♂️💨
 @export var health: int = 100
 const VERSION = "V2460" # Final: Combat Stutter & Analog Fix
 
@@ -37,12 +37,10 @@ func _ready():
 	nav_agent.path_desired_distance = 1.5
 	nav_agent.target_desired_distance = 1.5
 	
-	# Aguarda o mundo carregar e busca objetivo
-	await get_tree().create_timer(1.0).timeout
 	# STAGGER DE ACURÁCIA: Cada bot começa com acurácia aleatória diferente 🎯
-	# Isso evita que todos os bots atinjam acurácia máxima no mesmo instante!
 	accuracy = randf_range(0.0, 0.3)
 	_find_next_objective()
+	print("--- BOT %s NASCEU E CORRENDO PARA OBJETIVO ---" % name)
 
 enum State {PATROL, COMBAT, SEARCH}
 var current_state: State = State.PATROL
