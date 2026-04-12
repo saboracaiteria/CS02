@@ -60,11 +60,11 @@ func _physics_process(delta):
 	if !is_inside_tree(): return # EVITA ERROS V2390 ✨🎯🥇
 	if is_dead: return
 	
-	# GRAVIDADE SEMPRE ATIVA
+	# GRAVIDADE
 	if not is_on_floor():
-		velocity.y -= gravity * 5.0 * delta
+		velocity.y -= gravity * _delta
 	else:
-		velocity.y = -1.0
+		velocity.y = -0.5
 	
 	match current_state:
 		State.PATROL:
@@ -113,15 +113,13 @@ func _state_patrol(delta):
 		velocity.z = dir.z * speed
 		_smooth_look_at(global_position + dir, delta)
 		
-		# SISTEMA ANTI-TRAVAMENTO V2510 🛡️🏙️🥇
+		# ANTI-TRAVAMENTO V2510: move horizontal, sem salto
 		stuck_timer += delta
-		if stuck_timer > 2.2: # Mais rápido para detectar!
-			if global_position.distance_to(last_pos) < 0.6:
-				# SALTO DE ESCAPE: Teletransporta para alto + lado aleatório MAIOR para sair de quinas 🎲🚀
-				var escape_dir = Vector3(randf_range(-4.5, 4.5), 4.5, randf_range(-4.5, 4.5))
+		if stuck_timer > 2.5:
+			if global_position.distance_to(last_pos) < 0.4:
+				var escape_dir = Vector3(randf_range(-3.0, 3.0), 0.0, randf_range(-3.0, 3.0))
 				global_position += escape_dir
-				_find_next_objective() 
-				print("--- BOT %s PRESO EM QUINA: EXECUTANDO SALTO DE ESCAPE AMPLIFICADO ---" % name)
+				_find_next_objective()
 			last_pos = global_position
 			stuck_timer = 0
 		
