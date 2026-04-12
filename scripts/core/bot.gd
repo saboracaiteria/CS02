@@ -102,8 +102,8 @@ func _state_patrol(delta):
 
 		var next_path_pos = nav_agent.get_next_path_position()
 		
-		# FALLBACK V2500: Se a navegação retornar posição inválida ou presa, vai direto! 🚀🏙️🎯🥇
-		if next_path_pos.distance_to(global_position) < 0.2:
+		# Descarta posição inválida (dentro de container) 🧱
+		if next_path_pos.distance_to(global_position) < 0.1:
 			next_path_pos = target_node.global_position
 			
 		var dir = (next_path_pos - global_position).normalized()
@@ -113,17 +113,25 @@ func _state_patrol(delta):
 		velocity.z = dir.z * speed
 		_smooth_look_at(global_position + dir, delta)
 		
-		# ANTI-TRAVAMENTO V2510: move horizontal, sem salto
+		# ANTI-TRAVAMENTO V6.2: tenta rota alternativa antes de teletransportar
 		stuck_timer += delta
-		if stuck_timer > 2.5:
-			if global_position.distance_to(last_pos) < 0.4:
-				var escape_dir = Vector3(randf_range(-3.0, 3.0), 0.0, randf_range(-3.0, 3.0))
-				global_position += escape_dir
-				_find_next_objective()
-			last_pos = global_position
-			stuck_timer = 0
+		if stuck_timer > 2.0:
+			if global_position.distance_to(last_pos) < 0.5:
+				# Tenta girar 90 graus para contornar o obstáculo
+				var side = Vector3(-dir.z, 0, dir.x) # perpendicular
+				velocity.x = side.x * speed * 1.5
+				velocity.z = side.z * speed * 1.5
+				if stuck_timer > 3.5:
+					# Só reposiciona horizontalmente se ainda preso após 3.5s
+					var escape = Vector3(randf_range(-4.0, 4.0), 0.0, randf_range(-4.0, 4.0))
+					global_position += escape
+					_find_next_objective()
+					stuck_timer = 0
+			else:
+				last_pos = global_position
+				stuck_timer = 0
 		
-		# Se chegar na área ou perto dela (Raio ajustado para 2.5m - METADE) 🏙️🎯🥇
+		# Se chegou perto da zona, parar e capturar
 		if global_position.distance_to(target_node.global_position) < 2.5:
 			# Fica na área até capturar!
 			velocity.x = move_toward(velocity.x, 0, speed * delta)
