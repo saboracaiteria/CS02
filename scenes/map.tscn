@@ -3,45 +3,46 @@
 [ext_resource type="PackedScene" uid="uid://cec260edc6rgi" path="res://imports/map.glb" id="1_ivhtw"]
 [ext_resource type="Texture2D" uid="uid://b2y4kxxsaf48q" path="res://textures/kenney_prototype_textures/dark/texture_09.png" id="2_ak1oh"]
 
-; ---- PALETA INDUSTRIAL ENVELHECIDA V6.2 ----
-; Sem emissão, sem cores vivas — ferrugem, concreto, metal desgastado
+; ---- PALETA METÁLICA INDUSTRIAL V6.3 ----
+; Metal limpo, polido, industrial — sem ferrugem, cores sóbrias
 
 [sub_resource type="StandardMaterial3D" id="Mat_Floor"]
 albedo_texture = ExtResource("2_ak1oh")
-albedo_color = Color(0.45, 0.42, 0.38, 1)
+albedo_color = Color(0.55, 0.55, 0.52, 1)
 uv1_scale = Vector3(40, 40, 40)
-metallic = 0.1
-roughness = 0.95
-
-[sub_resource type="StandardMaterial3D" id="Mat_Rust1"]
-albedo_color = Color(0.45, 0.22, 0.10, 1)
 metallic = 0.3
-roughness = 0.92
+roughness = 0.85
 
-[sub_resource type="StandardMaterial3D" id="Mat_Rust2"]
-albedo_color = Color(0.38, 0.28, 0.18, 1)
-metallic = 0.25
-roughness = 0.95
+[sub_resource type="StandardMaterial3D" id="Mat_Steel1"]
+albedo_color = Color(0.50, 0.52, 0.55, 1)
+metallic = 0.85
+roughness = 0.30
 
-[sub_resource type="StandardMaterial3D" id="Mat_Steel"]
-albedo_color = Color(0.30, 0.30, 0.28, 1)
-metallic = 0.55
-roughness = 0.80
+[sub_resource type="StandardMaterial3D" id="Mat_Steel2"]
+albedo_color = Color(0.35, 0.38, 0.42, 1)
+metallic = 0.90
+roughness = 0.25
 
-[sub_resource type="StandardMaterial3D" id="Mat_OliveGreen"]
-albedo_color = Color(0.28, 0.33, 0.22, 1)
-metallic = 0.15
-roughness = 0.90
+[sub_resource type="StandardMaterial3D" id="Mat_Slate"]
+albedo_color = Color(0.28, 0.30, 0.33, 1)
+metallic = 0.80
+roughness = 0.35
 
-[sub_resource type="StandardMaterial3D" id="Mat_MudGray"]
-albedo_color = Color(0.35, 0.33, 0.30, 1)
-metallic = 0.10
-roughness = 0.97
+[sub_resource type="StandardMaterial3D" id="Mat_Khaki"]
+albedo_color = Color(0.42, 0.44, 0.36, 1)
+metallic = 0.70
+roughness = 0.40
+
+[sub_resource type="StandardMaterial3D" id="Mat_IronGray"]
+albedo_color = Color(0.40, 0.40, 0.40, 1)
+metallic = 0.88
+roughness = 0.28
 
 [sub_resource type="StandardMaterial3D" id="Mat_Barrel"]
-albedo_color = Color(0.20, 0.20, 0.18, 1)
-metallic = 0.45
-roughness = 0.75
+albedo_color = Color(0.22, 0.23, 0.25, 1)
+metallic = 0.92
+roughness = 0.20
+
 
 [node name="map" instance=ExtResource("1_ivhtw")]
 
@@ -49,67 +50,68 @@ roughness = 0.75
 surface_material_override/0 = SubResource("Mat_Floor")
 
 [node name="Walls " parent="." index="1"]
-surface_material_override/0 = SubResource("Mat_MudGray")
+surface_material_override/0 = SubResource("Mat_Slate")
 
 [node name="Cargo" parent="." index="2"]
-surface_material_override/0 = SubResource("Mat_Rust1")
+surface_material_override/0 = SubResource("Mat_Steel1")
 
 [node name="Cargo_001" parent="." index="3"]
-surface_material_override/0 = SubResource("Mat_Steel")
+surface_material_override/0 = SubResource("Mat_IronGray")
 
 [node name="Cargo_002" parent="." index="4"]
-surface_material_override/0 = SubResource("Mat_OliveGreen")
+surface_material_override/0 = SubResource("Mat_Steel2")
 
 [node name="Cargo_003" parent="." index="5"]
-surface_material_override/0 = SubResource("Mat_Rust2")
+surface_material_override/0 = SubResource("Mat_Khaki")
 
 [node name="Cargo_004" parent="." index="6"]
-surface_material_override/0 = SubResource("Mat_MudGray")
+surface_material_override/0 = SubResource("Mat_Slate")
 
 [node name="Cargo_005" parent="." index="7"]
-surface_material_override/0 = SubResource("Mat_Rust1")
+surface_material_override/0 = SubResource("Mat_Steel1")
 
 [node name="Cargo_006" parent="." index="8"]
-surface_material_override/0 = SubResource("Mat_Steel")
+surface_material_override/0 = SubResource("Mat_IronGray")
 
 [node name="Cargo_007" parent="." index="9"]
-surface_material_override/0 = SubResource("Mat_OliveGreen")
+surface_material_override/0 = SubResource("Mat_Steel2")
 
 [node name="Cargo_008" parent="." index="10"]
-surface_material_override/0 = SubResource("Mat_Rust2")
+surface_material_override/0 = SubResource("Mat_Khaki")
 
 [node name="Cargo_009" parent="." index="11"]
-surface_material_override/0 = SubResource("Mat_MudGray")
+surface_material_override/0 = SubResource("Mat_Slate")
 
 [node name="Cargo_010" parent="." index="12"]
-surface_material_override/0 = SubResource("Mat_Rust1")
+surface_material_override/0 = SubResource("Mat_Steel1")
 
 [node name="Cargo_011" parent="." index="13"]
-surface_material_override/0 = SubResource("Mat_Steel")
+surface_material_override/0 = SubResource("Mat_IronGray")
 
 [node name="Cargo_012" parent="." index="14"]
-surface_material_override/0 = SubResource("Mat_OliveGreen")
+surface_material_override/0 = SubResource("Mat_Steel2")
 
 [node name="Cargo_013" parent="." index="15"]
-surface_material_override/0 = SubResource("Mat_Rust2")
+surface_material_override/0 = SubResource("Mat_Khaki")
 
 [node name="Cargo_014" parent="." index="16"]
-surface_material_override/0 = SubResource("Mat_MudGray")
+surface_material_override/0 = SubResource("Mat_Slate")
 
 [node name="Cargo both open" parent="." index="17"]
-surface_material_override/0 = SubResource("Mat_Rust1")
+surface_material_override/0 = SubResource("Mat_Steel1")
 
 [node name="Cargo both open_001" parent="." index="18"]
-surface_material_override/0 = SubResource("Mat_Steel")
+surface_material_override/0 = SubResource("Mat_IronGray")
 
 [node name="cargo side open" parent="." index="19"]
-surface_material_override/0 = SubResource("Mat_OliveGreen")
+surface_material_override/0 = SubResource("Mat_Steel2")
 
 [node name="cargo side open_001" parent="." index="20"]
-surface_material_override/0 = SubResource("Mat_Rust2")
+surface_material_override/0 = SubResource("Mat_Khaki")
 
 [node name="cargo side open_002" parent="." index="21"]
-surface_material_override/0 = SubResource("Mat_MudGray")
+surface_material_override/0 = SubResource("Mat_Slate")
+
 
 [node name="barrel" parent="." index="22"]
 surface_material_override/0 = SubResource("Mat_Barrel")
