@@ -7,9 +7,11 @@ extends Node
 @onready var menu_music: AudioStreamPlayer = %MenuMusic
 
 const Player = preload("res://scenes/player.tscn")
-const Bot = preload("res://scenes/entities/bot.tscn")
-const PORT = 9999
-var enet_peer: ENetMultiplayerPeer
+const Bot    = preload("res://scenes/entities/bot.tscn")
+
+# Modo de jogo selecionado pelo jogador
+enum GameMode { SOLO, ONLINE_RENDER, LAN_HOST, LAN_JOIN }
+var current_mode : GameMode = GameMode.SOLO
 var paused: bool = false
 var options: bool = false
 var controller: bool = false
@@ -158,65 +160,71 @@ func _clear_menu_visuals():
 	$Menu/FallBackBG.hide()
 	menu_music.stop()
 
+# ──────────────────────────────────────────────────────────
+#  SOLO (sem rede — single player com bots)
+# ──────────────────────────────────────────────────────────
 func _on_host_button_pressed() -> void:
-	_setup_host()
+	current_mode = GameMode.SOLO
+	_start_solo()
 
-func _setup_host():
-	Global.log_error("SISTEMA: Iniciando modo HOST automático...")
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	
+func _start_solo() -> void:
+	Global.log_error("MODO: Solo com bots.")
 	_clear_menu_visuals()
-	
-	var host_err
-	if OS.has_feature("web"):
-		host_err = ERR_UNAVAILABLE
-		Global.log_error("SISTEMA: WEB detectada. Pulando criação de servidor ENet.")
-	else:
-		enet_peer = ENetMultiplayerPeer.new()
-		host_err = enet_peer.create_server(PORT)
-	if host_err == OK:
-		multiplayer.multiplayer_peer = enet_peer
-		multiplayer.peer_connected.connect(add_player)
-		multiplayer.peer_disconnected.connect(remove_player)
-		
-		# Inicia Broadcast para outros acharem a sala 📢
-		is_broadcasting = true
-		udp_peer.bind(broadcast_port)
-		
-		Global.log_error("AUTO-NET: Sala aberta e visível na rede local!")
-	
-	add_player(multiplayer.get_unique_id())
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	add_player(1)  # ID fixo 1 em modo solo
 	Global.is_playing = true
 	spawn_bots.call_deferred(3)
+
+# ──────────────────────────────────────────────────────────
+#  ONLINE RENDER — conecta ao servidor WebSocket do Render
+# ──────────────────────────────────────────────────────────
+func start_online_render(custom_url: String = "") -> void:
+	current_mode = GameMode.ONLINE_RENDER
+	Global.log_error("MODO: Online (Render WebSocket)")
+	_clear_menu_visuals()
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
-	if host_err == OK:
-		upnp_setup()
+	# Conecta callbacks de rede
+	NetworkManager.client_connected.connect(_on_online_connected, CONNECT_ONE_SHOT)
+	NetworkManager.connection_failed.connect(_on_online_failed, CONNECT_ONE_SHOT)
+	multiplayer.peer_connected.connect(add_player)
+	multiplayer.peer_disconnected.connect(remove_player)
+	
+	var err = NetworkManager.join_render(custom_url)
+	if err != OK:
+		Global.log_error("ERRO: Não foi possível conectar ao servidor Render.")
+		main_menu.show()
 
-func _on_join_button_pressed() -> void:
-	_join_server(address_entry.text)
+func _on_online_connected() -> void:
+	Global.log_error("ONLINE: Conectado! Aguardando servidor spawnar jogador...")
+	Global.is_playing = true
 
+
+func _on_online_failed() -> void:
+	Global.log_error("ONLINE ERRO: Falha ao conectar. Verifique a URL do servidor.")
+	main_menu.show()
+
+# ──────────────────────────────────────────────────────────
+#  LAN HOST (Desktop ENet)
+# ──────────────────────────────────────────────────────────
 func _join_server(ip: String):
 	if Global.is_playing: return
-	
-	Global.log_error("SISTEMA: Conectando a %s..." % ip)
+	Global.log_error("LAN JOIN: Conectando a %s..." % ip)
 	_clear_menu_visuals()
-	
 	if OS.has_feature("web"):
-		Global.log_error("ERRO: Multiplayer ENet não suportado na Web.")
-		main_menu.show()
+		# Na web, redireciona para o Render
+		start_online_render()
 		return
-
-	enet_peer = ENetMultiplayerPeer.new()
-	var err = enet_peer.create_client(ip, PORT)
-	if err == OK:
-		multiplayer.multiplayer_peer = enet_peer
-		Global.is_playing = true
-	else:
-		Global.log_error("ERRO: Falha ao conectar em %s" % ip)
+	current_mode = GameMode.LAN_JOIN
+	multiplayer.peer_connected.connect(add_player)
+	multiplayer.peer_disconnected.connect(remove_player)
+	var err = NetworkManager.join_local(ip)
+	if err != OK:
+		Global.log_error("LAN ERRO: Falha ao conectar em %s" % ip)
 		main_menu.show()
+	else:
+		Global.is_playing = true
 
-	if options_menu.visible:
-		options_menu.hide()
 
 func _on_options_button_toggled(toggled_on: bool) -> void:
 	if toggled_on:

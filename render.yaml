@@ -1,0 +1,36 @@
+services:
+  # ─── SERVIDOR DE JOGO (WebSocket Headless) ───────────────────────────────
+  - type: web
+    name: cs02-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+
+    # Plano gratuito do Render (750h/mês)
+    plan: free
+
+    # Porta WebSocket exposta
+    envVars:
+      - key: PORT
+        value: 8080
+
+    # Health check — o servidor responde na porta 8080
+    healthCheckPath: /
+
+    # Auto-deploy ao subir novo commit ao GitHub
+    autoDeploy: true
+
+  # ─── FRONTEND / WEB GAME (Static Site) ────────────────────────────────────
+  - type: web
+    name: cs02-web
+    runtime: static
+    buildCommand: echo "No build needed"
+    staticPublishPath: ./web
+    plan: free
+    autoDeploy: true
+    headers:
+      - path: /*
+        name: Cross-Origin-Embedder-Policy
+        value: require-corp
+      - path: /*
+        name: Cross-Origin-Opener-Policy
+        value: same-origin

@@ -26,6 +26,8 @@ config/icon="res://icon.svg"
 Global="*res://scripts/core/Global.gd"
 SettingsCache="*res://scripts/core/settings_cache.gd"
 ShaderPrewarmer="*res://scripts/core/shader_prewarmer.gd"
+NetworkManager="*res://scripts/core/network_manager.gd"
+ServerManager="*res://scripts/core/server_manager.gd"
 
 [debug]
 
