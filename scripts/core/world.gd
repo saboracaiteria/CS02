@@ -174,7 +174,10 @@ func _start_solo() -> void:
 	
 	# Mobile entra em tela cheia automático 📱🚀
 	if OS.has_feature("mobile"):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		if OS.has_feature("web"):
+			JavaScriptBridge.eval("window.requestNativeFullscreen()")
+		else:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		
 	add_player(1)  # ID fixo 1 em modo solo
 	Global.is_playing = true
@@ -190,7 +193,10 @@ func start_online_render(custom_url: String = "") -> void:
 	
 	# Mobile entra em tela cheia automático 📱🚀
 	if OS.has_feature("mobile"):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		if OS.has_feature("web"):
+			JavaScriptBridge.eval("window.requestNativeFullscreen()")
+		else:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
 	# Conecta callbacks de rede
 	NetworkManager.client_connected.connect(_on_online_connected, CONNECT_ONE_SHOT)

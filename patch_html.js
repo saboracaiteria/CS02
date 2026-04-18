@@ -223,6 +223,16 @@ if (fs.existsSync(path)) {
             else { document.exitFullscreen(); }
         }
 
+        // --- SISTEMA DE FULLSCREEN NATIVO (MOBILE GESTURE) 🚀 ---
+        window.requestNativeFullscreen = function() {
+            const container = document.getElementById('game-container');
+            if (isMobile && !document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.log("Fullscreen blocked or failed:", err);
+                });
+            }
+        };
+
         // --- MANIPULAÇÃO DE TAMANHO (RESIZE) ---
         function adjustCanvasSize() {
             const canvas = document.getElementById('canvas');
