@@ -19,7 +19,7 @@ func _setup_extra_controls():
 	
 	# --- RESOLUÇÃO ---
 	res_label = Label.new()
-	res_label.text = "Resolução 3D (Upscale): 40%"
+	res_label.text = "Resolução 3D (Upscale): 50%"
 	parent.add_child(res_label)
 	parent.move_child(res_label, my_idx + 1)
 	
@@ -104,7 +104,7 @@ func _toggled(toggled_on: bool) -> void:
 		if res_slider: res_slider.value = 1.0
 	else:
 		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-		var default_scale = 0.4
+		var default_scale = 0.5
 		_on_res_scale_changed(default_scale)
 		if res_slider: res_slider.value = default_scale
 	if shadow_btn: shadow_btn.button_pressed = toggled_on

@@ -24,7 +24,7 @@ echo [3/4] ADICIONANDO ARQUIVOS AO GIT...
 git add .
 
 echo [4/4] SUBINDO PARA O GITHUB...
-git commit -m "feat: %VERSION% - Stabilization and Redundancy Cleanup"
+git commit -m "feat: %VERSION% - CrazyGames Portal Template, 50%% Res Stabilization and Manual Resize Fix"
 git push origin main --force
 
 echo ------------------------------------------
