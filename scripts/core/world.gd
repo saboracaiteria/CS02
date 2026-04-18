@@ -171,7 +171,11 @@ func _on_host_button_pressed() -> void:
 func _start_solo() -> void:
 	Global.log_error("MODO: Solo com bots.")
 	_clear_menu_visuals()
-	# DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN) # REMOVIDO PARA CABER NO TEMPLATE 🏙️🎯🥇
+	
+	# Mobile entra em tela cheia automático 📱🚀
+	if OS.has_feature("mobile"):
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		
 	add_player(1)  # ID fixo 1 em modo solo
 	Global.is_playing = true
 	spawn_bots.call_deferred(3)
@@ -183,7 +187,10 @@ func start_online_render(custom_url: String = "") -> void:
 	current_mode = GameMode.ONLINE_RENDER
 	Global.log_error("MODO: Online (Render WebSocket)")
 	_clear_menu_visuals()
-	# DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN) # REMOVIDO PARA CABER NO TEMPLATE 🏙️🎯🥇
+	
+	# Mobile entra em tela cheia automático 📱🚀
+	if OS.has_feature("mobile"):
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
 	# Conecta callbacks de rede
 	NetworkManager.client_connected.connect(_on_online_connected, CONNECT_ONE_SHOT)
