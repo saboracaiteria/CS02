@@ -157,6 +157,29 @@ if (fs.existsSync(path)) {
             text-align: center;
         }
         @media (orientation: portrait) { #rotate-screen { display: flex; } }
+
+        /* MODO MOBILE (SEM TEMPLATE) 📱 */
+        body.is-mobile header,
+        body.is-mobile .info-bar,
+        body.is-mobile .about-section,
+        body.is-mobile footer,
+        body.is-mobile .status-footer {
+            display: none !important;
+        }
+
+        body.is-mobile .main-wrapper {
+            margin: 0;
+            padding: 0;
+            max-width: 100vw;
+            height: 100vh;
+        }
+
+        body.is-mobile .game-frame {
+            width: 100vw;
+            height: 100vh;
+            aspect-ratio: auto;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -187,6 +210,12 @@ if (fs.existsSync(path)) {
     <script>
         const GODOT_CONFIG = CUSTOM_CONFIG;
         const engine = new Engine(GODOT_CONFIG);
+
+        // DETECÇÃO DE MOBILE 📱
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            document.body.classList.add('is-mobile');
+        }
 
         function toggleFullscreen() {
             const container = document.getElementById('game-container');
