@@ -9,7 +9,7 @@ var _cfg := ConfigFile.new()
 
 # Valores padrão do jogo (primeira execução)
 const DEFAULTS := {
-	"render_scale": 0.5,      # 50%
+	"render_scale": 0.75,     # 75% (bom equilibrio mobile)
 	"shadows": false,         # Sombras desligadas por padrao
 	"bloom": false,
 	"sensitivity": 0.005,

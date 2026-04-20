@@ -178,12 +178,16 @@ func _start_solo() -> void:
 	_clear_menu_visuals()
 	_load_selected_map()
 	
-	# Mobile entra em tela cheia automático 📱🚀
-	if OS.has_feature("mobile"):
-		if OS.has_feature("web"):
-			JavaScriptBridge.eval("window.requestNativeFullscreen()")
-		else:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	# Mobile entra em tela cheia automatico
+	if OS.has_feature("web"):
+		# Tela cheia via JS — funciona no clique do botao (contexto de gesto)
+		JavaScriptBridge.eval("""
+			var el = document.documentElement;
+			if (el.requestFullscreen) { el.requestFullscreen(); }
+			else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+		""")
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		
 	add_player(1)  # ID fixo 1 em modo solo
 	Global.is_playing = true
@@ -197,12 +201,15 @@ func start_online_render(custom_url: String = "") -> void:
 	Global.log_error("MODO: Online (Render WebSocket)")
 	_clear_menu_visuals()
 	
-	# Mobile entra em tela cheia automático 📱🚀
-	if OS.has_feature("mobile"):
-		if OS.has_feature("web"):
-			JavaScriptBridge.eval("window.requestNativeFullscreen()")
-		else:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	# Mobile entra em tela cheia automatico
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("""
+			var el = document.documentElement;
+			if (el.requestFullscreen) { el.requestFullscreen(); }
+			else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+		""")
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	
 	# Conecta callbacks de rede
 	NetworkManager.client_connected.connect(_on_online_connected, CONNECT_ONE_SHOT)

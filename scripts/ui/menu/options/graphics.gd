@@ -19,7 +19,7 @@ func _setup_extra_controls():
 	
 	# --- RESOLUÇÃO ---
 	res_label = Label.new()
-	res_label.text = "Resolução 3D (Upscale): 50%"
+	res_label.text = "Resolucao 3D (Upscale): 75%"
 	parent.add_child(res_label)
 	parent.move_child(res_label, my_idx + 1)
 	
@@ -27,7 +27,7 @@ func _setup_extra_controls():
 	res_slider.min_value = 0.3
 	res_slider.max_value = 1.0
 	res_slider.step = 0.05
-	res_slider.value = 0.5  # Padrão 50%
+	res_slider.value = 0.75  # Padrao 75%
 	res_slider.value_changed.connect(_on_res_scale_changed)
 	parent.add_child(res_slider)
 	parent.move_child(res_slider, my_idx + 2)
@@ -79,8 +79,8 @@ func _load_from_cache():
 
 func _apply_defaults():
 	# 50% resolucao, sombras OFF, bloom OFF
-	_on_res_scale_changed(0.5)
-	if res_slider: res_slider.value = 0.5
+	_on_res_scale_changed(0.75)
+	if res_slider: res_slider.value = 0.75
 	_on_shadow_toggled(false)
 	if shadow_btn: shadow_btn.button_pressed = false
 	_on_bloom_toggled(false)
@@ -104,7 +104,7 @@ func _toggled(toggled_on: bool) -> void:
 		if res_slider: res_slider.value = 1.0
 	else:
 		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-		var default_scale = 0.5
+		var default_scale = 0.75
 		_on_res_scale_changed(default_scale)
 		if res_slider: res_slider.value = default_scale
 	if shadow_btn: shadow_btn.button_pressed = toggled_on
