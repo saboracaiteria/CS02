@@ -10,8 +10,9 @@ const Player       = preload("res://scenes/player.tscn")
 const Bot          = preload("res://scenes/entities/bot.tscn")
 const MapWarehouse = preload("res://scenes/map.tscn")
 const MapArena     = preload("res://scenes/map_arena.tscn")
+const MapForest    = preload("res://scenes/map_forest.tscn")
 
-var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER"]
+var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER", "FOREST ROYALE"]
 var map_index: int = 0
 
 # Modo de jogo selecionado pelo jogador
@@ -272,12 +273,19 @@ func add_player(peer_id: int) -> void:
 	call_deferred("add_child", player) # CORREÇÃO V2390 ✨🎯🥇
 	Global.log_error("SISTEMA: Jogador %d adicionado à cena." % peer_id)
 	
-	# SPAWN DE ELITE V1460: Busca os spawns do jogador ✨🚀🎯
+	# Spawns por mapa
 	if map_index == 1:  # Arena Bunker
 		player.spawns = PackedVector3Array([
 			Vector3(20, 2, 20), Vector3(20, 2, -20),
 			Vector3(25, 2, 0),  Vector3(15, 2, 15),
 			Vector3(15, 2, -15), Vector3(0, 2, 25),
+		])
+	elif map_index == 2:  # Forest Royale — borda da floresta
+		player.spawns = PackedVector3Array([
+			Vector3(55, 2, 0),  Vector3(-55, 2, 0),
+			Vector3(0, 2, 55),  Vector3(0, 2, -55),
+			Vector3(40, 2, 40), Vector3(-40, 2, 40),
+			Vector3(40, 2, -40), Vector3(-40, 2, -40),
 		])
 	player.global_position = player.spawns[randi() % player.spawns.size()]
 	
@@ -326,6 +334,12 @@ func spawn_bots(amount: int):
 				Vector3(-22, 2, -22), Vector3(-22, 2, 22),
 				Vector3(-26, 2, 0),   Vector3(-15, 2, -15), Vector3(-15, 2, 15)
 			]
+		2:  # Forest Royale — bots em lados opostos ao jogador
+			bot_spawns = [
+				Vector3(-50, 2, 0),  Vector3(-40, 2, -40),
+				Vector3(-50, 2, 30), Vector3(30, 2, -50),
+				Vector3(-30, 2, 50)
+			]
 		_:
 			bot_spawns = [Vector3(15, 2, 0), Vector3(-15, 2, 0), Vector3(0, 2, 15)]
 	for i in range(amount):
@@ -350,8 +364,13 @@ func _load_selected_map() -> void:
 	if old_map:
 		$NavigationRegion3D.remove_child(old_map)
 		old_map.free()
-	var map_scene = MapWarehouse if map_index == 0 else MapArena
+	var map_scene: PackedScene
+	match map_index:
+		0: map_scene = MapWarehouse
+		1: map_scene = MapArena
+		2: map_scene = MapForest
+		_: map_scene = MapWarehouse
 	var new_map = map_scene.instantiate()
 	new_map.name = "map"
 	$NavigationRegion3D.add_child(new_map)
-	Global.log_error("MAPA: [%s] carregado com sucesso! 🗺️" % map_names[map_index])
+	Global.log_error("MAPA: [%s] carregado! 🗺️" % map_names[map_index])
