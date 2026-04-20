@@ -6,8 +6,13 @@ extends Node
 @onready var address_entry: LineEdit = %AddressEntry
 @onready var menu_music: AudioStreamPlayer = %MenuMusic
 
-const Player = preload("res://scenes/player.tscn")
-const Bot    = preload("res://scenes/entities/bot.tscn")
+const Player       = preload("res://scenes/player.tscn")
+const Bot          = preload("res://scenes/entities/bot.tscn")
+const MapWarehouse = preload("res://scenes/map.tscn")
+const MapArena     = preload("res://scenes/map_arena.tscn")
+
+var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER"]
+var map_index: int = 0
 
 # Modo de jogo selecionado pelo jogador
 enum GameMode { SOLO, ONLINE_RENDER, LAN_HOST, LAN_JOIN }
@@ -171,6 +176,7 @@ func _on_host_button_pressed() -> void:
 func _start_solo() -> void:
 	Global.log_error("MODO: Solo com bots.")
 	_clear_menu_visuals()
+	_load_selected_map()
 	
 	# Mobile entra em tela cheia automático 📱🚀
 	if OS.has_feature("mobile"):
@@ -260,6 +266,12 @@ func add_player(peer_id: int) -> void:
 	Global.log_error("SISTEMA: Jogador %d adicionado à cena." % peer_id)
 	
 	# SPAWN DE ELITE V1460: Busca os spawns do jogador ✨🚀🎯
+	if map_index == 1:  # Arena Bunker
+		player.spawns = PackedVector3Array([
+			Vector3(20, 2, 20), Vector3(20, 2, -20),
+			Vector3(25, 2, 0),  Vector3(15, 2, 15),
+			Vector3(15, 2, -15), Vector3(0, 2, 25),
+		])
 	player.global_position = player.spawns[randi() % player.spawns.size()]
 	
 	# Ativa o HUD Mobile V1440 (Agora embutido no Player) ✨🎯🥇
@@ -294,18 +306,45 @@ func upnp_setup() -> void:
 
 func spawn_bots(amount: int):
 	Global.log_error("SISTEMA: Spawnando %d Bots Inimigos..." % amount)
+	# Posições de spawn diferentes por mapa 🗺️
+	var bot_spawns: Array
+	match map_index:
+		0:  # Warehouse
+			bot_spawns = [
+				Vector3(15, 2, 10), Vector3(15, 2, -10),
+				Vector3(20, 2, 0),  Vector3(10, 2, 15), Vector3(10, 2, -15)
+			]
+		1:  # Arena Bunker
+			bot_spawns = [
+				Vector3(-22, 2, -22), Vector3(-22, 2, 22),
+				Vector3(-26, 2, 0),   Vector3(-15, 2, -15), Vector3(-15, 2, 15)
+			]
+		_:
+			bot_spawns = [Vector3(15, 2, 0), Vector3(-15, 2, 0), Vector3(0, 2, 15)]
 	for i in range(amount):
 		var bot = Bot.instantiate()
 		bot.name = "Bot_" + str(i)
 		bot.team = "Vermelho"
-		call_deferred("add_child", bot) # CORREÇÃO V2390 ✨🎯🥇
-		# Spawns estratégicos para o time vermelho (Lado oposto do mapa)
-		var bot_spawns = [
-			Vector3(15, 2, 10),
-			Vector3(15, 2, -10),
-			Vector3(20, 2, 0),
-			Vector3(10, 2, 15),
-			Vector3(10, 2, -15)
-		]
+		call_deferred("add_child", bot)
 		bot.global_position = bot_spawns[i % bot_spawns.size()]
 		Global.log_error("IA: Bot %d entrou no campo de batalha." % i)
+
+# ────────────────────────────────────────────────────────
+#  SELEÇÃO DE MAPA 🗺️
+# ────────────────────────────────────────────────────────
+func _on_map_select_button_pressed() -> void:
+	map_index = (map_index + 1) % map_names.size()
+	var btn = get_node_or_null("Menu/MainMenu/MarginContainer/VBoxContainer/MapSelectButton")
+	if btn:
+		btn.text = "🗺️  ◄  " + map_names[map_index] + "  ►"
+
+func _load_selected_map() -> void:
+	var old_map = $NavigationRegion3D.get_node_or_null("map")
+	if old_map:
+		$NavigationRegion3D.remove_child(old_map)
+		old_map.free()
+	var map_scene = MapWarehouse if map_index == 0 else MapArena
+	var new_map = map_scene.instantiate()
+	new_map.name = "map"
+	$NavigationRegion3D.add_child(new_map)
+	Global.log_error("MAPA: [%s] carregado com sucesso! 🗺️" % map_names[map_index])

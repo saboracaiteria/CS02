@@ -4,6 +4,9 @@ const path = require('path');
 
 const PORT = 8080;
 
+// Diretório base = pasta onde este script está localizado (funciona independente de onde node é chamado)
+const BASE_DIR = __dirname;
+
 const MIME_TYPES = {
     '.html': 'text/html',
     '.js': 'text/javascript',
@@ -26,9 +29,14 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
 
-    let filePath = '.' + req.url;
-    if (filePath === './') {
-        filePath = './index.html';
+    // Remove query string (?v=...) antes de resolver o caminho
+    const urlPath = req.url.split('?')[0];
+
+    let filePath = path.join(BASE_DIR, urlPath === '/' ? 'index.html' : urlPath);
+
+    // Segurança: impede path traversal (ex: /../../../etc/passwd)
+    if (!filePath.startsWith(BASE_DIR)) {
+        res.writeHead(403); res.end('Forbidden'); return;
     }
 
     const extname = String(path.extname(filePath)).toLowerCase();

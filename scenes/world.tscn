@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://b57uspbprxc8"]
+[gd_scene load_steps=36 format=3 uid="uid://b57uspbprxc8"]
 
 [ext_resource type="Script" path="res://scripts/core/world.gd" id="1_ho7yh"]
 [ext_resource type="PackedScene" uid="uid://bd3ai1v40ssao" path="res://scenes/map.tscn" id="3_fd0sg"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://scripts/core/game_manager.gd" id="200_game"]
 [ext_resource type="PackedScene" uid="uid://c7t8r2h4x8p0v" path="res://scenes/objects/capture_zone.tscn" id="300_zone"]
 [ext_resource type="Texture2D" path="res://textures/industrial_bg.png" id="industrial_bg_tex"]
+[ext_resource type="PackedScene" path="res://scenes/map_arena.tscn" id="400_arena"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_web"]
 sky_top_color = Color(0.2, 0.5, 1.0, 1)
@@ -525,6 +526,21 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
+[node name="MapLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 11
+text = "SELECIONAR MAPA:"
+horizontal_alignment = 2
+
+[node name="MapSelectButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.97, 0.82, 0.27, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
+text = "🗺️  ◄  WAREHOUSE (Container)  ►"
+alignment = 2
+
 [node name="HostButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -608,5 +624,7 @@ spawn_path = NodePath("..")
 [connection signal="pressed" from="Debug/Control/Panel/Close" to="Debug" method="_on_close_pressed"]
 [connection signal="pressed" from="Debug/OpenConsole" to="Debug" method="toggle_console"]
 [connection signal="toggled" from="Menu/MainMenu/MusicToggle" to="." method="_on_music_toggle_toggled"]
+
+[connection signal="pressed" from="Menu/MainMenu/MarginContainer/VBoxContainer/MapSelectButton" to="." method="_on_map_select_button_pressed"]
 
 [editable path="map"]

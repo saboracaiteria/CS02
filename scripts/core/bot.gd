@@ -262,7 +262,6 @@ func _shoot(target):
 	# Lógica de Rastreador de Bala (Tracer) V1800 🏙️🎯🥇
 	var from_pos = global_position + Vector3.UP * 1.5
 	if weapon: from_pos = weapon.global_position
-	
 	var to_pos = Vector3.ZERO
 	if target:
 		to_pos = target.global_position + Vector3.UP * 1.2

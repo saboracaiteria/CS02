@@ -395,9 +395,12 @@ func _apply_recoil() -> void:
 	if Global.is_mobile:
 		v_kick *= 0.7
 		h_kick *= 0.7
-	camera.rotation.x += v_kick * 0.1
-	rotate_y(randf_range(-h_kick, h_kick) * 0.1)
-	weapon.position.z += 0.02
+	# Kick de câmera aumentado
+	camera.rotation.x += v_kick * 0.20
+	rotate_y(randf_range(-h_kick, h_kick) * 0.18)
+	# Movimentação física da arma: recua em Z e cai em Y
+	weapon.position.z += 0.055
+	weapon.position.y -= 0.022
 
 # PRE-CACHE
 var _shared_quad = QuadMesh.new()
