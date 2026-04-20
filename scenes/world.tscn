@@ -339,29 +339,29 @@ theme_override_constants/separation = 10
 
 [node name="OptionsLabel" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "⚙️ OPÇÕES"
+text = "OPCOES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Fullscreen" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "🖥️ Tela Cheia"
+text = "Tela Cheia"
 script = ExtResource("5_abwkb")
 
 [node name="FpsCounter" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
 button_pressed = true
-text = "📈 Contador de FPS"
+text = "Contador de FPS"
 
 [node name="Ping" type="CheckButton" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "Shows connection trip time to host (in milliseconds)"
-text = "🌐 Ver Ping"
+text = "Ver Ping"
 
 [node name="SensitivityLabel" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "🎯 Sensibilidade"
+text = "Sensibilidade"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -371,7 +371,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🖱️ Mouse"
+text = "Mouse"
 
 [node name="MouseSensitivity" type="HSlider" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -389,7 +389,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🎮 Controle"
+text = "Controle"
 
 [node name="ControllerSensitivity" type="HSlider" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
@@ -412,7 +412,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "👁️ Campo de Visão (FOV)"
+text = "Campo de Visao (FOV)"
 
 [node name="FOVSlider" type="HSlider" parent="Menu/Options/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
@@ -426,12 +426,12 @@ script = ExtResource("new_script_fov")
 
 [node name="EditHUDButton" type="Button" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "📱 AJUSTAR HUD (MOBILE)"
+text = "AJUSTAR HUD (MOBILE)"
 script = ExtResource("new_script_hud")
 
 [node name="Back" type="Button" parent="Menu/Options/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "⬅️ VOLTAR"
+text = "VOLTAR"
 script = ExtResource("6_2hany")
 
 [node name="PauseMenu" type="PanelContainer" parent="Menu"]
@@ -460,23 +460,23 @@ theme_override_constants/separation = 10
 
 [node name="PauseLabel" type="Label" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "⏸️ PAUSA
+text = "PAUSA
 "
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Resume" type="Button" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "▶️ CONTINUAR"
+text = "CONTINUAR"
 script = ExtResource("7_5cdyw")
 
 [node name="Options" type="Button" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "⚙️ OPÇÕES"
+text = "OPCOES"
 
 [node name="Quit" type="Button" parent="Menu/PauseMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "🚪 SAIR"
+text = "SAIR"
 script = ExtResource("9_ucmny")
 
 [node name="MainMenu" type="PanelContainer" parent="Menu"]
@@ -538,7 +538,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.97, 0.82, 0.27, 1)
 theme_override_font_sizes/font_size = 15
 theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
-text = "🗺️  ◄  WAREHOUSE (Container)  ►"
+text = "  <  WAREHOUSE (Container)  >"
 alignment = 2
 
 [node name="HostButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
@@ -600,7 +600,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 button_pressed = true
-text = "🎵 Música"
+text = "Musica"
 
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]

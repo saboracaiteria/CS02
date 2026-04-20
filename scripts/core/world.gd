@@ -336,7 +336,7 @@ func _on_map_select_button_pressed() -> void:
 	map_index = (map_index + 1) % map_names.size()
 	var btn = get_node_or_null("Menu/MainMenu/MarginContainer/VBoxContainer/MapSelectButton")
 	if btn:
-		btn.text = "🗺️  ◄  " + map_names[map_index] + "  ►"
+		btn.text = "  <  " + map_names[map_index] + "  >"
 
 func _load_selected_map() -> void:
 	var old_map = $NavigationRegion3D.get_node_or_null("map")
