@@ -175,8 +175,18 @@ func _spawn_house(pos: Vector3, rot_y: float) -> void:
 	var d = 6.0
 	var t = 0.4
 	
-	# Chão
-	add_part.call(Vector3(w, 0.2, d), Vector3(0, 0.1, 0), Color(0.4, 0.4, 0.4))
+	# Chão (Apenas visual, sem colisão para não gerar tropeço)
+	var fmesh = BoxMesh.new()
+	fmesh.size = Vector3(w, 0.1, d)
+	var fmat = StandardMaterial3D.new()
+	fmat.albedo_color = Color(0.4, 0.4, 0.4)
+	fmat.roughness = 0.9
+	fmesh.material = fmat
+	var fmi = MeshInstance3D.new()
+	fmi.mesh = fmesh
+	fmi.position = Vector3(0, 0.05, 0)
+	house.add_child(fmi)
+
 	# Teto (com leve beiral)
 	add_part.call(Vector3(w + 0.8, 0.2, d + 0.8), Vector3(0, h, 0), color_roof)
 	# Parede traseira
@@ -184,9 +194,9 @@ func _spawn_house(pos: Vector3, rot_y: float) -> void:
 	# Parede direita
 	add_part.call(Vector3(t, h, d - t*2), Vector3(w/2 - t/2, h/2, 0), color_wall)
 	
-	# Parede Frontal (com porta)
-	var door_w = 1.6
-	var door_h = 2.4
+	# Parede Frontal (com porta mais larga)
+	var door_w = 2.4
+	var door_h = 2.6
 	add_part.call(Vector3((w - door_w)/2, h, t), Vector3(-w/4 - door_w/4, h/2, d/2 - t/2), color_wall)
 	add_part.call(Vector3((w - door_w)/2, h, t), Vector3(w/4 + door_w/4, h/2, d/2 - t/2), color_wall)
 	add_part.call(Vector3(door_w, h - door_h, t), Vector3(0, h - (h - door_h)/2, d/2 - t/2), color_wall)

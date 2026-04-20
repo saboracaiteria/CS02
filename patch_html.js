@@ -239,9 +239,10 @@ if (fs.existsSync(path)) {
             const container = document.getElementById('game-container');
             if (canvas && container) {
                 const rect = container.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
-                // Comunica ao motor o novo tamanho se ele já estiver rodando
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                // Comunica ao motor o novo tamanho se ele j\u00e1 estiver rodando
                 if (typeof engine !== 'undefined' && engine.updateSize) {
                     engine.updateSize();
                 }

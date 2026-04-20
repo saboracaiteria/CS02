@@ -186,7 +186,7 @@
 
     <script src="index.js?v=V2460"></script>
     <script>
-        const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":17011008,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+        const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":17011216,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
         const engine = new Engine(GODOT_CONFIG);
 
         // DETECÇÃO DE MOBILE 📱
@@ -217,8 +217,9 @@
             const container = document.getElementById('game-container');
             if (canvas && container) {
                 const rect = container.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
                 // Comunica ao motor o novo tamanho se ele já estiver rodando
                 if (typeof engine !== 'undefined' && engine.updateSize) {
                     engine.updateSize();
