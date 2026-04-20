@@ -276,27 +276,39 @@ func _spawn_tree(pos: Vector3, trunk_h: float, trunk_r: float, leaf_r: float, le
 	trunk_mi.position = Vector3(0, trunk_h / 2.0, 0)
 	tree_root.add_child(trunk_mi)
 
-	# Copa — 2 esferas sobrepostas para dar volume
-	for layer in range(2):
-		var leaf_mesh = SphereMesh.new()
-		var ls = leaf_r * (1.0 - layer * 0.25)
-		leaf_mesh.radius     = ls
-		leaf_mesh.height     = ls * 2.2
-		leaf_mesh.radial_segments = 8
-		leaf_mesh.rings = 5
+	# Copa — 3 a 4 cones sobrepostos para estilo Pinheiro (Pine Tree realista)
+	var layers = rng.randi_range(3, 4)
+	var base_h = trunk_h * 0.4 # As folhas comecam no meio do tronco
+	for layer in range(layers):
+		var leaf_mesh = CylinderMesh.new()
+		var ls = leaf_r * (1.0 - layer * 0.22) # Raio da base diminui no topo
+		var lh = rng.randf_range(2.5, 4.0) * (1.0 - layer * 0.15) # Altura do cone
+		
+		# top_radius em 0 transforma o cilindro em cone
+		leaf_mesh.top_radius    = 0.0
+		leaf_mesh.bottom_radius = ls
+		leaf_mesh.height        = lh
+		leaf_mesh.radial_segments = 7 # Low poly tático (desempenho bom, visual agressivo)
 
 		var leaf_mat = StandardMaterial3D.new()
-		leaf_mat.albedo_color = leaf_color.darkened(layer * 0.1)
-		leaf_mat.roughness = 0.9
+		# Camadas mais altas recebem mais luz
+		leaf_mat.albedo_color = leaf_color.lightened(layer * 0.06)
+		leaf_mat.roughness = 0.95
 		leaf_mesh.material = leaf_mat
 
 		var leaf_mi = MeshInstance3D.new()
 		leaf_mi.mesh     = leaf_mesh
+		
+		# Empilha as camadas com sobreposição
+		var l_y = base_h + (layer * (lh * 0.55))
 		leaf_mi.position = Vector3(
-			rng.randf_range(-0.3, 0.3),
-			trunk_h + ls * 0.7 - layer * (ls * 0.4),
-			rng.randf_range(-0.3, 0.3)
+			rng.randf_range(-0.15, 0.15),
+			l_y + (lh/2),
+			rng.randf_range(-0.15, 0.15)
 		)
+		
+		# Variacao aleatoria de rotacao para imperfeicao natural
+		leaf_mi.rotation.y = rng.randf_range(0, TAU)
 		tree_root.add_child(leaf_mi)
 
 	# Raizes grossas no chao
