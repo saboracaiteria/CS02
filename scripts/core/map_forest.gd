@@ -6,9 +6,11 @@ extends Node3D
 
 const MAP_SIZE   := 80.0   # raio total do mapa
 const LAKE_R     := 12.0   # raio do lago central
-const TREE_COUNT := 90     # quantidade de arvores
-const ROCK_COUNT := 30     # pedras de cobertura
+const TREE_COUNT := 50     # quantidade de arvores (antes 90)
+const ROCK_COUNT := 20     # pedras de cobertura (antes 30)
+const HOUSE_COUNT:= 4      # casas estilo BR
 
+var house_positions: Array[Vector3] = []
 var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
@@ -16,6 +18,7 @@ func _ready() -> void:
 	_build_ground()
 	_build_lake()
 	_build_perimeter_walls()
+	_build_houses()
 	_build_trees()
 	_build_rocks()
 	_build_ambient_grass()
@@ -117,6 +120,97 @@ func _build_perimeter_walls() -> void:
 		add_child(wall)
 
 # ─────────────────────────────────────────────────────────────
+#  CASAS TÁTICAS (Estilo BR)
+# ─────────────────────────────────────────────────────────────
+func _build_houses() -> void:
+	var attempts := 0
+	var placed   := 0
+	while placed < HOUSE_COUNT and attempts < HOUSE_COUNT * 10:
+		attempts += 1
+		var angle = rng.randf_range(0, TAU)
+		var dist  = rng.randf_range(LAKE_R + 10.0, MAP_SIZE - 20.0) 
+		var pos   = Vector3(cos(angle) * dist, 0, sin(angle) * dist)
+		
+		var too_close = false
+		for hp in house_positions:
+			if pos.distance_to(hp) < 18.0:
+				too_close = true
+				break
+		if too_close: continue
+			
+		house_positions.append(pos)
+		var rot_y = rng.randf_range(0, TAU)
+		_spawn_house(pos, rot_y)
+		placed += 1
+
+func _spawn_house(pos: Vector3, rot_y: float) -> void:
+	var house = StaticBody3D.new()
+	house.position = pos
+	house.rotation.y = rot_y
+	
+	var color_wall = Color(0.65, 0.6, 0.55)
+	var color_roof = Color(0.25, 0.25, 0.25)
+	
+	var add_part = func(size: Vector3, offset: Vector3, color: Color):
+		var col = CollisionShape3D.new()
+		var shape = BoxShape3D.new()
+		shape.size = size
+		col.shape = shape
+		col.position = offset
+		house.add_child(col)
+		
+		var mesh = BoxMesh.new()
+		mesh.size = size
+		var mat = StandardMaterial3D.new()
+		mat.albedo_color = color
+		mat.roughness = 0.9
+		mesh.material = mat
+		var mi = MeshInstance3D.new()
+		mi.mesh = mesh
+		mi.position = offset
+		house.add_child(mi)
+
+	var w = 8.0
+	var h = 3.5
+	var d = 6.0
+	var t = 0.4
+	
+	# Chão
+	add_part.call(Vector3(w, 0.2, d), Vector3(0, 0.1, 0), Color(0.4, 0.4, 0.4))
+	# Teto (com leve beiral)
+	add_part.call(Vector3(w + 0.8, 0.2, d + 0.8), Vector3(0, h, 0), color_roof)
+	# Parede traseira
+	add_part.call(Vector3(w, h, t), Vector3(0, h/2, -d/2 + t/2), color_wall)
+	# Parede direita
+	add_part.call(Vector3(t, h, d - t*2), Vector3(w/2 - t/2, h/2, 0), color_wall)
+	
+	# Parede Frontal (com porta)
+	var door_w = 1.6
+	var door_h = 2.4
+	add_part.call(Vector3((w - door_w)/2, h, t), Vector3(-w/4 - door_w/4, h/2, d/2 - t/2), color_wall)
+	add_part.call(Vector3((w - door_w)/2, h, t), Vector3(w/4 + door_w/4, h/2, d/2 - t/2), color_wall)
+	add_part.call(Vector3(door_w, h - door_h, t), Vector3(0, h - (h - door_h)/2, d/2 - t/2), color_wall)
+	
+	# Parede Esquerda (com janela)
+	var win_w = 2.0
+	var win_h = 1.2
+	var win_y = 1.0
+	add_part.call(Vector3(t, win_y, d - t*2), Vector3(-w/2 + t/2, win_y/2, 0), color_wall)
+	add_part.call(Vector3(t, h - win_y - win_h, d - t*2), Vector3(-w/2 + t/2, h - (h - win_y - win_h)/2, 0), color_wall)
+	add_part.call(Vector3(t, win_h, (d - t*2 - win_w)/2), Vector3(-w/2 + t/2, win_y + win_h/2, -(d - t*2)/4 - win_w/4), color_wall)
+	add_part.call(Vector3(t, win_h, (d - t*2 - win_w)/2), Vector3(-w/2 + t/2, win_y + win_h/2, (d - t*2)/4 + win_w/4), color_wall)
+	
+	add_child(house)
+
+func _is_valid_nature_pos(pos: Vector3, min_lake_dist: float) -> bool:
+	if pos.length() < LAKE_R + min_lake_dist:
+		return false
+	for hp in house_positions:
+		if pos.distance_to(hp) < 8.0:
+			return false
+	return true
+
+# ─────────────────────────────────────────────────────────────
 #  ARVORES
 # ─────────────────────────────────────────────────────────────
 func _build_trees() -> void:
@@ -128,8 +222,8 @@ func _build_trees() -> void:
 		var dist  = rng.randf_range(LAKE_R + 4.0, MAP_SIZE - 4.0)
 		var pos   = Vector3(cos(angle) * dist, 0, sin(angle) * dist)
 
-		# Evita o lago
-		if pos.length() < LAKE_R + 3.0:
+		# Evita o lago e casas
+		if not _is_valid_nature_pos(pos, 3.0):
 			continue
 
 		var trunk_h = rng.randf_range(3.5, 7.0)
@@ -230,6 +324,9 @@ func _build_rocks() -> void:
 		var dist  = rng.randf_range(LAKE_R + 5.0, MAP_SIZE - 6.0)
 		var pos   = Vector3(cos(angle) * dist, 0, sin(angle) * dist)
 
+		if not _is_valid_nature_pos(pos, 4.0):
+			continue
+
 		var w = rng.randf_range(0.6, 2.2)
 		var h = rng.randf_range(0.5, 1.6)
 		var d = rng.randf_range(0.6, 2.0)
@@ -264,10 +361,13 @@ func _build_rocks() -> void:
 #  CAPIM / ARBUSTOS DECORATIVOS
 # ─────────────────────────────────────────────────────────────
 func _build_ambient_grass() -> void:
-	for i in range(60):
+	for i in range(40):
 		var angle = rng.randf_range(0, TAU)
 		var dist  = rng.randf_range(LAKE_R + 2.0, MAP_SIZE - 2.0)
 		var pos   = Vector3(cos(angle) * dist, 0, sin(angle) * dist)
+		
+		if not _is_valid_nature_pos(pos, 2.0):
+			continue
 
 		var bush_mesh = SphereMesh.new()
 		var s = rng.randf_range(0.3, 0.8)
