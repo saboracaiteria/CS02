@@ -159,6 +159,16 @@ if (fs.existsSync(path)) {
         @media (orientation: portrait) { #rotate-screen { display: flex; } }
 
         /* MODO MOBILE (SEM TEMPLATE) 📱 */
+        html.is-mobile,
+        html.is-mobile body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            touch-action: none;
+        }
+
         body.is-mobile header,
         body.is-mobile .info-bar,
         body.is-mobile .about-section,
@@ -170,15 +180,22 @@ if (fs.existsSync(path)) {
         body.is-mobile .main-wrapper {
             margin: 0;
             padding: 0;
-            max-width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            display: block;
         }
 
         body.is-mobile .game-frame {
-            width: 100vw;
-            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             aspect-ratio: auto;
             border: none;
+            box-shadow: none;
+            margin: 0;
         }
     </style>
 </head>
@@ -214,6 +231,7 @@ if (fs.existsSync(path)) {
         // DETECÇÃO DE MOBILE 📱
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         if (isMobile) {
+            document.documentElement.classList.add('is-mobile');
             document.body.classList.add('is-mobile');
         }
 
