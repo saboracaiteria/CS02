@@ -24,10 +24,12 @@
 [ext_resource type="PackedScene" path="res://scenes/map_arena.tscn" id="400_arena"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_web"]
-sky_top_color = Color(0.2, 0.5, 1.0, 1)
-sky_horizon_color = Color(0.5, 0.8, 1.0, 1)
-ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
-ground_horizon_color = Color(0.646, 0.656, 0.67, 1)
+sky_top_color = Color(0.28, 0.62, 1.0, 1)
+sky_horizon_color = Color(0.72, 0.88, 1.0, 1)
+ground_bottom_color = Color(0.55, 0.5, 0.42, 1)
+ground_horizon_color = Color(0.78, 0.78, 0.75, 1)
+sun_angle_max = 30.0
+sun_curve = 0.15
 
 [sub_resource type="Sky" id="Sky_78err"]
 sky_material = SubResource("ProceduralSkyMaterial_web")
@@ -35,22 +37,14 @@ sky_material = SubResource("ProceduralSkyMaterial_web")
 [sub_resource type="Environment" id="Environment_v7lsv"]
 background_mode = 2
 sky = SubResource("Sky_78err")
-tonemap_mode = 3
-tonemap_exposure = 1.1
+ambient_light_source = 3
+ambient_light_color = Color(0.9, 0.92, 1.0, 1)
+ambient_light_energy = 0.6
+tonemap_mode = 0
+tonemap_exposure = 1.0
 tonemap_white = 1.0
-glow_enabled = true
-glow_levels/1 = 1.0
-glow_levels/2 = 1.0
-glow_levels/3 = 1.0
-glow_levels/5 = 0.0
-glow_intensity = 0.5
-glow_strength = 0.8
-glow_bloom = 0.1
-glow_blend_mode = 1
-glow_hdr_threshold = 0.8
-fog_enabled = true
-fog_light_color = Color(0.517647, 0.552941, 0.607843, 1)
-fog_density = 0.001
+glow_enabled = false
+fog_enabled = false
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wntx8"]
 
@@ -157,15 +151,11 @@ environment = SubResource("Environment_v7lsv")
 camera_attributes = SubResource("CameraAttributesPractical_wntx8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.835807, -0.47011, 0.283589, -0.375944, 0.866496, 0.328406, -0.400115, 0.167871, -0.900959, 0, 4.88489, 0)
-light_energy = 5.0
-shadow_enabled = true
-shadow_bias = 0.0
-directional_shadow_split_1 = 0.04
-directional_shadow_split_2 = 0.11
-directional_shadow_split_3 = 0.33
-directional_shadow_blend_splits = true
-directional_shadow_max_distance = 99.3
+transform = Transform3D(1, 0, 0, 0, 0.766044, 0.642788, 0, -0.642788, 0.766044, 0, 8, 0)
+light_color = Color(1.0, 0.97, 0.9, 1)
+light_energy = 2.8
+light_specular = 0.3
+shadow_enabled = false
 
 [node name="Debug" type="CanvasLayer" parent="."]
 layer = 128
