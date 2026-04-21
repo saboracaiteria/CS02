@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://pcku303n6rx7"
-path="res://.godot/imported/dual_smgs_3.png-687086401dbe5b219fa7e053165f45b3.ctex"
+path.s3tc="res://.godot/imported/dual_smgs_3.png-687086401dbe5b219fa7e053165f45b3.s3tc.ctex"
+path.etc2="res://.godot/imported/dual_smgs_3.png-687086401dbe5b219fa7e053165f45b3.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "f03142f392492ecebae3e018d38c872f"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/dual_smgs/dual_smgs_3.png"
-dest_files=["res://.godot/imported/dual_smgs_3.png-687086401dbe5b219fa7e053165f45b3.ctex"]
+dest_files=["res://.godot/imported/dual_smgs_3.png-687086401dbe5b219fa7e053165f45b3.s3tc.ctex", "res://.godot/imported/dual_smgs_3.png-687086401dbe5b219fa7e053165f45b3.etc2.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -34,4 +36,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=1024
-detect_3d/compress_to=1
+detect_3d/compress_to=0

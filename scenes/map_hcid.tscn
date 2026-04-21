@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/map_hcid.gd" id="1_hcid"]
+
+[node name="map_hcid" type="Node3D"]
+script = ExtResource("1_hcid")

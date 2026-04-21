@@ -11,8 +11,9 @@ const Bot          = preload("res://scenes/entities/bot.tscn")
 const MapWarehouse = preload("res://scenes/map.tscn")
 const MapArena     = preload("res://scenes/map_arena.tscn")
 const MapForest    = preload("res://scenes/map_forest.tscn")
+const MapHCID      = preload("res://scenes/map_hcid.tscn")
 
-var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER", "FOREST ROYALE"]
+var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER", "FOREST ROYALE", "LABYRINTH (Unity)"]
 var map_index: int = 0
 
 # Modo de jogo selecionado pelo jogador
@@ -287,6 +288,12 @@ func add_player(peer_id: int) -> void:
 			Vector3(40, 2, 40), Vector3(-40, 2, 40),
 			Vector3(40, 2, -40), Vector3(-40, 2, -40),
 		])
+	elif map_index == 3:  # Labyrinth (Unity FPS)
+		player.spawns = PackedVector3Array([
+			Vector3(30, 2, 30),  Vector3(-30, 2, 30),
+			Vector3(30, 2, -30), Vector3(-30, 2, -30),
+			Vector3(0, 5, 25),   Vector3(0, 7, -25),
+		])
 	player.global_position = player.spawns[randi() % player.spawns.size()]
 	
 	# Ativa o HUD Mobile V1440 (Agora embutido no Player) ✨🎯🥇
@@ -340,6 +347,12 @@ func spawn_bots(amount: int):
 				Vector3(-50, 2, 30), Vector3(30, 2, -50),
 				Vector3(-30, 2, 50)
 			]
+		3:  # Labyrinth (Unity HCID)
+			bot_spawns = [
+				Vector3(20, 2, 20), Vector3(-20, 2, -20),
+				Vector3(-25, 5, 25), Vector3(25, 5, 25),
+				Vector3(0, 2, 0)
+			]
 		_:
 			bot_spawns = [Vector3(15, 2, 0), Vector3(-15, 2, 0), Vector3(0, 2, 15)]
 	for i in range(amount):
@@ -369,6 +382,7 @@ func _load_selected_map() -> void:
 		0: map_scene = MapWarehouse
 		1: map_scene = MapArena
 		2: map_scene = MapForest
+		3: map_scene = MapHCID
 		_: map_scene = MapWarehouse
 	var new_map = map_scene.instantiate()
 	new_map.name = "map"

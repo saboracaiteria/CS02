@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dwshr1u7o8qa5"
-path="res://.godot/imported/animated_pistol_3.png-1744a48a1352ad7a540d61d7884fd77e.ctex"
+path.s3tc="res://.godot/imported/animated_pistol_3.png-1744a48a1352ad7a540d61d7884fd77e.s3tc.ctex"
+path.etc2="res://.godot/imported/animated_pistol_3.png-1744a48a1352ad7a540d61d7884fd77e.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "028a5418645bfefc639371d8a00f2b8b"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://models/animated_pistol_3.png"
-dest_files=["res://.godot/imported/animated_pistol_3.png-1744a48a1352ad7a540d61d7884fd77e.ctex"]
+dest_files=["res://.godot/imported/animated_pistol_3.png-1744a48a1352ad7a540d61d7884fd77e.s3tc.ctex", "res://.godot/imported/animated_pistol_3.png-1744a48a1352ad7a540d61d7884fd77e.etc2.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -34,4 +36,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=1024
-detect_3d/compress_to=1
+detect_3d/compress_to=0
