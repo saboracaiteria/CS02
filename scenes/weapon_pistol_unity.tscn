@@ -6,6 +6,8 @@
 [node name="Pistol_Unity" type="Node3D"]
 script = ExtResource("1_base")
 view_model_offset = Vector3(0.4, -0.3, -0.5)
+view_model_rotation = Vector3(0, 180, 0)
+view_model_scale = Vector3(0.6, 0.6, 0.6)
 damage = 18
 fire_rate = 0.2
 
