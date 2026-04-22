@@ -5,7 +5,7 @@
 
 [node name="AKM_Unity" type="Node3D"]
 script = ExtResource("1_base")
-view_model_offset = Vector3(0.22, -0.35, -0.2)
+view_model_offset = Vector3(0.22, -0.35, -0.35)
 view_model_rotation = Vector3(0, -90, 0)
 view_model_scale = Vector3(0.15, 0.15, 0.15)
 damage = 32
