@@ -183,10 +183,10 @@ func _auto_normalize_model(model: Node3D) -> void:
 			var mesh_node = model.get_child(0)
 			if mesh_node is Node3D:
 				if model.name.contains("Sniper"):
-					mesh_node.rotation_degrees.y = 180
+					mesh_node.rotation_degrees.y = 0 
 				else:
-					# If previously pointing Right (+X), target is Forward (-Z) = +90 degrees
-					mesh_node.rotation_degrees.y = 90
+					# Targeting Forward (-Z). If original is Right (+X), rotation is -90.
+					mesh_node.rotation_degrees.y = -90
 	
 	if not model is WeaponBase and model.position == Vector3.ZERO:
 		model.position = Vector3(0.2, -0.2, -0.35)
@@ -226,9 +226,8 @@ func _process(_delta: float) -> void:
 
 	# --- SNIPER SCOPE 🔭 ---
 	var scope = get_node_or_null("%SniperScope")
-	if scope: scope = find_child("SniperScope", true)
 	if scope:
-		var is_sniper = weapon and weapon.name.contains("Sniper")
+		var is_sniper = weapon and (weapon.name.contains("Sniper") or weapon.name.contains("sniper"))
 		scope.visible = is_ads and is_sniper
 		if weapon:
 			weapon.visible = not scope.visible # Hide weapon model when scoped
