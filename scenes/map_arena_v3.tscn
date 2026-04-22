@@ -17,7 +17,7 @@ glow_enabled = true
 glow_intensity = 0.5
 glow_strength = 0.8
 glow_bloom = 0.1
-fog_enabled = true
+fog_enabled = false
 fog_light_color = Color(0.51, 0.55, 0.6, 1)
 fog_density = 0.005
 
@@ -25,7 +25,7 @@ fog_density = 0.005
 size = Vector3(1000, 1, 1000)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
-albedo_color = Color(0.08, 0.08, 0.08, 1)
+albedo_color = Color(0.2, 0.2, 0.2, 1)
 roughness = 0.8
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
@@ -40,6 +40,7 @@ environment = SubResource("Environment_arena")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 20, 0)
 shadow_enabled = true
+light_energy = 1.5
 
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -58,40 +59,45 @@ transform = Transform3D(60, 0, 0, 0, 12, 0, 0, 0, 60, 0, 0, 0)
 
 [node name="Light" type="OmniLight3D" parent="Buildings/Building1"]
 transform = Transform3D(0.016, 0, 0, 0, 0.083, 0, 0, 0, 0.016, 0, 0.5, 0)
-light_color = Color(1, 0.8, 0.5, 1)
-light_energy = 2.0
-omni_range = 50.0
+light_color = Color(1, 0.95, 0.8, 1)
+light_energy = 8.0
+omni_range = 100.0
+shadow_enabled = false
 
 [node name="Building2" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, 80, 0, 80)
 
 [node name="Light" type="OmniLight3D" parent="Buildings/Building2"]
 transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
-light_color = Color(0.5, 0.8, 1, 1)
-light_energy = 2.0
-omni_range = 40.0
+light_color = Color(0.8, 0.9, 1, 1)
+light_energy = 8.0
+omni_range = 80.0
+shadow_enabled = false
 
 [node name="Building3" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, -80, 0, -80)
 
 [node name="Light" type="OmniLight3D" parent="Buildings/Building3"]
 transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
-light_color = Color(0.8, 1, 0.5, 1)
-light_energy = 2.0
-omni_range = 40.0
+light_color = Color(0.9, 1, 0.8, 1)
+light_energy = 8.0
+omni_range = 80.0
+shadow_enabled = false
 
 [node name="Building4" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, 80, 0, -80)
 
 [node name="Light" type="OmniLight3D" parent="Buildings/Building4"]
 transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
-light_energy = 2.0
-omni_range = 40.0
+light_energy = 8.0
+omni_range = 80.0
+shadow_enabled = false
 
 [node name="Building5" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, -80, 0, 80)
 
 [node name="Light" type="OmniLight3D" parent="Buildings/Building5"]
 transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
-light_energy = 2.0
-omni_range = 40.0
+light_energy = 8.0
+omni_range = 80.0
+shadow_enabled = false
