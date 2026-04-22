@@ -12,8 +12,10 @@ const MapWarehouse = preload("res://scenes/map.tscn")
 const MapArena     = preload("res://scenes/map_arena.tscn")
 const MapForest    = preload("res://scenes/map_forest.tscn")
 const MapHCID      = preload("res://scenes/map_hcid.tscn")
+const MapArenaV3  = preload("res://scenes/map_arena_v3.tscn")
 
-var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER", "FOREST ROYALE", "LABYRINTH (Unity)"]
+
+var map_names: Array[String] = ["WAREHOUSE (Container)", "ARENA BUNKER", "FOREST ROYALE", "LABYRINTH (Unity)", "ARENA V3"]
 var map_index: int = 0
 
 # Modo de jogo selecionado pelo jogador
@@ -288,11 +290,17 @@ func add_player(peer_id: int) -> void:
 			Vector3(40, 2, 40), Vector3(-40, 2, 40),
 			Vector3(40, 2, -40), Vector3(-40, 2, -40),
 		])
-	elif map_index == 3:  # Labyrinth (Unity FPS)
+	elif map_index == 3:  # Labyrinth (Unity HCID)
 		player.spawns = PackedVector3Array([
 			Vector3(30, 2, 30),  Vector3(-30, 2, 30),
 			Vector3(30, 2, -30), Vector3(-30, 2, -30),
 			Vector3(0, 5, 25),   Vector3(0, 7, -25),
+		])
+	elif map_index == 4:  # Arena V3
+		player.spawns = PackedVector3Array([
+			Vector3(10, 2, 10), Vector3(-10, 2, 10),
+			Vector3(10, 2, -10), Vector3(-10, 2, -10),
+			Vector3(0, 2, 15)
 		])
 	player.global_position = player.spawns[randi() % player.spawns.size()]
 	
@@ -353,6 +361,11 @@ func spawn_bots(amount: int):
 				Vector3(-25, 5, 25), Vector3(25, 5, 25),
 				Vector3(0, 2, 0)
 			]
+		4: # Arena V3
+			bot_spawns = [
+				Vector3(12, 1, 0), Vector3(-12, 1, 0),
+				Vector3(0, 1, 12), Vector3(0, 1, -12)
+			]
 		_:
 			bot_spawns = [Vector3(15, 2, 0), Vector3(-15, 2, 0), Vector3(0, 2, 15)]
 	for i in range(amount):
@@ -383,6 +396,7 @@ func _load_selected_map() -> void:
 		1: map_scene = MapArena
 		2: map_scene = MapForest
 		3: map_scene = MapHCID
+		4: map_scene = MapArenaV3
 		_: map_scene = MapWarehouse
 	var new_map = map_scene.instantiate()
 	new_map.name = "map"
