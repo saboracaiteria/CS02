@@ -171,10 +171,7 @@ func _auto_normalize_model(model: Node3D) -> void:
 	
 	# Fixes orientation for imported Unity models 🔄🏙️
 	if model.name.contains("Unity"):
-		if model.name.contains("Sniper"):
-			model.rotation.y = PI # 180 deg
-		else:
-			model.rotation.y = -PI/2 # -90 deg
+		model.rotation.y = PI/2 # 90 deg (Should move from Right to Forward)
 			
 	if not model is WeaponBase and model.position == Vector3.ZERO:
 		model.position = Vector3(0.2, -0.2, -0.35)
