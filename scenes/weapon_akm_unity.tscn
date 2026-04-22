@@ -5,9 +5,9 @@
 
 [node name="AKM_Unity" type="Node3D"]
 script = ExtResource("1_base")
-view_model_offset = Vector3(0.22, -0.45, -0.6)
+view_model_offset = Vector3(0.25, -0.45, -0.6)
 view_model_rotation = Vector3(0, -90, 0)
-view_model_scale = Vector3(0.45, 0.4, 0.35)
+view_model_scale = Vector3(0.45, 0.5, 0.4)
 damage = 32
 fire_rate = 0.1
 max_ammo = 30
