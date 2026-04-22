@@ -1,16 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://b2qhxdrnviyqf"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scope"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 250
-corner_radius_top_right = 250
-corner_radius_bottom_right = 250
-corner_radius_bottom_left = 250
+[gd_scene load_steps=30 format=3 uid="uid://b2qhxdrnviyqf"]
 
 [ext_resource type="PackedScene" uid="uid://animatedpistol" path="res://scenes/animated_pistol.tscn" id="ak_scene"]
 [ext_resource type="Script" path="res://scripts/core/player.gd" id="1_8tdgl"]
@@ -282,17 +270,6 @@ script = ExtResource("5_fnci2")
 [node name="PCHUD" type="CanvasLayer" parent="."]
 visible = false
 
-[node name="PCHB" type="ProgressBar" parent="PCHUD"]
-anchors_preset = 15
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = -60.0
-offset_right = 220.0
-offset_bottom = -30.0
-grow_vertical = 0
-value = 100.0
-show_percentage = false
 
 [node name="SniperScope" type="ColorRect" parent="PCHUD"]
 unique_name_in_owner = true
@@ -345,7 +322,6 @@ offset_right = 250.0
 offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_scope")
 
 [node name="AmmoHUD" type="Label" parent="PCHUD"]
 anchors_preset = 3
