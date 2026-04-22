@@ -100,6 +100,8 @@ func _ready() -> void:
 	ads_fov = Global.ads_fov
 	if Global.is_mobile:
 		ads_fov = 73.0
+	if weapon and weapon.name.contains("Sniper"):
+		ads_fov = 15.0
 	if camera: camera.fov = default_fov
 	print("--- PLAYER PRONTO ---")
 
@@ -112,6 +114,11 @@ func switch_weapon(weapon_name: String) -> void:
 		else:
 			w.visible = false
 	_update_weapon_nodes()
+	# Reset ADS FOV if sniper
+	if weapon and weapon.name.contains("Sniper"):
+		ads_fov = 15.0
+	else:
+		ads_fov = Global.ads_fov if not Global.is_mobile else 73.0
 	current_ammo = max_ammo
 	is_reloading = false
 
@@ -170,6 +177,17 @@ func _auto_normalize_model(model: Node3D) -> void:
 		model.scale = Vector3(auto_scale, auto_scale, auto_scale)
 	
 	# Fixes orientation for imported Unity models 🔄🏙️
+	if model.name.contains("Unity"):
+		# Force rotation on the first child (usually the Model node)
+		if model.get_child_count() > 0:
+			var mesh_node = model.get_child(0)
+			if mesh_node is Node3D:
+				if model.name.contains("Sniper"):
+					mesh_node.rotation_degrees.y = 180
+				else:
+					# If previously pointing Right (+X), target is Forward (-Z) = +90 degrees
+					mesh_node.rotation_degrees.y = 90
+	
 	if not model is WeaponBase and model.position == Vector3.ZERO:
 		model.position = Vector3(0.2, -0.2, -0.35)
 
@@ -205,6 +223,15 @@ func _process(_delta: float) -> void:
 	if is_ads:       fov_target = ads_fov
 	elif is_sprinting: fov_target = sprint_fov
 	if camera: camera.fov = lerpf(camera.fov, clamp(fov_target, 1.0, 179.0), FOV_LERP_SPEED * _delta)
+
+	# --- SNIPER SCOPE 🔭 ---
+	var scope = %SniperScope if has_node("%SniperScope") else null
+	if !scope: scope = find_child("SniperScope", true)
+	if scope:
+		var is_sniper = weapon and weapon.name.contains("Sniper")
+		scope.visible = is_ads and is_sniper
+		if weapon:
+			weapon.visible = not scope.visible # Hide weapon model when scoped
 
 	# --- CROUCH HEIGHT ---
 	var target_height := 2.1 if !is_crouching else 1.2

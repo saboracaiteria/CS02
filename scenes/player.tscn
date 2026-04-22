@@ -1,5 +1,17 @@
 [gd_scene load_steps=20 format=3 uid="uid://b2qhxdrnviyqf"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scope"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 250
+corner_radius_top_right = 250
+corner_radius_bottom_right = 250
+corner_radius_bottom_left = 250
+
 [ext_resource type="PackedScene" uid="uid://animatedpistol" path="res://scenes/animated_pistol.tscn" id="ak_scene"]
 [ext_resource type="Script" path="res://scripts/core/player.gd" id="1_8tdgl"]
 [ext_resource type="PackedScene" uid="uid://c5c1lnw5ajt3c" path="res://scenes/pistol.tscn" id="2_0s6en"]
@@ -281,6 +293,59 @@ offset_bottom = -30.0
 grow_vertical = 0
 value = 100.0
 show_percentage = false
+
+[node name="SniperScope" type="ColorRect" parent="PCHUD"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="H" type="ColorRect" parent="PCHUD/SniperScope"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -1.0
+offset_right = 500.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="V" type="ColorRect" parent="PCHUD/SniperScope"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -500.0
+offset_right = 1.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Circle" type="Panel" parent="PCHUD/SniperScope"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_scope")
 
 [node name="PCAmmo" type="Label" parent="PCHUD"]
 anchors_preset = 3
