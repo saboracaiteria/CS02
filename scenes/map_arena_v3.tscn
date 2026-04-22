@@ -1,17 +1,45 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
 [ext_resource type="PackedScene" path="res://imports/fps_shooter_game_arena_map_v3.glb" id="1_glb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_arena"]
+sky_top_color = Color(0.15, 0.45, 0.85, 1)
+sky_horizon_color = Color(0.55, 0.65, 0.75, 1)
+ground_bottom_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="Sky" id="Sky_arena"]
+sky_material = SubResource("ProceduralSkyMaterial_arena")
+
+[sub_resource type="Environment" id="Environment_arena"]
+background_mode = 2
+sky = SubResource("Sky_arena")
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.5
+glow_strength = 0.8
+glow_bloom = 0.1
+fog_enabled = true
+fog_light_color = Color(0.51, 0.55, 0.6, 1)
+fog_density = 0.005
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(1000, 1, 1000)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
-albedo_color = Color(0.12, 0.12, 0.12, 1)
+albedo_color = Color(0.08, 0.08, 0.08, 1)
+roughness = 0.8
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
 material = SubResource("StandardMaterial3D_floor")
 size = Vector2(1000, 1000)
 
 [node name="ArenaV3" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_arena")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 20, 0)
+shadow_enabled = true
 
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -25,17 +53,45 @@ mesh = SubResource("PlaneMesh_floor")
 
 [node name="Buildings" type="Node3D" parent="."]
 
-[node name="MapModel" parent="Buildings" instance=ExtResource("1_glb")]
+[node name="Building1" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(60, 0, 0, 0, 12, 0, 0, 0, 60, 0, 0, 0)
 
-[node name="MapModel2" parent="Buildings" instance=ExtResource("1_glb")]
+[node name="Light" type="OmniLight3D" parent="Buildings/Building1"]
+transform = Transform3D(0.016, 0, 0, 0, 0.083, 0, 0, 0, 0.016, 0, 0.5, 0)
+light_color = Color(1, 0.8, 0.5, 1)
+light_energy = 2.0
+omni_range = 50.0
+
+[node name="Building2" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, 80, 0, 80)
 
-[node name="MapModel3" parent="Buildings" instance=ExtResource("1_glb")]
+[node name="Light" type="OmniLight3D" parent="Buildings/Building2"]
+transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
+light_color = Color(0.5, 0.8, 1, 1)
+light_energy = 2.0
+omni_range = 40.0
+
+[node name="Building3" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, -80, 0, -80)
 
-[node name="MapModel4" parent="Buildings" instance=ExtResource("1_glb")]
+[node name="Light" type="OmniLight3D" parent="Buildings/Building3"]
+transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
+light_color = Color(0.8, 1, 0.5, 1)
+light_energy = 2.0
+omni_range = 40.0
+
+[node name="Building4" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, 80, 0, -80)
 
-[node name="MapModel5" parent="Buildings" instance=ExtResource("1_glb")]
+[node name="Light" type="OmniLight3D" parent="Buildings/Building4"]
+transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
+light_energy = 2.0
+omni_range = 40.0
+
+[node name="Building5" parent="Buildings" instance=ExtResource("1_glb")]
 transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, -80, 0, 80)
+
+[node name="Light" type="OmniLight3D" parent="Buildings/Building5"]
+transform = Transform3D(0.025, 0, 0, 0, 0.125, 0, 0, 0, 0.025, 0, 0.5, 0)
+light_energy = 2.0
+omni_range = 40.0
