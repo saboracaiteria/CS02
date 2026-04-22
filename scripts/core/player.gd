@@ -134,6 +134,12 @@ func _update_weapon_nodes() -> void:
 		if child is Node3D and child.visible:
 			weapon = child
 			_auto_normalize_model(weapon)
+			
+			# Oculta braços genéricos se a arma tiver braços próprios (Geralmente Unity)
+			var skin_arms = get_node_or_null("Camera3D/Skin_Arms")
+			if skin_arms:
+				skin_arms.visible = not weapon.name.contains("Unity")
+
 			var flash_r = weapon.find_child("MuzzleFlash_R", true)
 			var flash_l = weapon.find_child("MuzzleFlash_L", true)
 			if not (flash_r or flash_l):
