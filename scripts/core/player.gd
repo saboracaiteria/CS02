@@ -46,7 +46,7 @@ var sprint_fov : float = 82.0
 # A single speed for the FOV lerp — keeping it moderate prevents snapping
 const FOV_LERP_SPEED : float = 8.0
 
-var weapons_list : Array = ["AnimatedPistol", "DualSMGs", "Assault_Unity", "Pistol_Unity", "Sniper_Unity"]
+var weapons_list : Array = ["AnimatedPistol", "DualSMGs", "Assault_Unity", "Pistol_Unity", "Sniper_Unity", "AKM_Unity"]
 var current_weapon_index : int = 0
 
 var BASE_SPEED : float = 5.5
@@ -482,27 +482,36 @@ func _spawn_bullet_tracer(from: Vector3, to: Vector3):
 
 func _inspect() -> void:
 	if is_reloading: return
-	if not weapon: return
+	_play_weapon_anim("inspect")
+
+func _play_weapon_anim(keyword: String):
+	if not weapon: return null
 	var weapon_anim = weapon.find_child("AnimationPlayer", true)
-	if weapon_anim:
-		for anim in ["inspect", "Inspect", "INSPECT", "idle_inspect"]:
-			if weapon_anim.has_animation(anim):
-				weapon_anim.play(anim)
-				return
+	if not weapon_anim: return null
+	
+	var anim_list = weapon_anim.get_animation_list()
+	var target = ""
+	for a in anim_list:
+		var al = a.to_lower()
+		var kl = keyword.to_lower()
+		if al == kl: # Prioridade exata
+			target = a
+			break
+		if al.contains(kl):
+			target = a # Melhor match parcial
+			
+	if target != "":
+		weapon_anim.stop()
+		weapon_anim.play(target)
+		return weapon_anim.animation_finished
+	return null
 
 func _reload() -> void:
 	if is_reloading or current_ammo == max_ammo or total_ammo <= 0: return
 	is_reloading = true
-	var weapon_anim = weapon.find_child("AnimationPlayer", true) if weapon else null
-	if weapon_anim:
-		var found = false
-		for anim in ["reload", "Reload", "RELOAD", "action_reload"]:
-			if weapon_anim.has_animation(anim):
-				weapon_anim.play(anim)
-				found = true
-				await weapon_anim.animation_finished
-				break
-		if !found: await get_tree().create_timer(1.5).timeout
+	var sig = _play_weapon_anim("reload")
+	if sig:
+		await sig
 	elif anim_player and anim_player.has_animation("reload"):
 		anim_player.play("reload")
 		await anim_player.animation_finished
@@ -520,17 +529,10 @@ var shoot_right : bool = true
 func play_shoot_effects() -> void:
 	if !weapon: _update_weapon_nodes()
 	if anim_player:
-		var weapon_anim = weapon.find_child("AnimationPlayer", true)
-		if weapon_anim:
-			weapon_anim.stop(true)
-			var shot_anim = ""
-			if weapon_anim.has_animation("fire"):  shot_anim = "fire"
-			elif weapon_anim.has_animation("shoot"): shot_anim = "shoot"
-			elif weapon_anim.has_animation("Shoot"): shot_anim = "Shoot"
-			if shot_anim != "":
-				weapon_anim.play(shot_anim)
-				weapon_anim.seek(0.0)
-		else:
+		var played_custom = _play_weapon_anim("fire") 
+		if not played_custom: played_custom = _play_weapon_anim("shoot")
+		
+		if not played_custom:
 			anim_player.stop(true)
 			anim_player.play("shoot")
 	var current_muzzle = null

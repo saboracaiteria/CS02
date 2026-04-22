@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/core/weapon_base.gd" id="1_base"]
+[ext_resource type="PackedScene" path="res://models/weapons/imported/akm_fps_animation.glb" id="2_glb"]
+[ext_resource type="AudioStream" uid="uid://bevvvtb8n4qfc" path="res://audio/645317__darkshroom__m9_noisegate-1780.ogg" id="3_sfx"]
+
+[node name="AKM_Unity" type="Node3D"]
+script = ExtResource("1_base")
+view_model_offset = Vector3(0.35, -0.35, -0.6)
+view_model_rotation = Vector3(0, -90, 0)
+view_model_scale = Vector3(0.1, 0.1, 0.1)
+damage = 32
+fire_rate = 0.1
+max_ammo = 30
+ads_offset = Vector3(0.0, -0.22, -0.4)
+
+[node name="Model" parent="." instance=ExtResource("2_glb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="GunshotSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_sfx")
+bus = &"SFX"

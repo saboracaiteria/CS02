@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/weapon_assault_unity.tscn" id="8_ar"]
 [ext_resource type="PackedScene" path="res://scenes/weapon_pistol_unity.tscn" id="9_pistol"]
 [ext_resource type="PackedScene" path="res://scenes/weapon_sniper_unity.tscn" id="10_sniper"]
+[ext_resource type="PackedScene" path="res://scenes/weapon_akm_unity.tscn" id="11_akm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_arms"]
 transparency = 1
@@ -224,6 +225,9 @@ visible = false
 visible = false
 
 [node name="Sniper_Unity" parent="Camera3D/WeaponRoot" instance=ExtResource("10_sniper")]
+visible = false
+
+[node name="AKM_Unity" parent="Camera3D/WeaponRoot" instance=ExtResource("11_akm")]
 visible = false
 
 [node name="GunshotSound" type="AudioStreamPlayer3D" parent="Camera3D/WeaponRoot/pistol"]
