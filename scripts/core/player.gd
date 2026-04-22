@@ -225,8 +225,8 @@ func _process(_delta: float) -> void:
 	if camera: camera.fov = lerpf(camera.fov, clamp(fov_target, 1.0, 179.0), FOV_LERP_SPEED * _delta)
 
 	# --- SNIPER SCOPE 🔭 ---
-	var scope = %SniperScope if has_node("%SniperScope") else null
-	if !scope: scope = find_child("SniperScope", true)
+	var scope = get_node_or_null("%SniperScope")
+	if scope: scope = find_child("SniperScope", true)
 	if scope:
 		var is_sniper = weapon and weapon.name.contains("Sniper")
 		scope.visible = is_ads and is_sniper
