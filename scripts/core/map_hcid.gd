@@ -2,10 +2,11 @@ extends Node3D
 # MAP: UNITY LABYRINTH (Inspirado no HCID FPS) 🏗️
 # Mapa aberto estilo prototype com plataformas altas, pilares cilindricos e labirinto.
 
-const COL_FLOOR  := Color(0.85, 0.85, 0.85)   # Chão cinza claro
-const COL_WALL   := Color(0.92, 0.92, 0.92)   # Paredes brancas
-const COL_PLATFORM := Color(0.75, 0.75, 0.75) # Plataformas um pouco mais escuras
-const COL_PILLAR := Color(0.65, 0.65, 0.65)   # Pilares
+const COL_FLOOR      := Color(0.05, 0.05, 0.1)    # Chão azul noturno profundo
+const COL_WALL       := Color(0.0, 0.4, 0.7)      # Paredes Azul Vibrante
+const COL_PLATFORM   := Color(1.0, 0.9, 0.0)      # Plataformas Amarelo Alerta
+const COL_PILLAR     := Color(0.8, 0.1, 0.1)      # Pilares Vermelhos
+const COL_DECOR      := Color(0.0, 1.0, 0.4)      # Detalhes Verde Neon
 
 func _ready() -> void:
 	_build_floor()
