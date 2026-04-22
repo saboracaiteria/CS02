@@ -35,12 +35,12 @@ orientation = 2
 
 [node name="AnimatedPistol" type="Node3D"]
 script = ExtResource("1_base")
-view_model_offset = Vector3(0.3, -0.4, -0.7)
-ads_offset = Vector3(0, -0.35, -0.7)
+view_model_offset = Vector3(0.3, -0.4, -0.4)
+ads_offset = Vector3(0, -0.35, -0.4)
 view_model_scale = Vector3(0.018, 0.018, 0.018)
 view_model_rotation = Vector3(0, 180, 0)
 fire_rate = 0.12
-damage = 17
+damage = 32
 recoil_vertical = 0.04
 recoil_horizontal = 0.01
 
