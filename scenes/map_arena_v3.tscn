@@ -14,6 +14,7 @@ size = Vector2(100, 100)
 [node name="ArenaV3" type="Node3D"]
 
 [node name="MapModel" parent="." instance=ExtResource("1_glb")]
+transform = Transform3D(40, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0)
 
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
