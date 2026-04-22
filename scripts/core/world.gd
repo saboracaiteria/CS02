@@ -298,9 +298,9 @@ func add_player(peer_id: int) -> void:
 		])
 	elif map_index == 4:  # Arena V3
 		player.spawns = PackedVector3Array([
-			Vector3(10, 2, 10), Vector3(-10, 2, 10),
-			Vector3(10, 2, -10), Vector3(-10, 2, -10),
-			Vector3(0, 2, 15)
+			Vector3(120, 2, 120), Vector3(-120, 2, 120),
+			Vector3(120, 2, -120), Vector3(-120, 2, -120),
+			Vector3(0, 2, 150)
 		])
 	player.global_position = player.spawns[randi() % player.spawns.size()]
 	
@@ -363,8 +363,9 @@ func spawn_bots(amount: int):
 			]
 		4: # Arena V3
 			bot_spawns = [
-				Vector3(12, 1, 0), Vector3(-12, 1, 0),
-				Vector3(0, 1, 12), Vector3(0, 1, -12)
+				Vector3(60, 1, 60), Vector3(-60, 1, 60),
+				Vector3(60, 1, -60), Vector3(-60, 1, -60),
+				Vector3(0, 1, 0)
 			]
 		_:
 			bot_spawns = [Vector3(15, 2, 0), Vector3(-15, 2, 0), Vector3(0, 2, 15)]

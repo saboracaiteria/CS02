@@ -2,19 +2,16 @@
 [ext_resource type="PackedScene" path="res://imports/fps_shooter_game_arena_map_v3.glb" id="1_glb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
-size = Vector3(100, 1, 100)
+size = Vector3(1000, 1, 1000)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_color = Color(0.12, 0.12, 0.12, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
 material = SubResource("StandardMaterial3D_floor")
-size = Vector2(100, 100)
+size = Vector2(1000, 1000)
 
 [node name="ArenaV3" type="Node3D"]
-
-[node name="MapModel" parent="." instance=ExtResource("1_glb")]
-transform = Transform3D(40, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0)
 
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -25,3 +22,20 @@ shape = SubResource("BoxShape3D_floor")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("PlaneMesh_floor")
+
+[node name="Buildings" type="Node3D" parent="."]
+
+[node name="MapModel" parent="Buildings" instance=ExtResource("1_glb")]
+transform = Transform3D(60, 0, 0, 0, 12, 0, 0, 0, 60, 0, 0, 0)
+
+[node name="MapModel2" parent="Buildings" instance=ExtResource("1_glb")]
+transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, 80, 0, 80)
+
+[node name="MapModel3" parent="Buildings" instance=ExtResource("1_glb")]
+transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, -80, 0, -80)
+
+[node name="MapModel4" parent="Buildings" instance=ExtResource("1_glb")]
+transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, 80, 0, -80)
+
+[node name="MapModel5" parent="Buildings" instance=ExtResource("1_glb")]
+transform = Transform3D(40, 0, 0, 0, 8, 0, 0, 0, 40, -80, 0, 80)
