@@ -8,7 +8,7 @@ class_name WeaponBase
 @export_category("Gabarito (Transform)")
 @export var view_model_offset: Vector3 = Vector3(0.5, -0.4, -0.6) # Offset lateral/altura/profundidade
 @export var view_model_rotation: Vector3 = Vector3(0, 0, 0)
-@export var view_model_scale: Vector3 = Vector3(1.0, 1.0, 1.0) # ESCALA REAL: AK (1.2), Dual (0.02)
+@export var view_model_scale: Vector3 = Vector3(0.7, 0.7, 0.7) # ESCALA PADRÃO REDUZIDA 🏙️🎯
 @export var ads_offset: Vector3 = Vector3(0, -0.25, -0.6)
 
 @export_category("Weapon Stats")
