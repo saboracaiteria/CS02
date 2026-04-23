@@ -25,7 +25,14 @@ var animation_player: AnimationPlayer
 
 func _ready():
 	animation_player = find_child("AnimationPlayer", true)
-	# Aplica as transformações do Gabarito automaticamente ✨
+	# Aplica inicialmente
+	_update_viewmodel_transform()
+
+func _process(_delta):
+	# Força a transformação a cada frame para vencer animações que resetam a escala 🔨
+	_update_viewmodel_transform()
+
+func _update_viewmodel_transform():
 	transform.origin = view_model_offset
 	rotation_degrees = view_model_rotation
 	scale = view_model_scale
