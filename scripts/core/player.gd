@@ -172,8 +172,8 @@ func get_max_dim(node: Node3D) -> float:
 func _auto_normalize_model(model: Node3D) -> void:
 	if model.has_meta("auto_scaled"): return
 	model.set_meta("auto_scaled", true)
-	if model is WeaponBase:
-		return
+	# if model is WeaponBase:
+	# 	return
 	var max_size = get_max_dim(model)
 	if max_size > 0.05:
 		var target_length = 0.8
