@@ -65,29 +65,25 @@ var is_broadcasting: bool = false
 var discovery_timer: float = 0.0
 
 func _ready():
+	# GARANTE QUE O BOTÃO ESTÁ ATIVO V2500 🏙️🎯🥇
+	var host_btn = get_node_or_null("Menu/MainMenu/MarginContainer/VBoxContainer/HostButton")
+	if host_btn:
+		host_btn.disabled = false
+		host_btn.grab_focus()
+
 	_apply_premium_style()
-	
-	# Configura UDP para o "Auto-Join" 🌐🚀
-	if !OS.has_feature("web"):
-		udp_peer.set_dest_address("255.255.255.255", broadcast_port)
-		
-	# CONEXÃO DE DOMINAÇÃO V1675 🏙️🚩🥇
-	var gm = get_node_or_null("GameManager")
-	var zones = [get_node_or_null("CapturePoint_A"), get_node_or_null("CapturePoint_B"), get_node_or_null("CapturePoint_C")]
-	for zone in zones:
-		if zone and gm:
-			zone.zone_captured.connect(gm._on_zone_captured)
-		else:
-			print("SISTEMA: Aguardando spawn das zonas de captura...")
 	
 	# MOUSE VISÍVEL NO MENU! V1210 🖱️🎭
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Global.is_playing = false
 	
-	# PRÉ-AQUECIMENTO NO MENU V6.1 🔥🏙️🎯🥇
-	# Roda enquanto o player está no menu — zero impacto no gameplay!
-	if ShaderPrewarmer:
-		ShaderPrewarmer.prewarm()
+	# SETUP SEGURO DE ZONAS
+	var gm = get_node_or_null("GameManager")
+	var zones = [get_node_or_null("CapturePoint_A"), get_node_or_null("CapturePoint_B"), get_node_or_null("CapturePoint_C")]
+	for zone in zones:
+		if zone and gm:
+			if zone.has_signal("zone_captured"):
+				zone.zone_captured.connect(gm._on_zone_captured)
 
 func _process(delta: float) -> void:
 	# Lógica de Broadcast do Host 📢
@@ -181,15 +177,8 @@ func _start_solo() -> void:
 	_clear_menu_visuals()
 	_load_selected_map()
 	
-	# Mobile entra em tela cheia automatico
-	if OS.has_feature("web"):
-		# Tela cheia via JS — funciona no clique do botao (contexto de gesto)
-		JavaScriptBridge.eval("""
-			var el = document.documentElement;
-			if (el.requestFullscreen) { el.requestFullscreen(); }
-			else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
-		""")
-	else:
+	# Mobile entra em tela cheia automatico (Apenas se suportado)
+	if !OS.has_feature("web"):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		
 	add_player(1)  # ID fixo 1 em modo solo
