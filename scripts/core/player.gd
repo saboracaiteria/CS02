@@ -163,33 +163,7 @@ func get_max_dim_recursive(node: Node3D, model_root: Node3D) -> float:
 func get_max_dim(node: Node3D) -> float:
 	return get_max_dim_recursive(node, node)
 
-func _auto_normalize_model(model: Node3D) -> void:
-	if model.has_meta("auto_scaled"): return
-	model.set_meta("auto_scaled", true)
-	# if model is WeaponBase:
-	# 	return
-	var max_size = get_max_dim(model)
-	if max_size > 0.05:
-		var target_length = 0.8
-		if model.name.to_lower().contains("pistol") or model.name.to_lower().contains("handgun"):
-			target_length = 0.45
-		var auto_scale = target_length / max_size
-		model.scale = Vector3(auto_scale, auto_scale, auto_scale)
-	
-	# Fixes orientation for imported Unity models 🔄🏙️
-	if model.name.contains("Unity"):
-		# Force rotation on the first child (usually the Model node)
-		if model.get_child_count() > 0:
-			var mesh_node = model.get_child(0)
-			if mesh_node is Node3D:
-				if model.name.contains("Sniper"):
-					mesh_node.rotation_degrees.y = 0 
-				else:
-					# Targeting Forward (-Z). If original is Right (+X), rotation is -90.
-					mesh_node.rotation_degrees.y = -90
-	
-	if not model is WeaponBase and model.position == Vector3.ZERO:
-		model.position = Vector3(0.2, -0.2, -0.35)
+
 
 var is_mobile_shooting : bool = false
 
