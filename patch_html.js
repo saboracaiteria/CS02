@@ -82,7 +82,7 @@ if (fs.existsSync(path)) {
             overflow: hidden;
         }
 
-        #canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+        #canvas { width: 100%; height: 100%; display: block; image-rendering: auto; }
         #canvas:focus { outline: none; }
 
         .info-bar {
