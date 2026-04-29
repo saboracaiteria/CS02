@@ -209,28 +209,7 @@ mesh = SubResource("BoxMesh_arms")
 [node name="WeaponRoot" type="Node3D" parent="Camera3D"]
 unique_name_in_owner = true
 
-[node name="pistol" parent="Camera3D/WeaponRoot" instance=ExtResource("2_0s6en")]
-visible = false
-
-[node name="AnimatedPistol" parent="Camera3D/WeaponRoot" instance=ExtResource("ak_scene")]
-visible = false
-
-[node name="DualSMGs" parent="Camera3D/WeaponRoot" instance=ExtResource("7_dual")]
-visible = true
-
-[node name="Assault_Unity" parent="Camera3D/WeaponRoot" instance=ExtResource("8_ar")]
-visible = false
-
-[node name="Pistol_Unity" parent="Camera3D/WeaponRoot" instance=ExtResource("9_pistol")]
-visible = false
-
-[node name="Sniper_Unity" parent="Camera3D/WeaponRoot" instance=ExtResource("10_sniper")]
-visible = false
-
-[node name="AKM_Unity" parent="Camera3D/WeaponRoot" instance=ExtResource("11_akm")]
-visible = false
-
-[node name="GunshotSound" type="AudioStreamPlayer3D" parent="Camera3D/WeaponRoot/pistol"]
+[node name="GunshotSound" type="AudioStreamPlayer3D" parent="Camera3D/WeaponRoot"]
 unique_name_in_owner = true
 stream = ExtResource("3_pilvn")
 bus = &"SFX"

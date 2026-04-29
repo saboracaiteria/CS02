@@ -63,6 +63,7 @@ func _ready() -> void:
 	camera = find_child("Camera3D", true, false)
 	raycast = find_child("RayCast3D", true, false)
 	anim_player = get_node_or_null("AnimationPlayer")
+	gunshot_sound = find_child("GunshotSound", true)
 	
 	# SETUP DINÂMICO DE ARMAS (POLYGONAL) V2500 🏙️🎯🥇
 	_setup_dynamic_weapons()
@@ -616,16 +617,16 @@ func _setup_dynamic_weapons():
 			pistol.position = Vector3(0.2, -0.2, -0.3)
 			pistol.rotation.y = PI
 
-func _auto_normalize_model(model: Node):
-	if !model: return
+func _auto_normalize_model(model: Node, depth: int = 0):
+	if !model or depth > 3: return # Limite de segurança V2500 🏙️🎯🥇
 	
 	var atlas_tex = load("res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Textures/atlass_1_diffuse.png")
 	var mat = StandardMaterial3D.new()
 	mat.albedo_texture = atlas_tex
 	mat.roughness = 0.8
 	
-	# Aplica textura em todos os meshes recursivamente
+	# Aplica textura em todos os meshes
 	for child in model.get_children():
 		if child is MeshInstance3D:
 			child.material_override = mat
-		_auto_normalize_model(child)
+		_auto_normalize_model(child, depth + 1)
