@@ -98,6 +98,18 @@ func setup(team_color: Color = Color.ORANGE):
 	gun.position = Vector3(0, -0.2, 0.1)
 	gun.rotation.y = PI
 	gun.rotation.x = PI / 2
+	
+	# APLICAÇÃO DE TEXTURA V2500 🏙️🎯🥇
+	var atlas_tex = load("res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Textures/atlass_1_diffuse.png")
+	var mat = StandardMaterial3D.new()
+	mat.albedo_texture = atlas_tex
+	
+	for child in gun.get_children():
+		if child is MeshInstance3D:
+			child.material_override = mat
+		for subchild in child.get_children():
+			if subchild is MeshInstance3D:
+				subchild.material_override = mat
 
 func _create_mesh(parent: Node3D, mesh: Mesh, pos: Vector3, mat: Material) -> MeshInstance3D:
 	var mi = MeshInstance3D.new()

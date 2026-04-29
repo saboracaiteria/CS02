@@ -46,7 +46,7 @@ var sprint_fov : float = 82.0
 # A single speed for the FOV lerp — keeping it moderate prevents snapping
 const FOV_LERP_SPEED : float = 8.0
 
-var weapons_list : Array = ["Rifle", "Pistol"]
+var weapons_list : Array = ["AKM", "SMG", "Pistol"]
 var current_weapon_index : int = 0
 var weapon_cache : Dictionary = {} # V2500 - Cache para eliminar LAG 🏙️🎯🥇
 
@@ -580,19 +580,31 @@ func _setup_dynamic_weapons():
 	var root = %WeaponRoot
 	if !root: return
 	
-	# 1. RIFLE
-	if !root.has_node("Rifle"):
+	# 1. AKM (Baseada no Rifle1)
+	if !root.has_node("AKM"):
 		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Rifles/Rifle1/rifle_1.fbx"
 		var rifle_scene = load(model_path)
 		if rifle_scene:
 			var rifle = rifle_scene.instantiate()
-			rifle.name = "Rifle"
+			rifle.name = "AKM"
 			root.add_child(rifle)
 			rifle.scale = Vector3(0.5, 0.5, 0.5)
 			rifle.position = Vector3(0.2, -0.2, -0.3)
 			rifle.rotation.y = PI
 	
-	# 2. PISTOL
+	# 2. SMG (Baseada no SMG1)
+	if !root.has_node("SMG"):
+		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/SMGs/SMG1/smg_1.fbx"
+		var smg_scene = load(model_path)
+		if smg_scene:
+			var smg = smg_scene.instantiate()
+			smg.name = "SMG"
+			root.add_child(smg)
+			smg.scale = Vector3(0.5, 0.5, 0.5)
+			smg.position = Vector3(0.2, -0.2, -0.3)
+			smg.rotation.y = PI
+
+	# 3. PISTOL
 	if !root.has_node("Pistol"):
 		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Pistols/Pistol1/pistol_1.fbx"
 		var pistol_scene = load(model_path)
@@ -603,3 +615,17 @@ func _setup_dynamic_weapons():
 			pistol.scale = Vector3(0.5, 0.5, 0.5)
 			pistol.position = Vector3(0.2, -0.2, -0.3)
 			pistol.rotation.y = PI
+
+func _auto_normalize_model(model: Node):
+	if !model: return
+	
+	var atlas_tex = load("res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Textures/atlass_1_diffuse.png")
+	var mat = StandardMaterial3D.new()
+	mat.albedo_texture = atlas_tex
+	mat.roughness = 0.8
+	
+	# Aplica textura em todos os meshes recursivamente
+	for child in model.get_children():
+		if child is MeshInstance3D:
+			child.material_override = mat
+		_auto_normalize_model(child)
