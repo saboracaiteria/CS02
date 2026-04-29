@@ -205,7 +205,7 @@ if (fs.existsSync(path)) {
         <div class="game-frame" id="game-container">
             <canvas id="canvas">Browser not supported.</canvas>
             <div id="status">
-                <img src="index.png?v=V2460" alt="Logo" style="max-width: 150px; margin-bottom: 20px;">
+                <img src="index.png?v=${VERSION}" alt="Logo" style="max-width: 150px; margin-bottom: 20px;">
                 <div style="font-weight: bold; letter-spacing: 2px; font-size: 14px;">INICIALIZANDO OPERAÇÃO...</div>
                 <progress id="status-progress"></progress>
                 <div id="status-notice" style="margin-top: 10px; color: var(--text-dim); font-size: 11px;"></div>
@@ -223,7 +223,7 @@ if (fs.existsSync(path)) {
     </div>
     <div id="rotate-screen"><h1 style="color: var(--accent-yellow);">GIRE O CELULAR</h1></div>
 
-    <script src="index.js?v=V2460"></script>
+    <script src="index.js?v=${VERSION}"></script>
     <script>
         const GODOT_CONFIG = CUSTOM_CONFIG;
         const engine = new Engine(GODOT_CONFIG);

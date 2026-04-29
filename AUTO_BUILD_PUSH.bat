@@ -1,5 +1,5 @@
 @echo off
-set VERSION=V2500
+set VERSION=V2501
 set "GODOT_PATH=C:\Users\Terminal\Documents\Godot_4.3\Godot_v4.3-stable_win64.exe"
 
 echo --- INICIANDO PIPELINE DE BUILD %VERSION% ---
