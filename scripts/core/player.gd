@@ -557,41 +557,41 @@ func _setup_dynamic_weapons():
 	var root = %WeaponRoot
 	if !root: return
 	
-	# 1. AKM (Alta Fidelidade)
+	# 1. AKM (Original de 6h atrás)
 	if !root.has_node("AKM"):
-		var model_path = "res://assets/weapons/persuader_animated.glb"
+		var model_path = "res://models/weapons/imported/akm_fps_animation.glb"
 		var akm_scene = load(model_path)
 		if akm_scene:
 			var akm = akm_scene.instantiate()
 			akm.name = "AKM"
 			root.add_child(akm)
-			akm.scale = Vector3(1.2, 1.2, 1.2)
-			akm.position = Vector3(0.2, -0.2, -0.4)
-			akm.rotation_degrees = Vector3(0, 180, 0)
+			akm.scale = Vector3(1.6, 1.6, 1.6)
+			akm.position = Vector3(0.3, -0.5, -0.6)
+			akm.rotation_degrees = Vector3(0, -90, 0)
 	
-	# 2. PISTOL (Alta Fidelidade)
+	# 2. PISTOL (Original de 6h atrás)
 	if !root.has_node("Pistol"):
-		var model_path = "res://imports/pistol.glb"
+		var model_path = "res://models/animated_pistol.glb"
 		var pistol_scene = load(model_path)
 		if pistol_scene:
 			var pistol = pistol_scene.instantiate()
 			pistol.name = "Pistol"
 			root.add_child(pistol)
-			pistol.scale = Vector3(0.8, 0.8, 0.8)
-			pistol.position = Vector3(0.2, -0.15, -0.3)
+			pistol.scale = Vector3(0.009, 0.009, 0.009)
+			pistol.position = Vector3(0.3, -0.4, -0.45)
 			pistol.rotation_degrees = Vector3(0, 180, 0)
 
-	# 3. SMG (Fallback Polygonal Texturizado)
+	# 3. SMG (DualSMGs originais)
 	if !root.has_node("SMG"):
-		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/SubmachineGuns/SubmachineGun3/submachine_gun_3.fbx"
+		var model_path = "res://models/dual_smgs/dual_smgs.glb"
 		var smg_scene = load(model_path)
 		if smg_scene:
 			var smg = smg_scene.instantiate()
 			smg.name = "SMG"
 			root.add_child(smg)
-			smg.scale = Vector3(0.5, 0.5, 0.5)
-			smg.position = Vector3(0.2, -0.2, -0.3)
-			smg.rotation_degrees.y = 180
+			smg.scale = Vector3(0.016, 0.016, 0.016)
+			smg.position = Vector3(0, -0.4, -0.5)
+			smg.rotation_degrees = Vector3(0, 180, 0)
 
 func _auto_normalize_model(model: Node, depth: int = 0):
 	if !model or depth > 3: return
