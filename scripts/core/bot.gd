@@ -40,11 +40,7 @@ func _ready():
 	# Configuração do Navigation Agent
 	nav_agent.path_desired_distance = 1.0
 	nav_agent.target_desired_distance = 1.0
-	nav_agent.avoidance_enabled = true # V2500 - Desvio de obstáculos ativado 🏙️🎯🥇
-	nav_agent.radius = 0.8 # Espaço que o bot ocupa para não bater
-	
-	# Conecta o sinal de velocidade segura para evitar paredes
-	nav_agent.velocity_computed.connect(_on_velocity_computed)
+	nav_agent.avoidance_enabled = false # Desativado temporariamente para evitar paralisia no WebGL
 	
 	# STAGGER DE ACURÁCIA: Cada bot começa com acurácia aleatória diferente 🎯
 	accuracy = randf_range(0.0, 0.3)
@@ -52,11 +48,6 @@ func _ready():
 	_apply_elite_skin()
 	print("--- BOT %s PRONTO PARA AÇÃO ---" % name)
 
-func _on_velocity_computed(safe_velocity: Vector3):
-	if is_dead: return
-	velocity.x = safe_velocity.x
-	velocity.z = safe_velocity.z
-	move_and_slide()
 
 enum State {PATROL, COMBAT, SEARCH}
 var current_state: State = State.PATROL
@@ -86,7 +77,7 @@ func _physics_process(delta):
 		State.SEARCH:
 			_state_search(delta)
 	
-	# move_and_slide() # Removido: agora é chamado via _on_velocity_computed para evitar paredes 🧱
+	move_and_slide() 
 	_process_aura_damage(delta)
 	_update_animations()
 
@@ -115,9 +106,8 @@ func _state_patrol(delta):
 		var dir = (next_path_pos - global_position).normalized()
 		dir.y = 0
 		
-		# Otimização de Movimento: Usa avoidance do NavAgent
-		var new_velocity = dir * speed
-		nav_agent.set_velocity(new_velocity)
+		velocity.x = dir.x * speed
+		velocity.z = dir.z * speed
 		
 		_smooth_look_at(global_position + dir, delta)
 		
