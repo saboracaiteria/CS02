@@ -617,17 +617,17 @@ func _setup_dynamic_weapons():
 			root.add_child(smg)
 			smg.scale = Vector3(0.5, 0.5, 0.5)
 			smg.position = Vector3(0.2, -0.2, -0.3)
-			smg.rotation.y = PI
+			smg.rotation_degrees.y = 180
 
 func _auto_normalize_model(model: Node, depth: int = 0):
-	if !model or depth > 3: return # Limite de segurança V2500 🏙️🎯🥇
+	if !model or depth > 3: return
 	
 	var atlas_tex = load("res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Textures/atlass_1_diffuse.png")
 	var mat = StandardMaterial3D.new()
-	mat.albedo_texture = atlas_tex
+	if atlas_tex:
+		mat.albedo_texture = atlas_tex
 	mat.roughness = 0.8
 	
-	# Aplica textura em todos os meshes
 	for child in model.get_children():
 		if child is MeshInstance3D:
 			child.material_override = mat
