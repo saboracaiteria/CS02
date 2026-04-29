@@ -48,6 +48,7 @@ const FOV_LERP_SPEED : float = 8.0
 
 var weapons_list : Array = ["AnimatedPistol", "DualSMGs", "AKM_Unity"]
 var current_weapon_index : int = 0
+var weapon_cache : Dictionary = {} # V2500 - Cache para eliminar LAG 🏙️🎯🥇
 
 var BASE_SPEED : float = 5.5
 var SPRINT_SPEED : float = 9.0
@@ -69,22 +70,27 @@ func _ready() -> void:
 		Global.log_error("ERRO CRÍTICO: Camera3D não encontrada!")
 		camera = get_viewport().get_camera_3d()
 	
+	# PRE-CACHE DE ARMAS V2500 🏎️💨
 	for child in %WeaponRoot.get_children():
 		if child is Node3D:
 			child.visible = false
+			_auto_normalize_model(child) # Normaliza TUDO no começo
+			
+			# Cache de sub-nós para evitar find_child no lag
+			var weapon_data = {
+				"node": child,
+				"muzzle": child.find_child("MuzzleFlash*", true) if not child.find_child("MuzzleFlash_R", true) else child.find_child("MuzzleFlash_R", true),
+				"sound": child.find_child("AudioStreamPlayer3D*", true) if not child.find_child("GunshotSound*", true) else child.find_child("GunshotSound*", true),
+				"anim": child.find_child("AnimationPlayer", true)
+			}
+			weapon_cache[child.name.to_lower()] = weapon_data
 
-	var dual_node = find_child("DualSMGs", true)
-	if dual_node:
-		dual_node.visible = true
-		current_weapon_index = weapons_list.find("DualSMGs")
+	var initial_weapon = "DualSMGs"
+	if weapon_cache.has(initial_weapon.to_lower()):
+		switch_weapon(initial_weapon)
 	else:
-		var anim_pistol = find_child("AnimatedPistol", true)
-		if anim_pistol:
-			anim_pistol.visible = true
-			current_weapon_index = weapons_list.find("AnimatedPistol")
+		switch_weapon(weapons_list[0])
 
-	if current_weapon_index == -1: current_weapon_index = 0
-	_update_weapon_nodes()
 	add_to_group("player")
 	
 	if is_multiplayer_authority():
@@ -107,18 +113,32 @@ func _ready() -> void:
 
 # --- WEAPON SYSTEM ---
 func switch_weapon(weapon_name: String) -> void:
-	for w in %WeaponRoot.get_children():
-		if w.name.to_lower() == weapon_name.to_lower():
-			w.visible = true
-			weapon = w
-		else:
-			w.visible = false
-	_update_weapon_nodes()
-	# Reset ADS FOV if sniper
-	if weapon and weapon.name.contains("Sniper"):
+	var key = weapon_name.to_lower()
+	if not weapon_cache.has(key): return
+
+	# Oculta arma atual
+	if weapon: weapon.visible = false
+	
+	# Ativa nova arma via cache (Zero LAG) 🏎️💨
+	var data = weapon_cache[key]
+	weapon = data.node
+	weapon.visible = true
+	muzzle_flash = data.muzzle
+	gunshot_sound = data.sound
+	
+	current_weapon_index = weapons_list.find(weapon_name)
+	
+	# Update ADS FOV
+	if weapon.name.contains("Sniper"):
 		ads_fov = 15.0
 	else:
 		ads_fov = Global.ads_fov if not Global.is_mobile else 73.0
+	
+	# Skin Arms logic
+	var skin_arms = get_node_or_null("Camera3D/Skin_Arms")
+	if skin_arms:
+		skin_arms.visible = not weapon.name.contains("Unity")
+		
 	current_ammo = max_ammo
 	is_reloading = false
 
@@ -127,30 +147,8 @@ func cycle_weapon() -> void:
 	switch_weapon(weapons_list[current_weapon_index])
 
 func _update_weapon_nodes() -> void:
-	muzzle_flash = null
-	gunshot_sound = null
-	
-	for child in %WeaponRoot.get_children():
-		if child is Node3D and child.visible:
-			weapon = child
-			_auto_normalize_model(weapon)
-			
-			# Oculta braços genéricos se a arma tiver braços próprios (Geralmente Unity)
-			var skin_arms = get_node_or_null("Camera3D/Skin_Arms")
-			if skin_arms:
-				skin_arms.visible = not weapon.name.contains("Unity")
-
-			var flash_r = weapon.find_child("MuzzleFlash_R", true)
-			var flash_l = weapon.find_child("MuzzleFlash_L", true)
-			if not (flash_r or flash_l):
-				muzzle_flash = weapon.find_child("GPUParticles3D*", true)
-				if !muzzle_flash: muzzle_flash = weapon.find_child("MuzzleFlash*", true)
-			gunshot_sound = weapon.find_child("AudioStreamPlayer3D*", true)
-			if !gunshot_sound: gunshot_sound = weapon.find_child("GunshotSound*", true)
-			break
-	
-	if !muzzle_flash: muzzle_flash = find_child("GPUParticles3D*", true)
-	if !gunshot_sound: gunshot_sound = find_child("GunshotSound*", true)
+	# Função mantida por compatibilidade mas o switch agora faz o trabalho via cache
+	pass
 
 # --- AUTO NORMALIZER ---
 func get_max_dim_recursive(node: Node3D, model_root: Node3D) -> float:

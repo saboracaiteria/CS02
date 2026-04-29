@@ -38,14 +38,25 @@ func _ready():
 	global_position.y = 1.0 # Força pro nível do player
 	
 	# Configuração do Navigation Agent
-	nav_agent.path_desired_distance = 1.5
-	nav_agent.target_desired_distance = 1.5
+	nav_agent.path_desired_distance = 1.0
+	nav_agent.target_desired_distance = 1.0
+	nav_agent.avoidance_enabled = true # V2500 - Desvio de obstáculos ativado 🏙️🎯🥇
+	nav_agent.radius = 0.8 # Espaço que o bot ocupa para não bater
+	
+	# Conecta o sinal de velocidade segura para evitar paredes
+	nav_agent.velocity_computed.connect(_on_velocity_computed)
 	
 	# STAGGER DE ACURÁCIA: Cada bot começa com acurácia aleatória diferente 🎯
 	accuracy = randf_range(0.0, 0.3)
 	_find_next_objective()
 	_apply_elite_skin()
 	print("--- BOT %s PRONTO PARA AÇÃO ---" % name)
+
+func _on_velocity_computed(safe_velocity: Vector3):
+	if is_dead: return
+	velocity.x = safe_velocity.x
+	velocity.z = safe_velocity.z
+	move_and_slide()
 
 enum State {PATROL, COMBAT, SEARCH}
 var current_state: State = State.PATROL
@@ -75,7 +86,7 @@ func _physics_process(delta):
 		State.SEARCH:
 			_state_search(delta)
 	
-	move_and_slide()
+	# move_and_slide() # Removido: agora é chamado via _on_velocity_computed para evitar paredes 🧱
 	_process_aura_damage(delta)
 	_update_animations()
 
@@ -101,16 +112,13 @@ func _state_patrol(delta):
 			return
 
 		var next_path_pos = nav_agent.get_next_path_position()
-		
-		# Descarta posição inválida (dentro de container) 🧱
-		if next_path_pos.distance_to(global_position) < 0.1:
-			next_path_pos = target_node.global_position
-			
 		var dir = (next_path_pos - global_position).normalized()
 		dir.y = 0
 		
-		velocity.x = dir.x * speed
-		velocity.z = dir.z * speed
+		# Otimização de Movimento: Usa avoidance do NavAgent
+		var new_velocity = dir * speed
+		nav_agent.set_velocity(new_velocity)
+		
 		_smooth_look_at(global_position + dir, delta)
 		
 		# ANTI-TRAVAMENTO V6.2: tenta rota alternativa antes de teletransportar
