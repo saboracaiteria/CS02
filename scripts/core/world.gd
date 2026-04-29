@@ -72,14 +72,13 @@ func _ready():
 		udp_peer.set_dest_address("255.255.255.255", broadcast_port)
 		
 	# CONEXÃO DE DOMINAÇÃO V1675 🏙️🚩🥇
-	var gm = $GameManager
-	var zones = [$CapturePoint_A, $CapturePoint_B, $CapturePoint_C]
+	var gm = get_node_or_null("GameManager")
+	var zones = [get_node_or_null("CapturePoint_A"), get_node_or_null("CapturePoint_B"), get_node_or_null("CapturePoint_C")]
 	for zone in zones:
 		if zone and gm:
 			zone.zone_captured.connect(gm._on_zone_captured)
-			$Debug.log_msg("SISTEMA: Zona %s conectada ao Game Manager!" % zone.zone_id)
 		else:
-			$Debug.log_msg("ERRO: Falha ao conectar zona ou Game Manager!")
+			print("SISTEMA: Aguardando spawn das zonas de captura...")
 	
 	# MOUSE VISÍVEL NO MENU! V1210 🖱️🎭
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

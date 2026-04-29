@@ -1,18 +1,11 @@
 [gd_scene load_steps=30 format=3 uid="uid://b2qhxdrnviyqf"]
 
-[ext_resource type="PackedScene" uid="uid://animatedpistol" path="res://scenes/animated_pistol.tscn" id="ak_scene"]
 [ext_resource type="Script" path="res://scripts/core/player.gd" id="1_8tdgl"]
-[ext_resource type="PackedScene" uid="uid://c5c1lnw5ajt3c" path="res://scenes/pistol.tscn" id="2_0s6en"]
 [ext_resource type="Texture2D" uid="uid://ctosmto80mu2s" path="res://textures/kenney_particle_pack/star_05.png" id="3_ep0ec"]
 [ext_resource type="AudioStream" uid="uid://bevvvtb8n4qfc" path="res://audio/645317__darkshroom__m9_noisegate-1780.ogg" id="3_pilvn"]
 [ext_resource type="Texture2D" uid="uid://duu4nryr7idps" path="res://textures/kenney_particle_pack/circle_05.png" id="4_ssmal"]
 [ext_resource type="Script" path="res://scripts/ui/crosshair.gd" id="5_fnci2"]
 [ext_resource type="PackedScene" path="res://scenes/ui/touch_controls.tscn" id="6_touch"]
-[ext_resource type="PackedScene" path="res://scenes/dual_smgs.tscn" id="7_dual"]
-[ext_resource type="PackedScene" path="res://scenes/weapon_assault_unity.tscn" id="8_ar"]
-[ext_resource type="PackedScene" path="res://scenes/weapon_pistol_unity.tscn" id="9_pistol"]
-[ext_resource type="PackedScene" path="res://scenes/weapon_sniper_unity.tscn" id="10_sniper"]
-[ext_resource type="PackedScene" path="res://scenes/weapon_akm_unity.tscn" id="11_akm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_arms"]
 transparency = 1
