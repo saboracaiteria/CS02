@@ -207,15 +207,6 @@ unique_name_in_owner = true
 stream = ExtResource("3_pilvn")
 bus = &"SFX"
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Camera3D/WeaponRoot/pistol"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00020802, 0.0394075, -0.282182)
-emitting = false
-amount = 1
-lifetime = 0.02
-one_shot = true
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_h4yve")
-draw_pass_1 = SubResource("PlaneMesh_fbvoh")
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
 target_position = Vector3(0, 0, -50)
