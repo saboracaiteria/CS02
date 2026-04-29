@@ -46,7 +46,7 @@ var sprint_fov : float = 82.0
 # A single speed for the FOV lerp — keeping it moderate prevents snapping
 const FOV_LERP_SPEED : float = 8.0
 
-var weapons_list : Array = ["AnimatedPistol", "AKM_Unity"]
+var weapons_list : Array = ["Rifle", "Pistol"]
 var current_weapon_index : int = 0
 var weapon_cache : Dictionary = {} # V2500 - Cache para eliminar LAG 🏙️🎯🥇
 
@@ -63,12 +63,9 @@ func _ready() -> void:
 	camera = find_child("Camera3D", true, false)
 	raycast = find_child("RayCast3D", true, false)
 	anim_player = get_node_or_null("AnimationPlayer")
-	if !anim_player:
-		anim_player = find_child("AnimationPlayer", false, false)
 	
-	if !camera:
-		Global.log_error("ERRO CRÍTICO: Camera3D não encontrada!")
-		camera = get_viewport().get_camera_3d()
+	# SETUP DINÂMICO DE ARMAS (POLYGONAL) V2500 🏙️🎯🥇
+	_setup_dynamic_weapons()
 	
 	# PRE-CACHE DE ARMAS V2500 🏎️💨
 	for child in %WeaponRoot.get_children():
@@ -80,16 +77,12 @@ func _ready() -> void:
 			var weapon_data = {
 				"node": child,
 				"muzzle": child.find_child("MuzzleFlash*", true) if not child.find_child("MuzzleFlash_R", true) else child.find_child("MuzzleFlash_R", true),
-				"sound": child.find_child("AudioStreamPlayer3D*", true) if not child.find_child("GunshotSound*", true) else child.find_child("GunshotSound*", true),
+				"sound": gunshot_sound, # Reutiliza o som global se não houver local
 				"anim": child.find_child("AnimationPlayer", true)
 			}
 			weapon_cache[child.name.to_lower()] = weapon_data
 
-	var initial_weapon = "DualSMGs"
-	if weapon_cache.has(initial_weapon.to_lower()):
-		switch_weapon(initial_weapon)
-	else:
-		switch_weapon(weapons_list[0])
+	switch_weapon(weapons_list[0])
 
 	add_to_group("player")
 	
@@ -581,3 +574,32 @@ func _on_input_event(_camera: Node, _event: InputEvent, _position: Vector3, _nor
 
 func _on_mesh_instance_3d_child_order_changed():
 	pass
+
+# SISTEMA DE ARMAS DINÂMICAS V2500 🏙️🎯🥇
+func _setup_dynamic_weapons():
+	var root = %WeaponRoot
+	if !root: return
+	
+	# 1. RIFLE
+	if !root.has_node("Rifle"):
+		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Rifles/Rifle1/rifle_1.fbx"
+		var rifle_scene = load(model_path)
+		if rifle_scene:
+			var rifle = rifle_scene.instantiate()
+			rifle.name = "Rifle"
+			root.add_child(rifle)
+			rifle.scale = Vector3(0.5, 0.5, 0.5)
+			rifle.position = Vector3(0.2, -0.2, -0.3)
+			rifle.rotation.y = PI
+	
+	# 2. PISTOL
+	if !root.has_node("Pistol"):
+		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Pistols/Pistol1/pistol_1.fbx"
+		var pistol_scene = load(model_path)
+		if pistol_scene:
+			var pistol = pistol_scene.instantiate()
+			pistol.name = "Pistol"
+			root.add_child(pistol)
+			pistol.scale = Vector3(0.5, 0.5, 0.5)
+			pistol.position = Vector3(0.2, -0.2, -0.3)
+			pistol.rotation.y = PI

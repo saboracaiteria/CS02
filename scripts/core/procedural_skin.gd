@@ -87,13 +87,17 @@ func setup(team_color: Color = Color.ORANGE):
 	pivots["r_arm"] = _create_arm(pelve, Vector3(0.25, 0.75, 0), materials["skin"], materials["vest"])
 	
 	# ARMA PROCEDURAL (Canaã PC Fidelity) 🏙️🎯🥇
-	var weapon_mat = StandardMaterial3D.new()
-	weapon_mat.albedo_color = Color(0.1, 0.1, 0.1) # 0x111111
-	
 	var r_elbow = pivots["r_arm"].elbow
-	var gun = _create_mesh(r_elbow, BoxMesh.new(), Vector3(0, -0.2, 0), weapon_mat)
-	gun.mesh.size = Vector3(0.1, 0.15, 0.6)
-	gun.rotation.x = -PI / 2
+	var weapon_model = load("res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Rifles/Rifle1/rifle_1.fbx")
+	var gun = weapon_model.instantiate()
+	gun.name = "BotWeapon"
+	r_elbow.add_child(gun)
+	
+	# Ajuste de escala e posição para o rifle poligonal
+	gun.scale = Vector3(0.5, 0.5, 0.5)
+	gun.position = Vector3(0, -0.2, 0.1)
+	gun.rotation.y = PI
+	gun.rotation.x = PI / 2
 
 func _create_mesh(parent: Node3D, mesh: Mesh, pos: Vector3, mat: Material) -> MeshInstance3D:
 	var mi = MeshInstance3D.new()

@@ -407,3 +407,9 @@ func _load_selected_map() -> void:
 	new_map.name = "map"
 	$NavigationRegion3D.add_child(new_map)
 	Global.log_error("MAPA: [%s] carregado! 🗺️" % map_names[map_index])
+	
+	# RE-BAKE DA NAVEGAÇÃO V2500 🏙️🎯🥇
+	# Essencial para que os bots reconheçam o terreno procedural
+	await get_tree().process_frame
+	$NavigationRegion3D.bake_navigation_mesh()
+	Global.log_error("SISTEMA: Malha de Navegação reconstruída para o novo mapa!")
