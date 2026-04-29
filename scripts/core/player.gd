@@ -69,22 +69,24 @@ func _ready() -> void:
 	_setup_dynamic_weapons()
 	
 	# PRE-CACHE DE ARMAS V2500 🏎️💨
-	for child in %WeaponRoot.get_children():
-		if child is Node3D:
-			child.visible = false
-			_auto_normalize_model(child) # Normaliza TUDO no começo
-			
-			# Cache de sub-nós para evitar find_child no lag
-			var weapon_data = {
-				"node": child,
-				"muzzle": child.find_child("MuzzleFlash*", true) if not child.find_child("MuzzleFlash_R", true) else child.find_child("MuzzleFlash_R", true),
-				"sound": gunshot_sound, # Reutiliza o som global se não houver local
-				"anim": child.find_child("AnimationPlayer", true)
-			}
-			weapon_cache[child.name.to_lower()] = weapon_data
+	if %WeaponRoot:
+		for child in %WeaponRoot.get_children():
+			if child is Node3D:
+				child.visible = false
+				_auto_normalize_model(child) # Normaliza TUDO no começo
+				
+				# Cache de sub-nós para evitar find_child no lag
+				var weapon_data = {
+					"node": child,
+					"muzzle": child.find_child("MuzzleFlash*", true) if not child.find_child("MuzzleFlash_R", true) else child.find_child("MuzzleFlash_R", true),
+					"sound": gunshot_sound,
+					"anim": child.find_child("AnimationPlayer", true)
+				}
+				weapon_cache[child.name.to_lower()] = weapon_data
 
-	switch_weapon(weapons_list[0])
-
+	if weapons_list.size() > 0:
+		switch_weapon(weapons_list[0])
+	
 	add_to_group("player")
 	
 	if is_multiplayer_authority():
@@ -581,21 +583,33 @@ func _setup_dynamic_weapons():
 	var root = %WeaponRoot
 	if !root: return
 	
-	# 1. AKM (Baseada no Rifle1)
+	# 1. AKM (Alta Fidelidade)
 	if !root.has_node("AKM"):
-		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Rifles/Rifle1/rifle_1.fbx"
-		var rifle_scene = load(model_path)
-		if rifle_scene:
-			var rifle = rifle_scene.instantiate()
-			rifle.name = "AKM"
-			root.add_child(rifle)
-			rifle.scale = Vector3(0.5, 0.5, 0.5)
-			rifle.position = Vector3(0.2, -0.2, -0.3)
-			rifle.rotation.y = PI
+		var model_path = "res://assets/weapons/persuader_animated.glb"
+		var akm_scene = load(model_path)
+		if akm_scene:
+			var akm = akm_scene.instantiate()
+			akm.name = "AKM"
+			root.add_child(akm)
+			akm.scale = Vector3(1.2, 1.2, 1.2)
+			akm.position = Vector3(0.2, -0.2, -0.4)
+			akm.rotation_degrees = Vector3(0, 180, 0)
 	
-	# 2. SMG (Baseada no SMG1)
+	# 2. PISTOL (Alta Fidelidade)
+	if !root.has_node("Pistol"):
+		var model_path = "res://imports/pistol.glb"
+		var pistol_scene = load(model_path)
+		if pistol_scene:
+			var pistol = pistol_scene.instantiate()
+			pistol.name = "Pistol"
+			root.add_child(pistol)
+			pistol.scale = Vector3(0.8, 0.8, 0.8)
+			pistol.position = Vector3(0.2, -0.15, -0.3)
+			pistol.rotation_degrees = Vector3(0, 180, 0)
+
+	# 3. SMG (Fallback Polygonal Texturizado)
 	if !root.has_node("SMG"):
-		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/SMGs/SMG1/smg_1.fbx"
+		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/SubmachineGuns/SubmachineGun3/submachine_gun_3.fbx"
 		var smg_scene = load(model_path)
 		if smg_scene:
 			var smg = smg_scene.instantiate()
@@ -604,18 +618,6 @@ func _setup_dynamic_weapons():
 			smg.scale = Vector3(0.5, 0.5, 0.5)
 			smg.position = Vector3(0.2, -0.2, -0.3)
 			smg.rotation.y = PI
-
-	# 3. PISTOL
-	if !root.has_node("Pistol"):
-		var model_path = "res://assets/weapons/Polygonal Modern Weapons Collection 1 Asset Package/Polygonal Modern Weapons Collection 1 Asset Package/Models/Guns/Pistols/Pistol1/pistol_1.fbx"
-		var pistol_scene = load(model_path)
-		if pistol_scene:
-			var pistol = pistol_scene.instantiate()
-			pistol.name = "Pistol"
-			root.add_child(pistol)
-			pistol.scale = Vector3(0.5, 0.5, 0.5)
-			pistol.position = Vector3(0.2, -0.2, -0.3)
-			pistol.rotation.y = PI
 
 func _auto_normalize_model(model: Node, depth: int = 0):
 	if !model or depth > 3: return # Limite de segurança V2500 🏙️🎯🥇
