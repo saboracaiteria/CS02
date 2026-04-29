@@ -92,52 +92,85 @@ shader_parameter/mix_amount = 0.0
 shader_parameter/color_over = null
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glass"]
-bg_color = Color(0.02, 0.02, 0.03, 0.7)
+bg_color = Color(0.04, 0.05, 0.08, 0.82)
 border_width_left = 0
-border_width_top = 0
-border_width_right = 4
+border_width_top = 1
+border_width_right = 3
 border_width_bottom = 0
-border_color = Color(0.0, 0.95, 1.0, 1)
-shadow_color = Color(0, 0, 0, 0.5)
-shadow_size = 15
+border_color = Color(0.0, 0.9, 1.0, 0.9)
+shadow_color = Color(0.0, 0.8, 1.0, 0.25)
+shadow_size = 20
+content_margin_left = 20
+content_margin_top = 10
+content_margin_right = 20
+content_margin_bottom = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bronze_btn"]
-bg_color = Color(0.05, 0.05, 0.05, 0.9)
-skew = Vector2(-0.25, 0)
+bg_color = Color(0.06, 0.07, 0.1, 0.95)
+skew = Vector2(-0.18, 0)
 border_width_left = 0
 border_width_top = 0
-border_width_right = 8
-border_width_bottom = 2
-border_color = Color(0.97, 0.82, 0.27, 1)
-shadow_color = Color(0, 0, 0, 0.4)
-shadow_size = 10
-expand_margin_left = 40
-expand_margin_right = 10
-content_margin_top = 15
-content_margin_bottom = 15
+border_width_right = 5
+border_width_bottom = 0
+border_color = Color(1.0, 0.75, 0.1, 1)
+shadow_color = Color(1.0, 0.6, 0.0, 0.35)
+shadow_size = 14
+expand_margin_left = 30
+expand_margin_right = 8
+content_margin_top = 18
+content_margin_bottom = 18
+content_margin_left = 25
+content_margin_right = 25
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_start_btn"]
+bg_color = Color(0.85, 0.35, 0.0, 1.0)
+skew = Vector2(-0.18, 0)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 5
+border_width_bottom = 0
+border_color = Color(1.0, 0.9, 0.2, 1)
+shadow_color = Color(1.0, 0.5, 0.0, 0.6)
+shadow_size = 20
+expand_margin_left = 30
+expand_margin_right = 8
+content_margin_top = 22
+content_margin_bottom = 22
+content_margin_left = 30
+content_margin_right = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_btn"]
+bg_color = Color(0.35, 0.03, 0.03, 0.95)
+skew = Vector2(-0.18, 0)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 5
+border_width_bottom = 0
+border_color = Color(1.0, 0.15, 0.15, 0.9)
+shadow_color = Color(1.0, 0.0, 0.0, 0.35)
+shadow_size = 14
+expand_margin_left = 30
+expand_margin_right = 8
+content_margin_top = 18
+content_margin_bottom = 18
 
 [sub_resource type="Shader" id="Shader_vaporwave"]
 code = "shader_type canvas_item;
+uniform float speed : hint_range(0.1, 5.0) = 0.6;
 void fragment() {
     vec2 uv = UV;
-    vec3 color = mix(vec3(0.02, 0.0, 0.1), vec3(1.0, 0.5, 0.0), smoothstep(0.0, 1.0, uv.y));
-    vec2 sun_pos = vec2(0.5, 0.6);
-    float sun_dist = distance(uv, vec2(sun_pos.x, sun_pos.y * 1.5));
-    if (sun_dist < 0.25) {
-        float stripes = sin(uv.y * 150.0 - TIME * 2.0);
-        if (stripes < 0.0 || sun_dist < 0.15) {
-            color = mix(vec3(1.0, 0.9, 0.0), vec3(1.0, 0.4, 0.0), uv.y);
-        }
-    }
-    float h1 = (sin(uv.x * 20.0) * cos(uv.x * 12.0) + sin(uv.x * 35.0) * 0.5) * 0.15 + 0.8;
-    float h2 = (cos(uv.x * 15.0 - 5.0) * sin(uv.x * 25.0) + cos(uv.x * 40.0) * 0.5) * 0.15 + 0.85;
-    h1 = floor(h1 * 20.0) / 20.0;
-    h2 = floor(h2 * 25.0) / 25.0;
-    if (uv.y > h1) color = vec3(0.05, 0.02, 0.08); 
-    else if (uv.y > h2) color = vec3(0.1, 0.05, 0.15); 
-    COLOR = vec4(color, 1.0);
-}
-"
+    vec3 bg = mix(vec3(0.01, 0.02, 0.06), vec3(0.04, 0.01, 0.08), uv.y);
+    float grid_x = abs(sin(uv.x * 28.0 - TIME * speed * 0.2)) * 0.04;
+    float grid_y = abs(sin(uv.y * 16.0 + TIME * speed)) * 0.06;
+    float grid = max(grid_x, grid_y);
+    vec3 grid_color = vec3(0.0, 0.7, 1.0);
+    bg = mix(bg, grid_color, grid * smoothstep(0.3, 1.0, uv.y));
+    float horizon = smoothstep(0.28, 0.32, uv.y);
+    vec3 horizon_glow = vec3(1.0, 0.5, 0.05) * 0.35 * (1.0 - abs(uv.x - 0.5) * 2.5);
+    bg = mix(bg + horizon_glow * (1.0 - horizon), bg, horizon);
+    float vign = 1.0 - smoothstep(0.3, 1.0, length((uv - 0.5) * vec2(1.4, 1.8)));
+    COLOR = vec4(bg * vign, 1.0);
+}"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_Vaporwave"]
 shader = SubResource("Shader_vaporwave")
@@ -475,7 +508,7 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -480.0
+offset_left = -520.0
 offset_right = 0.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -484,104 +517,120 @@ theme = SubResource("Theme_utqnk")
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu/MainMenu"]
 layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 30
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Menu/MainMenu/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 10
-
+theme_override_constants/separation = 14
 
 [node name="MainMenuLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_y = 4
-theme_override_font_sizes/font_size = 48
+theme_override_colors/font_shadow_color = Color(0.0, 0.85, 1.0, 0.6)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 8
+theme_override_font_sizes/font_size = 58
 text = "COMBAT ZONE"
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="SubTitleLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.97, 0.82, 0.27, 1)
-theme_override_font_sizes/font_size = 18
-text = "SEASON CANAÃ RELOAD"
+theme_override_colors/font_color = Color(1.0, 0.72, 0.05, 1)
+theme_override_colors/font_shadow_color = Color(1.0, 0.4, 0.0, 0.5)
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "◆  SEASON CANAÃ RELOAD  ◆"
 horizontal_alignment = 2
 vertical_alignment = 1
 
+[node name="Divider" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0, 0.9, 1.0, 0.4)
+theme_override_font_sizes/font_size = 10
+text = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+horizontal_alignment = 2
+
 [node name="Spacer" type="Control" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="MapLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_colors/font_color = Color(0.45, 0.55, 0.65, 1)
 theme_override_font_sizes/font_size = 11
-text = "SELECIONAR MAPA:"
+text = "▸  SELECIONAR MAPA"
 horizontal_alignment = 2
 
 [node name="MapSelectButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.97, 0.82, 0.27, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1.0, 0.75, 0.1, 1)
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
-text = "  <  WAREHOUSE (Container)  >"
+text = "  ◀  WAREHOUSE (Container)  ▶"
 alignment = 2
 
 [node name="HostButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
-text = "START OPERATION"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_start_btn")
+text = "⚡  START OPERATION"
 alignment = 2
 script = ExtResource("4_nuahp")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 2
+theme_override_constants/separation = 8
 
 [node name="AddressEntry" type="LineEdit" parent="Menu/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "IP..."
+placeholder_text = "🌐 IP do servidor..."
 alignment = 1
 
 [node name="JoinButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
-text = " PVP "
+text = "▶ PVP"
 
 [node name="OptionsButton" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 toggle_mode = true
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
-text = "LOADOUT"
+text = "⚙  LOADOUT & OPÇÕES"
 alignment = 2
 script = ExtResource("6_7g7sm")
 
 [node name="Quit" type="Button" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxFlat_bronze_btn")
-text = "EXIT"
+theme_override_colors/font_color = Color(1.0, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_exit_btn")
+text = "✕  SAIR"
 alignment = 2
 script = ExtResource("9_ucmny")
 
 [node name="StatusLabel" type="Label" parent="Menu/MainMenu/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.2, 1.0, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(0, 0.8, 0.3, 0.4)
+theme_override_constants/shadow_outline_size = 3
+theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -591,7 +640,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 button_pressed = true
-text = "Musica"
+text = "♪ Música"
 
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
