@@ -46,7 +46,7 @@ var sprint_fov : float = 82.0
 # A single speed for the FOV lerp — keeping it moderate prevents snapping
 const FOV_LERP_SPEED : float = 8.0
 
-var weapons_list : Array = ["AnimatedPistol", "DualSMGs", "AKM_Unity"]
+var weapons_list : Array = ["AnimatedPistol", "AKM_Unity"]
 var current_weapon_index : int = 0
 var weapon_cache : Dictionary = {} # V2500 - Cache para eliminar LAG 🏙️🎯🥇
 
